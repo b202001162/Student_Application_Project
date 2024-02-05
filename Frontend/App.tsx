@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 // Screens
-import LoginPage from './Screens/LoginPage';
+import Dashboard from './Screens/Dashboard';
 // import Welcome from './components/Welcome';
 // import CourseRegistration from './components/CourseRegistration';
 // import LoginDemo from './components/LoginDemo';
