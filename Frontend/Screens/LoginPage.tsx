@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   FlatList,
   Appearance,
-  Image,
 } from 'react-native';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -51,43 +50,110 @@ const LoginPage = (navigation: {LoginPageProps}) => {
                 ? mainStyle.loginMainContainer
                 : mainStyle.dLoginMainContainer
             }>
-            <View>
+            <View style={{alignItems: 'center'}}>
               <Text
                 style={
                   theme === 'light'
-                    ? {color: '#1d1d1d', fontSize: 20, fontWeight: 'bold'}
-                    : {color: '#eeeeee', fontSize: 20, fontWeight: 'bold'}
+                    ? {
+                        color: '#1d1d1d',
+                        fontSize: 25,
+                        fontWeight: 'bold',
+                        marginBottom: 5,
+                      }
+                    : {
+                        color: '#eeeeee',
+                        fontSize: 25,
+                        fontWeight: 'bold',
+                        marginBottom: 5,
+                      }
                 }>
-                {' '}
-                Enter Your Mobile Number{' '}
+                Enter Your Mobile Number
               </Text>
               <Text
                 style={
                   theme === 'light'
-                    ? {color: '#1d1d1d', fontSize: 15}
-                    : {color: '#eeeeee', fontSize: 15}
+                    ? {color: '#4d4d4d', fontSize: 17, marginBottom: 150}
+                    : {color: '#bbb', fontSize: 17, marginBottom: 150}
                 }>
-                {' '}
-                We will send you confirmation code...{' '}
+                We will send you confirmation code...
               </Text>
             </View>
-            <View> </View>
+            <View style={mainStyle.loginInputButtonContainer}>
+              <View
+                style={
+                  theme === 'light'
+                    ? mainStyle.logintextInput
+                    : mainStyle.dLoginTextInput
+                }>
+                <TextInput
+                  style={
+                    theme == 'light'
+                      ? mainStyle.loginInputText
+                      : mainStyle.dLoginInputText
+                  }
+                  placeholder="Enter Mobile number"
+                  placeholderTextColor={theme === 'light' ? '#003f5c' : '#ccc'}
+                  onChangeText={text => setState({email: text})}
+                />
+              </View>
+              <TouchableOpacity
+                style={
+                  theme === 'light'
+                    ? mainStyle.loginButton
+                    : mainStyle.dLoginButton
+                }>
+                <Text
+                  style={
+                    theme === 'light'
+                      ? mainStyle.loginButtonText
+                      : mainStyle.dLoginButtonText
+                  }>
+                  GET OTP
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View
+            style={{position: 'absolute', bottom: 125, flexDirection: 'row'}}>
+            <View
+              style={
+                theme === 'light'
+                  ? {
+                      height: 18,
+                      width: 18,
+                      backgroundColor: '#2196f3',
+                      borderRadius: 50,
+                      marginRight: 7,
+                    }
+                  : {
+                      height: 18,
+                      width: 18,
+                      backgroundColor: '#98BAFC',
+                      borderRadius: 50,
+                      marginRight: 7,
+                    }
+              }></View>
+            <View
+              style={
+                theme === 'light'
+                  ? {
+                      height: 18,
+                      width: 18,
+                      backgroundColor: '#FAFAFA',
+                      borderRadius: 50,
+                    }
+                  : {
+                      height: 18,
+                      width: 18,
+                      backgroundColor: '#23303C',
+                      borderRadius: 50,
+                    }
+              }></View>
           </View>
         </View>
       </View>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  loginContainer: {
-    backgroundColor: 'white',
-    width: '100%',
-    height: 300,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-  },
-});
 
 export default LoginPage;
