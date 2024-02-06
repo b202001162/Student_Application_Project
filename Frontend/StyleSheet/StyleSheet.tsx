@@ -8,14 +8,14 @@ export const mainStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'start',
     height: '100%',
-    paddingTop: 20,
+    // paddingTop: 20,
   },
   dContainer: {
     backgroundColor: '#0c1319',
     alignItems: 'center',
     justifyContent: 'start',
     height: '100%',
-    paddingTop: 20,
+    // paddingTop: 20,
   },
 
   subContainer: {
@@ -143,8 +143,9 @@ export const mainStyle = StyleSheet.create({
     },
     dAcademicsButtons: {
         backgroundColor: '#23303C',
-        width: '45%',
-        padding: 10,
+        width: '47%',
+        padding: 12,
+        paddingHorizontal: 15,
         borderRadius: 10,
         marginTop: 10,
         flexDirection: 'row',
@@ -162,4 +163,20 @@ export const mainStyle = StyleSheet.create({
         fontSize: 17,
         textAlign: 'center',
     },
+
+
+    loginMainContainer : {
+      width: '100%',
+      height : '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    dLoginMainContainer : {
+      width: '100%',
+      height : '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }
+
+
 });

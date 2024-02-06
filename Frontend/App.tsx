@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 // Screens
 import Dashboard from './Screens/Dashboard';
+import LoginPage from './Screens/LoginPage';
 // import Welcome from './components/Welcome';
 // import CourseRegistration from './components/CourseRegistration';
 // import LoginDemo from './components/LoginDemo';
@@ -18,6 +19,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // For parameter types in stack navigation
 export type RootStackParamList = {
+  Dashboard: undefined;
   LoginPage: undefined;
 };
 
@@ -29,6 +31,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="LoginPage">
+        <Stack.Screen name="Dashboard" component={Dashboard} options={{headerShown: false,}}/>
         <Stack.Screen name="LoginPage" component={LoginPage} options={{headerShown: false,}}/>
       </Stack.Navigator>
     </NavigationContainer>
