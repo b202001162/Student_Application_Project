@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 
 export const mainStyle = StyleSheet.create({
   container: {
-    backgroundColor: '#F3f3f3',
+    backgroundColor: '#DDDDDD',
     alignItems: 'center',
     justifyContent: 'start',
     height: '100%',
@@ -75,7 +75,7 @@ export const mainStyle = StyleSheet.create({
   },
 
   ongoingEventsButtons: {
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#EAEAEA',
     width: '90%',
     padding: 10,
     paddingLeft: 30,
@@ -131,7 +131,7 @@ export const mainStyle = StyleSheet.create({
   },
 
   academicsButtons: {
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#EAEAEA',
     width: '47%',
     padding: 12,
     paddingHorizontal: 15,
@@ -185,7 +185,7 @@ export const mainStyle = StyleSheet.create({
     alignItems : 'center',
   },
 
-  logintextInput : {
+  loginTextInput : {
     width: '90%',
     borderRadius: 8,
     height: 50,
@@ -210,7 +210,7 @@ export const mainStyle = StyleSheet.create({
 
   loginInputText : {
     height : 50,
-    color : '#3d33d',
+    color : '#3d3d3d',
   },
   dLoginInputText : {
     height : 50,
@@ -228,7 +228,7 @@ export const mainStyle = StyleSheet.create({
     paddingBottom: 10,
     paddingTop: 10,
     marginTop: 20,
-    marginBottom : 100,
+    marginBottom : 90,
   },
   dLoginButton : {
     backgroundColor: '#98BAFC',
@@ -241,11 +241,11 @@ export const mainStyle = StyleSheet.create({
     paddingBottom: 10,
     paddingTop: 10,
     marginTop: 20,
-    marginBottom : 100,
+    marginBottom : 90,
   },
 
   loginButtonText : {
-    color: '#FAFAFA',
+    color: '#EAEAEA',
     fontSize: 15,
     fontWeight: 'bold',
   },

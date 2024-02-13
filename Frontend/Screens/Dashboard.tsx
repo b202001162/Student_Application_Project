@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {NativeStackNavigationProps} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {mainStyle} from '../StyleSheet/StyleSheet';
 
@@ -19,9 +21,39 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 type DashboardProps = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
-const Dashboard = (navigation: {DashboardProps}) => {
+const Dashboard = ({route}: DashboardProps) => {
+  const {token, name} = route.params;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [firstName, setFirstName] = useState('');
+  const [jwtToken, setJwtToken] = useState('');
+  const _retrieveData = async () => {
+    setLoading(true); // Indicate loading state
+    try {
+      // // setState({jwtToken: token});
+      // console.log(firstName);
+      // console.log(jwtToken);
+    } catch (error) {
+      // Error retrieving data
+      console.log('Error retrieving data');
+    } finally {
+      setLoading(false);
+    }
+  };
+  const retrieveData = async () => {
+    setLoading(true); // Indicate loading state
+    try {
+      
+    } catch (error) {
+      // Error retrieving data
+      console.log('Error retrieving data');
+    } finally {
+      setLoading(false);
+    }
+  };
   const [theme, setTheme] = useState(Appearance.getColorScheme());
   useEffect(() => {
+    // _retrieveData();
     const colorTheme = Appearance.getColorScheme();
     console.log(colorTheme);
     if (theme === 'light') {
@@ -32,9 +64,6 @@ const Dashboard = (navigation: {DashboardProps}) => {
   });
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState();
-  const [state, setState] = useState({
-    email: '',
-  });
 
   return (
     <SafeAreaView>
@@ -74,7 +103,7 @@ const Dashboard = (navigation: {DashboardProps}) => {
                   ? mainStyle.greetingText
                   : mainStyle.dGreetingText
               }>
-              Good moring, [Name]!
+              Good moring, {!isLoading ? name : <ActivityIndicator />}!
             </Text>
           </View>
           <View style={mainStyle.ongoingEvents}>

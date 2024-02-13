@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 // Screens
 import Dashboard from './Screens/Dashboard';
 import LoginPage from './Screens/LoginPage';
+import OTPVerification from './Screens/OTPVerification';
 // import Welcome from './components/Welcome';
 // import CourseRegistration from './components/CourseRegistration';
 // import LoginDemo from './components/LoginDemo';
@@ -20,8 +21,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 // For parameter types in stack navigation
 export type RootStackParamList = {
-  Dashboard: undefined;
+  Dashboard: {token: string, name: string};
   LoginPage: undefined;
+  OTPVerification: {Number: string};
 };
 
 // Create stack navigator
@@ -40,21 +42,29 @@ const App = () => {
   });
   return (
     <>
-    <StatusBar animated={true} backgroundColor={theme === 'light' ? "#F3f3f3" : "#0c1319"}/>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="LoginPage">
-        <Stack.Screen
-          name="Dashboard"
-          component={Dashboard}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="LoginPage"
-          component={LoginPage}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <StatusBar
+        animated={true}
+        backgroundColor={theme === 'light' ? '#F3f3f3' : '#0c1319'}
+      />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="LoginPage">
+          <Stack.Screen
+            name="Dashboard"
+            component={Dashboard}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="LoginPage"
+            component={LoginPage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="OTPVerification"
+            component={OTPVerification}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </>
   );
 };
