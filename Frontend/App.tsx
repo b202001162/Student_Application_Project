@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 // Screens
 import Dashboard from './Screens/Dashboard';
 import LoginPage from './Screens/LoginPage';
+import CourseRegistration from './Screens/CourseRegistration';
 // import Welcome from './components/Welcome';
 // import CourseRegistration from './components/CourseRegistration';
 // import LoginDemo from './components/LoginDemo';
@@ -21,6 +22,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 export type RootStackParamList = {
   Dashboard: undefined;
   LoginPage: undefined;
+  CourseRegistration: undefined;
 };
 
 // Create stack navigator
@@ -33,6 +35,7 @@ const App = () => {
       <Stack.Navigator initialRouteName="LoginPage">
         <Stack.Screen name="Dashboard" component={Dashboard} options={{headerShown: false,}}/>
         <Stack.Screen name="LoginPage" component={LoginPage} options={{headerShown: false,}}/>
+        <Stack.Screen name="CourseRegistration" component={CourseRegistration} options={{headerShown: false,}}/>
       </Stack.Navigator>
     </NavigationContainer>
     // <FileInput/>
