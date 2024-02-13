@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import Dashboard from './Screens/Dashboard';
 import LoginPage from './Screens/LoginPage';
 import OTPVerification from './Screens/OTPVerification';
+import CourseRegistration from './Screens/CourseRegistration';
 // import Welcome from './components/Welcome';
 // import CourseRegistration from './components/CourseRegistration';
 // import LoginDemo from './components/LoginDemo';
@@ -21,9 +22,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 // For parameter types in stack navigation
 export type RootStackParamList = {
-  Dashboard: {token: string, name: string};
+  Dashboard: {token: string; name: string};
   LoginPage: undefined;
   OTPVerification: {Number: string};
+  CourseRegistration: undefined;
 };
 
 // Create stack navigator
@@ -63,9 +65,15 @@ const App = () => {
             component={OTPVerification}
             options={{headerShown: false}}
           />
+          <Stack.Screen
+            name="CourseRegistration"
+            component={CourseRegistration}
+            options={{headerShown: false}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </>
+    // <FileInput/>
   );
 };
 
