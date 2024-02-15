@@ -6,17 +6,14 @@ import Dashboard from './Screens/Dashboard';
 import LoginPage from './Screens/LoginPage';
 import OTPVerification from './Screens/OTPVerification';
 import CourseRegistration from './Screens/CourseRegistration';
-// import Welcome from './components/Welcome';
-// import CourseRegistration from './components/CourseRegistration';
-// import LoginDemo from './components/LoginDemo';
-// import Notifications from './components/Notifications';
-// import GradeCard from './components/GradeCard';
-// import MyComp from './components/MyComp';
-// import APICheck from './components/APICheck';
-// import RegisteredCourses from './components/RegisteredCourses';
-// import FileInput from './components/FileInput';
-// import OTPVerification from './components/OTPVerification';
-// For stack navigation
+import Notifications from './Screens/Notifications';
+import MyTerms from './Screens/MyTerms';
+import MyCourses from './Screens/MyCourses';
+import MyCourseDetails from './Screens/MyCourseDetails';
+import LessonPlan from './Screens/LessonPlan';
+import Assignments from './Screens/Assignments';
+
+// Stack Navigator
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 // import Component from './components/Component';
 
@@ -24,8 +21,14 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 export type RootStackParamList = {
   Dashboard: {token: string; name: string};
   LoginPage: undefined;
+  Notifications: undefined;
   OTPVerification: {Number: string};
   CourseRegistration: undefined;
+  MyTerms: undefined;
+  MyCourses: undefined;
+  MyCourseDetails: undefined;
+  LessonPlan: undefined;
+  Assignments: undefined;
 };
 
 // Create stack navigator
@@ -68,6 +71,36 @@ const App = () => {
           <Stack.Screen
             name="CourseRegistration"
             component={CourseRegistration}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Notifications"
+            component={Notifications}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MyTerms"
+            component={MyTerms}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MyCourses"
+            component={MyCourses}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MyCourseDetails"
+            component={MyCourseDetails}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="LessonPlan"
+            component={LessonPlan}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Assignments"
+            component={Assignments}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

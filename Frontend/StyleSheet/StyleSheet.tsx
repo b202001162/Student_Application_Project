@@ -20,14 +20,14 @@ export const mainStyle = StyleSheet.create({
   subContainer: {
     backgroundColor: 'transparent',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     // height: '100%',
     width: '90%',
   },
   dSubContainer: {
     backgroundColor: 'transparent',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     // height: '100%',
     width: '90%',
   },
@@ -181,11 +181,11 @@ export const mainStyle = StyleSheet.create({
     mariginTop: 100,
     width: '100%',
     height: 100,
-    justifyContent : 'center',
-    alignItems : 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
-  loginTextInput : {
+  loginTextInput: {
     width: '90%',
     borderRadius: 8,
     height: 50,
@@ -194,9 +194,9 @@ export const mainStyle = StyleSheet.create({
     padding: 15,
     borderWidth: 0,
     borderBottomWidth: 2,
-    borderColor : '#1d1d1d',
+    borderColor: '#1d1d1d',
   },
-  dLoginTextInput : {
+  dLoginTextInput: {
     width: '90%',
     borderRadius: 8,
     height: 50,
@@ -205,53 +205,274 @@ export const mainStyle = StyleSheet.create({
     padding: 15,
     borderWidth: 0,
     borderBottomWidth: 2,
-    borderColor : '#777',
+    borderColor: '#777',
   },
 
-  loginInputText : {
-    height : 50,
-    color : '#3d3d3d',
+  loginInputText: {
+    height: 50,
+    color: '#3d3d3d',
   },
-  dLoginInputText : {
-    height : 50,
-    color : '#bbb'
+  dLoginInputText: {
+    height: 50,
+    color: '#bbb',
   },
 
-  loginButton : {
+  loginButton: {
     backgroundColor: '#2196f3',
     borderRadius: 7,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
     // padding: 20,
-    width : '40%',
+    width: '40%',
     paddingBottom: 10,
     paddingTop: 10,
     marginTop: 20,
-    marginBottom : 90,
+    marginBottom: 90,
   },
-  dLoginButton : {
+  dLoginButton: {
     backgroundColor: '#98BAFC',
     borderRadius: 50,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
     // padding: 20,
-    width : '40%',
+    width: '40%',
     paddingBottom: 10,
     paddingTop: 10,
     marginTop: 20,
-    marginBottom : 90,
+    marginBottom: 90,
   },
 
-  loginButtonText : {
+  loginButtonText: {
     color: '#EAEAEA',
     fontSize: 15,
     fontWeight: 'bold',
   },
-  dLoginButtonText : {
+  dLoginButtonText: {
     color: '#23303C',
     fontSize: 15,
     fontWeight: 'bold',
+  },
+
+  headerMain: {
+    width: '100%',
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    position: 'fixed',
+    top: 0,
+  },
+  dHeaderMain: {
+    width: '100%',
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    position: 'fixed',
+    top: 0,
+  },
+
+  headerText: {
+    color: '#1d1d1d',
+    fontSize: 20,
+  },
+  dHeaderText: {
+    color: '#eee',
+    fontSize: 20,
+  },
+
+  headerIcon: {
+    marginRight: 10,
+    marginLeft: 5,
+  },
+
+  itemContainer: {
+    backgroundColor: '#EAEAEA',
+    minWwidth: '95%',
+    maxWidth: '95%',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  dItemContainer: {
+    backgroundColor: '#23303C',
+    minWidth: '95%',
+    maxWidth: '95%',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+
+  myTermsItemContainer: {
+    backgroundColor: '#EAEAEA',
+    minWidth: '90%',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  dMyTermsItemContainer: {
+    backgroundColor: '#23303C',
+    minWidth: '90%',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+
+  myCourseDetailsItemContainer: {
+    backgroundColor: '#EAEAEA',
+    minWidth: '90%',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  dMyCourseDetailsItemContainer: {
+    backgroundColor: '#23303C',
+    minWidth: '90%',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+
+  itemTitle: {
+    color: '#1d1d1d',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  dItemTitle: {
+    color: '#eee',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+
+  myTermsItemTitle: {
+    color: '#1d1d1d',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  dMyTermsItemTitle: {
+    color: '#eee',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+
+  myCoursesItemTitle: {
+    color: '#1d1d1d',
+    fontSize: 17,
+    fontWeight: 'heavy',
+  },
+  dMyCoursesItemTitle: {
+    color: '#eee',
+    fontSize: 17,
+    fontWeight: 'heavy',
+  },
+
+  itemDetails: {
+    color: '#1d1d1d',
+    fontSize: 15,
+  },
+  dItemDetails: {
+    color: '#eee',
+    fontSize: 15,
+  },
+
+  myTermsItemDetails: {
+    color: '#1d1d1d',
+    fontSize: 17,
+  },
+  dMyTermsItemDetails: {
+    color: '#eee',
+    fontSize: 17,
+  },
+
+  flatListStyle: {
+    width: '100%',
+    // marginBottom: 200,
+    // height: '90%',
+    // justifyContent: 'center',
+    // paddingVertical: 30,
+    // height: '50%',
+    // scrollEnabled: true,
+    alignItems: 'center',
+  },
+
+  myCourseDetailsButtonContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20
+  },
+
+  myCourseDetailsButton: {
+    backgroundColor: '#EAEAEA',
+    width: '90%',
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 10,
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  dMyCourseDetailsButton: {
+    backgroundColor: '#23303C',
+    width: '90%',
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 10,
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  myCourseDetailsButtonText: {
+    color: '#1E63BB',
+    fontSize: 17,
+    textAlign: 'center',
+  },
+  dMyCourseDetailsButtonText: {
+    color: '#98BAFC',
+    fontSize: 17,
+    textAlign: 'center',
+  },
+
+  lessonPlanTitle : {
+    color: '#4d4d4d',
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  dLessonPlanTitle : {
+    color: '#bbb',
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+
+  assignmentItemContainer: {
+    backgroundColor: '#EAEAEA',
+    minWidth: '95%',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    height: 'auto',
+  },
+  dAssignmentItemContainer: {
+    backgroundColor: '#23303C',
+    minWidth: '95%',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    height: 'auto',
   },
 });

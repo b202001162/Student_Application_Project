@@ -43,7 +43,6 @@ const Dashboard = ({route}: DashboardProps) => {
   const retrieveData = async () => {
     setLoading(true); // Indicate loading state
     try {
-      
     } catch (error) {
       // Error retrieving data
       console.log('Error retrieving data');
@@ -85,6 +84,7 @@ const Dashboard = ({route}: DashboardProps) => {
                   name="bell-o"
                   size={25}
                   color={theme === 'light' ? '#1d1d1d' : '#eee'}
+                  onPress={() => navigation.navigate('Notifications')}
                 />
               </View>
               <View style={{marginRight: 5}}>
@@ -176,6 +176,7 @@ const Dashboard = ({route}: DashboardProps) => {
                   width: '100%',
                 }}>
                 <TouchableOpacity
+                  onPress={() => navigation.push('MyCourses')}
                   style={
                     theme === 'light'
                       ? mainStyle.academicsButtons
@@ -187,7 +188,7 @@ const Dashboard = ({route}: DashboardProps) => {
                         ? mainStyle.academicsButtonsText
                         : mainStyle.dAcademicsButtonsText
                     }>
-                    Courses
+                    My Courses
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -195,14 +196,15 @@ const Dashboard = ({route}: DashboardProps) => {
                     theme === 'light'
                       ? mainStyle.academicsButtons
                       : mainStyle.dAcademicsButtons
-                  }>
+                  }
+                  onPress={() => navigation.push('MyTerms')}>
                   <Text
                     style={
                       theme === 'light'
                         ? mainStyle.academicsButtonsText
                         : mainStyle.dAcademicsButtonsText
                     }>
-                    Fee Structure
+                    My Terms
                   </Text>
                 </TouchableOpacity>
               </View>
