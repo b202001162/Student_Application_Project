@@ -133,6 +133,7 @@ const LoginPage = ({navigation}: LoginPageProps) => {
                         ? mainStyle.loginInputText
                         : mainStyle.dLoginInputText
                     }
+                    keyboardType="numeric"
                     placeholder="Enter Mobile number"
                     placeholderTextColor={
                       theme === 'light' ? '#003f5c' : '#ccc'

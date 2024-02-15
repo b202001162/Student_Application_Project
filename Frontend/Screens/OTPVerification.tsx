@@ -90,10 +90,17 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
       // setState({jwtToken: jwtToken, firstName: firstName});
       const jwtToken = await JSON.stringify(response1.data.jwtToken);
       const firstName = await JSON.stringify(response1.data.resData.user.firstName);
-      // await AsyncStorage.setItem('jwtToken', response.data.jwtToken);
+      const userId = await JSON.stringify(response1.data.resData.user.appUserId);
+
+      await AsyncStorage.setItem('jwtToken', jwtToken);
+      await AsyncStorage.setItem('firstName', firstName);
+      await AsyncStorage.setItem('userId', userId);
+      const Id = JSON.parse(await AsyncStorage.getItem('userId'));
+      console.log(Id);
+      
       navigation.replace('Dashboard', {token: jwtToken, name: firstName});
-      console.log(jwtToken);
-      console.log(firstName);
+      // console.log(jwtToken);
+      // console.log(firstName);
       
     } catch (error) {
       console.error('OTP veri error:', error);
@@ -208,6 +215,7 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
                       ? mainStyle.loginInputText
                       : mainStyle.dLoginInputText
                   }
+                  keyboardType="numeric"
                   placeholder="Enter Verification Code"
                   placeholderTextColor={theme === 'light' ? '#003f5c' : '#ccc'}
                   onChangeText={text => setOtp(text)}
