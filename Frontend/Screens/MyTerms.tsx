@@ -1,4 +1,3 @@
-
 import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
@@ -169,18 +168,29 @@ const MyTerms = ({route}: MyTermsProps) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <FlatList
-                data={terms}
-                renderItem={({item}) => <TermItem item={item} />}
-                contentContainerStyle={mainStyle.flatListStyle}
-                keyExtractor={item => item.id} // Use unique IDs for performance
-                ItemSeparatorComponent={() => (
-                  <View style={mainStyle.separator} />
-                )}
-                // ListHeaderComponent={() => (
-                //   <Text style={mainStyle.header}>Courses</Text>
-                // )}
-              />
+              {terms.length === 0 ? (
+                <Text
+                  style={
+                    theme === 'light'
+                      ? mainStyle.noDataText
+                      : mainStyle.dNoDataText
+                  }>
+                  No terms available
+                </Text>
+              ) : (
+                <FlatList
+                  data={terms}
+                  renderItem={({item}) => <TermItem item={item} />}
+                  contentContainerStyle={mainStyle.flatListStyle}
+                  keyExtractor={item => item.id} // Use unique IDs for performance
+                  ItemSeparatorComponent={() => (
+                    <View style={mainStyle.separator} />
+                  )}
+                  // ListHeaderComponent={() => (
+                  //   <Text style={mainStyle.header}>Courses</Text>
+                  // )}
+                />
+              )}
             </View>
           )}
         </View>

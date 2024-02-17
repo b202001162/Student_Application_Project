@@ -111,7 +111,17 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
   const LessonItem = ({item}) => {
     return (
       <TouchableOpacity
-      onPress={() => navigation.push('Assignments', {code: code, name : name, credit : credit, facultyId : faculty.id, batchId : faculty.batchId, lessonPlanId : item.id, plan : item.plan})}
+        onPress={() =>
+          navigation.push('Assignments', {
+            code: code,
+            name: name,
+            credit: credit,
+            facultyId: faculty.id,
+            batchId: faculty.batchId,
+            lessonPlanId: item.id,
+            plan: item.plan,
+          })
+        }
         style={
           theme === 'light'
             ? mainStyle.myCourseDetailsItemContainer
@@ -150,6 +160,12 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
               {`${item.endDate}`}
             </Text>
           </View>
+          <Icon
+            style={(mainStyle.headerIcon, {position: 'absolute', right: 10})}
+            name="circle-chevron-right"
+            size={20}
+            color={theme === 'light' ? '#3d3d3d' : '#ccc'}
+          />
         </View>
       </TouchableOpacity>
     );
@@ -200,8 +216,8 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
             <View
               style={
                 theme === 'light'
-                  ? mainStyle.myTermsItemContainer
-                  : mainStyle.dMyTermsItemContainer
+                  ? mainStyle.myCourseDetailsItemContainer
+                  : mainStyle.dMyCourseDetailsItemContainer
               }>
               <Text
                 style={
@@ -214,32 +230,32 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
               <Text
                 style={
                   theme === 'light'
-                    ? mainStyle.myTermsItemDetails
-                    : mainStyle.dMyTermsItemDetails
+                    ? mainStyle.myCourseItemDetails
+                    : mainStyle.dMyCourseItemDetails
                 }>
                 Course name: {`${name}`}
               </Text>
               <Text
                 style={
                   theme === 'light'
-                    ? mainStyle.myTermsItemDetails
-                    : mainStyle.dMyTermsItemDetails
+                    ? mainStyle.myCourseItemDetails
+                    : mainStyle.dMyCourseItemDetails
                 }>
                 Course credit: {`${credit}`}
               </Text>
               <Text
                 style={
                   theme === 'light'
-                    ? mainStyle.myTermsItemDetails
-                    : mainStyle.dMyTermsItemDetails
+                    ? mainStyle.myCourseItemDetails
+                    : mainStyle.dMyCourseItemDetails
                 }>
                 Faculty ID: {faculty.id}
               </Text>
               <Text
                 style={
                   theme === 'light'
-                    ? mainStyle.myTermsItemDetails
-                    : mainStyle.dMyTermsItemDetails
+                    ? mainStyle.myCourseItemDetails
+                    : mainStyle.dMyCourseItemDetails
                 }>
                 Batch ID: {faculty.batchId}
               </Text>
@@ -268,18 +284,29 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
                   }>
                   Lesson Plans
                 </Text>
-                <FlatList
-                  data={lessons}
-                  renderItem={({item}) => <LessonItem item={item} />}
-                  contentContainerStyle={mainStyle.flatListStyle}
-                  keyExtractor={item => item.id} // Use unique IDs for performance
-                  ItemSeparatorComponent={() => (
-                    <View style={mainStyle.separator} />
-                  )}
-                  // ListHeaderComponent={() => (
-                  //   <Text style={mainStyle.header}>Courses</Text>
-                  // )}
-                />
+                {lessons.length === 0 ? (
+                  <Text
+                    style={
+                      theme === 'light'
+                        ? mainStyle.noLessonPlan
+                        : mainStyle.dNoLessonPlan
+                    }>
+                    No lesson plans available
+                  </Text>
+                ) : (
+                  <FlatList
+                    data={lessons}
+                    renderItem={({item}) => <LessonItem item={item} />}
+                    contentContainerStyle={mainStyle.flatListStyle}
+                    keyExtractor={item => item.id} // Use unique IDs for performance
+                    ItemSeparatorComponent={() => (
+                      <View style={mainStyle.separator} />
+                    )}
+                    // ListHeaderComponent={() => (
+                    //   <Text style={mainStyle.header}>Courses</Text>
+                    // )}
+                  />
+                )}
               </View>
             </>
           )}

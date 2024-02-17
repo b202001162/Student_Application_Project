@@ -210,10 +210,12 @@ export const mainStyle = StyleSheet.create({
 
   loginInputText: {
     height: 50,
+    fontSize: 20,
     color: '#3d3d3d',
   },
   dLoginInputText: {
     height: 50,
+    fontSize: 20,
     color: '#bbb',
   },
 
@@ -305,6 +307,23 @@ export const mainStyle = StyleSheet.create({
     marginTop: 10,
   },
 
+  myProfilesItemContainer : {
+    backgroundColor: '#EAEAEA',
+    minWidth: '95%',
+    maxWidth: '95%',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  dMyProfilesItemContainer : {
+    backgroundColor: '#23303C',
+    minWidth: '95%',
+    maxWidth: '95%',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+
   myTermsItemContainer: {
     backgroundColor: '#EAEAEA',
     minWidth: '90%',
@@ -319,7 +338,7 @@ export const mainStyle = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 10,
   },
 
   myCourseDetailsItemContainer: {
@@ -329,6 +348,7 @@ export const mainStyle = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
     marginBottom: 10,
+    color: '#1E63BB'
   },
   dMyCourseDetailsItemContainer: {
     backgroundColor: '#23303C',
@@ -337,6 +357,7 @@ export const mainStyle = StyleSheet.create({
     borderRadius: 10,
     marginTop: 5,
     marginBottom: 5,
+    color: '#98BAFC'
   },
 
   itemTitle: {
@@ -350,13 +371,24 @@ export const mainStyle = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  myTermsItemTitle: {
+  myProfilesItemTitle: {
     color: '#1d1d1d',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  dMyProfilesItemTitle: {
+    color: '#eee',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+
+  myTermsItemTitle: {
+    color: '#1E63BB',
     fontSize: 17,
     fontWeight: 'bold',
   },
   dMyTermsItemTitle: {
-    color: '#eee',
+    color: '#98BAFC',
     fontSize: 17,
     fontWeight: 'bold',
   },
@@ -381,12 +413,44 @@ export const mainStyle = StyleSheet.create({
     fontSize: 15,
   },
 
+  myProfilesItemDetails : {
+    color: '#1d1d1d',
+    fontSize: 15,
+  },
+  dMyProfilesItemDetails : {
+    color: '#eee',
+    fontSize: 15,
+  },
+
+  profileTitleText : {
+    color: '#1d1d1d',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  dProfileTitleText : {
+    color: '#eee',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+
+
   myTermsItemDetails: {
     color: '#1d1d1d',
     fontSize: 17,
   },
   dMyTermsItemDetails: {
     color: '#eee',
+    fontSize: 17,
+  },
+
+  myCourseItemDetails: {
+    color: '#1E63BB',
+    fontSize: 17,
+  },
+  dMyCourseItemDetails: {
+    color: '#98BAFC',
     fontSize: 17,
   },
 

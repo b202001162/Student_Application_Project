@@ -145,18 +145,29 @@ const Notifications = ({route}: NotificationsProps) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <FlatList
-                data={notifications}
-                contentContainerStyle={mainStyle.flatListStyle}
-                renderItem={({item}) => <NotificationItem item={item} />}
-                keyExtractor={item => item.code + item.name} // Use unique IDs for performance
-                ItemSeparatorComponent={() => (
-                  <View style={mainStyle.separator} />
-                )}
-                // ListHeaderComponent={() => (
-                //   <Text style={mainStyle.header}>Notifications</Text>
-                // )}
-              />
+              {notifications.length === 0 ? (
+                <Text
+                  style={
+                    theme === 'light'
+                      ? mainStyle.noDataText
+                      : mainStyle.dNoDataText
+                  }>
+                  No Notifications available
+                </Text>
+              ) : (
+                <FlatList
+                  data={notifications}
+                  contentContainerStyle={mainStyle.flatListStyle}
+                  renderItem={({item}) => <NotificationItem item={item} />}
+                  keyExtractor={item => item.code + item.name} // Use unique IDs for performance
+                  ItemSeparatorComponent={() => (
+                    <View style={mainStyle.separator} />
+                  )}
+                  // ListHeaderComponent={() => (
+                  //   <Text style={mainStyle.header}>Notifications</Text>
+                  // )}
+                />
+              )}
             </View>
           )}
         </View>

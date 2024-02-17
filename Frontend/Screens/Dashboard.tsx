@@ -16,32 +16,31 @@ import {NativeStackNavigationProps} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {mainStyle} from '../StyleSheet/StyleSheet';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 type DashboardProps = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
 const Dashboard = ({route}: DashboardProps) => {
-  const {token, name} = route.params;
+  // const {token, name} = route.params;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [firstName, setFirstName] = useState('');
   const [jwtToken, setJwtToken] = useState('');
-  const _retrieveData = async () => {
-    setLoading(true); // Indicate loading state
-    try {
-      // // setState({jwtToken: token});
-      // console.log(firstName);
-      // console.log(jwtToken);
-    } catch (error) {
-      // Error retrieving data
-      console.log('Error retrieving data');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [userId, setUserId] = useState('');
+
   const retrieveData = async () => {
     setLoading(true); // Indicate loading state
+    const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
+    if(token == null){ 
+      navigation.replace('LoginPage');
+    }
+    const userId = JSON.parse(await AsyncStorage.getItem('userId'));
+    const firstName = JSON.parse(await AsyncStorage.getItem('firstName'));
+    setJwtToken(token);
+    setUserId(userId);
+    setFirstName(firstName);
     try {
     } catch (error) {
       // Error retrieving data
@@ -50,9 +49,17 @@ const Dashboard = ({route}: DashboardProps) => {
       setLoading(false);
     }
   };
+
+  const logoutHandler = async () => {
+    await AsyncStorage.removeItem('jwtToken');
+    await AsyncStorage.removeItem('userId');
+    await AsyncStorage.removeItem('firstName');
+    navigation.replace('LoginPage');
+  };
+
   const [theme, setTheme] = useState(Appearance.getColorScheme());
   useEffect(() => {
-    // _retrieveData();
+    retrieveData();
     const colorTheme = Appearance.getColorScheme();
     console.log(colorTheme);
     if (theme === 'light') {
@@ -60,7 +67,7 @@ const Dashboard = ({route}: DashboardProps) => {
     } else {
       setTheme('dark');
     }
-  });
+  }, []);
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState();
 
@@ -103,7 +110,7 @@ const Dashboard = ({route}: DashboardProps) => {
                   ? mainStyle.greetingText
                   : mainStyle.dGreetingText
               }>
-              Good moring, {!isLoading ? name : <ActivityIndicator />}!
+              Good moring, {!isLoading ? firstName : <ActivityIndicator />}!
             </Text>
           </View>
           <View style={mainStyle.ongoingEvents}>
@@ -176,7 +183,7 @@ const Dashboard = ({route}: DashboardProps) => {
                   width: '100%',
                 }}>
                 <TouchableOpacity
-                  onPress={() => navigation.push('MyCourses')}
+                  // onPress={() => navigation.push('MyCourses')}
                   style={
                     theme === 'light'
                       ? mainStyle.academicsButtons
@@ -231,6 +238,7 @@ const Dashboard = ({route}: DashboardProps) => {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  onPress = {() => logoutHandler()}
                   style={
                     theme === 'light'
                       ? mainStyle.academicsButtons
@@ -242,7 +250,7 @@ const Dashboard = ({route}: DashboardProps) => {
                         ? mainStyle.academicsButtonsText
                         : mainStyle.dAcademicsButtonsText
                     }>
-                    Results
+                    LOGOUT
                   </Text>
                 </TouchableOpacity>
               </View>

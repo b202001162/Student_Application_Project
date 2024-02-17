@@ -243,9 +243,20 @@ const Assignments = ({route}: AssignmentsProps) => {
                       ? mainStyle.lessonPlanTitle
                       : mainStyle.dLessonPlanTitle
                   }>
-                  Lesson Plans
+                  Assignments
                 </Text>
-                <FlatList
+                {
+                  assignments.length === 0 ? (
+                    <Text
+                      style={
+                        theme === 'light'
+                          ? mainStyle.noDataText
+                          : mainStyle.dNoDataText
+                      }>
+                      No Assignments available
+                    </Text>
+                  ) : (
+                    <FlatList
                   data={assignments}
                   renderItem={({item}) => <AssignmentItem item={item} />}
                   contentContainerStyle={mainStyle.flatListStyle}
@@ -257,6 +268,8 @@ const Assignments = ({route}: AssignmentsProps) => {
                   //   <Text style={mainStyle.header}>Courses</Text>
                   // )}
                 />
+                  )
+                }
               </View>
             </>
           )}

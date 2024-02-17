@@ -23,33 +23,22 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 type LoginPageProps = NativeStackScreenProps<RootStackParamList, 'LoginPage'>;
 
 const LoginPage = ({navigation}: LoginPageProps) => {
-  const requestStoragePermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        {
-          title: 'Storage Permission',
-          message: 'This app needs access to your storage to...',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Storage permission granted');
-        // Proceed with writing or reading data
-      } else {
-        console.log('Storage permission denied');
-        // Handle permission denial (e.g., display an error message or retry)
-      }
-    } catch (err) {
-      console.warn('Error requesting storage permission:', err);
-    }
-  };
   const [theme, setTheme] = useState(Appearance.getColorScheme());
   const [number, setNumber] = useState();
+  const handleNumberChange = (text) => {
+    // Regex to ensure only numbers are entered
+    const cleanNumber = text.replace(/[^0-9]/g, '');
+
+    // Limit number length to 10
+    if (cleanNumber.length > 10) {
+      alert('Number cannot exceed 10 digits');
+      return; // Prevent further changes if max length is exceeded
+    }
+
+    setNumber(cleanNumber);
+  };
   useEffect(() => {
-    requestStoragePermission();
+    // requestStoragePermission();
     const colorTheme = Appearance.getColorScheme();
     console.log(colorTheme);
     if (theme === 'light') {
@@ -138,7 +127,7 @@ const LoginPage = ({navigation}: LoginPageProps) => {
                     placeholderTextColor={
                       theme === 'light' ? '#003f5c' : '#ccc'
                     }
-                    onChangeText={text => setNumber(text)}
+                    onChangeText={handleNumberChange}
                   />
                 </View>
                 <TouchableOpacity

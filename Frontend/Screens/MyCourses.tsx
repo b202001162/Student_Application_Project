@@ -58,14 +58,10 @@ const MyCourses = ({route}: MyCoursesProps) => {
         alert('Error fetching data');
         navigation.goBack();
       }
-
-      //   console.log(response.data);
-
-      if (response.data.sCode !== 1) {
-        alert('Error fetching data');
-        navigation.goBack();
+      await setCourses(response.data.resData.courses);
+      if(courses == null){
+        alert('No courses found');
       }
-      setCourses(response.data.resData.courses);
     } catch (error) {
       // Error retrieving data
       console.log('Error notification retrieving data' + error);
@@ -182,7 +178,9 @@ const MyCourses = ({route}: MyCoursesProps) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <FlatList
+             {
+              courses.length > 0 ? (
+                <FlatList
                 data={courses}
                 renderItem={({item}) => <CourseItem item={item} />}
                 contentContainerStyle={mainStyle.flatListStyle}
@@ -194,6 +192,10 @@ const MyCourses = ({route}: MyCoursesProps) => {
                 //   <Text style={mainStyle.header}>Courses</Text>
                 // )}
               />
+              ) : (
+                <Text>No courses found</Text>
+              )
+             }
             </View>
           )}
         </View>

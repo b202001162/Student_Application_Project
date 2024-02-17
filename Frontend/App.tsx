@@ -49,10 +49,11 @@ const App = () => {
     <>
       <StatusBar
         animated={true}
-        backgroundColor={theme === 'light' ? '#F3f3f3' : '#0c1319'}
+        backgroundColor={theme === 'light' ? '#DDDDDD' : '#0c1319'}
+        barStyle={theme === 'light' ? 'dark-content' : 'light-content'}
       />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LoginPage">
+        <Stack.Navigator initialRouteName="Dashboard">
           <Stack.Screen
             name="Dashboard"
             component={Dashboard}
