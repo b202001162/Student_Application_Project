@@ -44,6 +44,7 @@ const Dashboard = ({route}: DashboardProps) => {
     try {
     } catch (error) {
       // Error retrieving data
+      navigation.replace('LoginPage');
       console.log('Error retrieving data');
     } finally {
       setLoading(false);
