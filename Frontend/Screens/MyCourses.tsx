@@ -20,6 +20,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/FontAwesome6';
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type MyCoursesProps = NativeStackScreenProps<RootStackParamList, 'MyCourses'>;
 
@@ -59,7 +60,7 @@ const MyCourses = ({route}: MyCoursesProps) => {
         navigation.goBack();
       }
       await setCourses(response.data.resData.courses);
-      if(courses == null){
+      if (courses == null) {
         alert('No courses found');
       }
     } catch (error) {
@@ -90,7 +91,15 @@ const MyCourses = ({route}: MyCoursesProps) => {
         }>
         <TouchableOpacity
           style={{flexDirection: 'row', alignItems: 'center'}}
-          onPress={() => navigation.push('MyCourseDetails', {code: item.code, name : item.name, credit : item.value, courseId : item.id, levelId : levelId})}>
+          onPress={() =>
+            navigation.push('MyCourseDetails', {
+              code: item.code,
+              name: item.name,
+              credit: item.value,
+              courseId: item.id,
+              levelId: levelId,
+            })
+          }>
           <View style={{maxWidth: '85%'}}>
             <Text
               style={
@@ -162,6 +171,11 @@ const MyCourses = ({route}: MyCoursesProps) => {
                     ? mainStyle.headerText
                     : mainStyle.dHeaderText
                 }>
+                <Icon3
+                  name="bookshelf"
+                  size={23}
+                  color={theme === 'light' ? '#3d3d3d' : '#bbb'}
+                />
                 My Courses
               </Text>
             </TouchableOpacity>
@@ -178,24 +192,22 @@ const MyCourses = ({route}: MyCoursesProps) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-             {
-              courses.length > 0 ? (
+              {courses.length > 0 ? (
                 <FlatList
-                data={courses}
-                renderItem={({item}) => <CourseItem item={item} />}
-                contentContainerStyle={mainStyle.flatListStyle}
-                keyExtractor={item => item.id} // Use unique IDs for performance
-                ItemSeparatorComponent={() => (
-                  <View style={mainStyle.separator} />
-                )}
-                // ListHeaderComponent={() => (
-                //   <Text style={mainStyle.header}>Courses</Text>
-                // )}
-              />
+                  data={courses}
+                  renderItem={({item}) => <CourseItem item={item} />}
+                  contentContainerStyle={mainStyle.flatListStyle}
+                  keyExtractor={item => item.id} // Use unique IDs for performance
+                  ItemSeparatorComponent={() => (
+                    <View style={mainStyle.separator} />
+                  )}
+                  // ListHeaderComponent={() => (
+                  //   <Text style={mainStyle.header}>Courses</Text>
+                  // )}
+                />
               ) : (
                 <Text>No courses found</Text>
-              )
-             }
+              )}
             </View>
           )}
         </View>

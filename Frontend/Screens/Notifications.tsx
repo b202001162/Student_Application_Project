@@ -99,7 +99,7 @@ const Notifications = ({route}: NotificationsProps) => {
 
   const [isLoading, setLoading] = useState(false);
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{fontFamily: "Poppins"}}>
       <View
         style={theme === 'light' ? mainStyle.container : mainStyle.dContainer}>
         <View
@@ -129,6 +129,12 @@ const Notifications = ({route}: NotificationsProps) => {
                     ? mainStyle.headerText
                     : mainStyle.dHeaderText
                 }>
+                  <Icon
+                  name="bell"
+                  size={25}
+                  color={theme === 'light' ? '#1d1d1d' : '#eee'}
+                  onPress={() => navigation.navigate('Notifications')}
+                /> {" "}
                 Notifications
               </Text>
             </TouchableOpacity>

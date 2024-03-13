@@ -12,6 +12,17 @@ import MyCourses from './Screens/MyCourses';
 import MyCourseDetails from './Screens/MyCourseDetails';
 import LessonPlan from './Screens/LessonPlan';
 import Assignments from './Screens/Assignments';
+import Results from './Screens/Results';
+import PaymentHistory from './Screens/PaymentHistory';
+import ResultTermWise from './Screens/ResultTermWise';
+import Payment from './Screens/Payment';
+import CourseFeedback from './Screens/CourseFeedback';
+import AssignmentDetails from './Screens/AssignmentDetails';
+import LessonPlansDetails from './Screens/LessonPlansDetails';
+import NotificationSettings from './Screens/NotificationSettings';
+import MyTotalDues from './Screens/MyTotalDues';
+import MyProfile from './Screens/MyProfile';
+import PaymentHistoryNew from './Screens/PaymentHistoryNew';
 
 // Stack Navigator
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -29,6 +40,17 @@ export type RootStackParamList = {
   MyCourseDetails: undefined;
   LessonPlan: undefined;
   Assignments: undefined;
+  Results: undefined;
+  PaymentHistory: undefined;
+  ResultTermWise: undefined;
+  Payment: undefined;
+  CourseFeedback: undefined;
+  AssignmentDetails: undefined;
+  LessonPlansDetails: undefined;
+  NotificationSettings: undefined;
+  MyTotalDues: undefined;
+  MyProfile: undefined;
+  PaymentHistoryNew: undefined;
 };
 
 // Create stack navigator
@@ -52,8 +74,8 @@ const App = () => {
         backgroundColor={theme === 'light' ? '#DDDDDD' : '#0c1319'}
         barStyle={theme === 'light' ? 'dark-content' : 'light-content'}
       />
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Dashboard">
+      <NavigationContainer style={{fontFamily: 'arial'}}>
+        <Stack.Navigator initialRouteName="LoginPage">
           <Stack.Screen
             name="Dashboard"
             component={Dashboard}
@@ -102,6 +124,61 @@ const App = () => {
           <Stack.Screen
             name="Assignments"
             component={Assignments}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Results"
+            component={Results}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="PaymentHistory"
+            component={PaymentHistory}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ResultTermWise"
+            component={ResultTermWise}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Payment"
+            component={Payment}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CourseFeedback"
+            component={CourseFeedback}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AssignmentDetails"
+            component={AssignmentDetails}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="LessonPlansDetails"
+            component={LessonPlansDetails}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="NotificationSettings"
+            component={NotificationSettings}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MyTotalDues"
+            component={MyTotalDues}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MyProfile"
+            component={MyProfile}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="PaymentHistoryNew"
+            component={PaymentHistoryNew}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

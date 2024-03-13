@@ -138,8 +138,8 @@ export const mainStyle = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   dAcademicsButtons: {
     backgroundColor: '#23303C',
@@ -149,8 +149,8 @@ export const mainStyle = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
 
   academicsButtonsText: {
@@ -539,4 +539,574 @@ export const mainStyle = StyleSheet.create({
     marginBottom: 10,
     height: 'auto',
   },
+
+  resultContainer : {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: '#EAEAEA',
+    minWidth: '95%',
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  dResultContainer : {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: '#23303C',
+    minWidth: '95%',
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 7,
+    marginBottom: 7,
+  },
+
+  resultPageText : {
+    color: '#5d5d5d',
+    fontSize: 17,
+  },
+  dResultPageText : {
+    color: '#bbb',
+    fontSize: 17,
+  },
+
+  paymentHistoryStudentDetailsText : {
+    color: '#7d7d7d',
+    fontSize: 15,
+  },
+  dPaymentHistoryStudentDetailsText : {
+    color: '#aaa',
+    fontSize: 15,
+  },
+
+  paymentHistoryTable : {
+    width: '100%',
+    marginTop: 40,
+  },
+  dPaymentHistoryTable : {
+    width: '100%',
+    marginTop: 40,
+  },
+
+  paymentHistoryTHead : {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#EAEAEA',
+    padding: 10,
+    // borderRadius: 10,
+  },
+  dPaymentHistoryTHead : {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#23303C',
+    padding: 10,
+    // borderRadius: 10,
+  },
+
+  paymentHistoryTHeadText : {
+    color: '#1d1d1d',
+    fontSize: 15,
+  },
+  dPaymentHistoryTHeadText : {
+    color: '#eee',
+    fontSize: 15,
+  },
+
+  paymentHistoryTData : {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    borderRadius: 10,
+  },
+  dPaymentHistoryTData : {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    borderRadius: 10,
+  },
+
+  paymentHistoryTBody : {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#ECECEC',
+    padding: 10,
+    // borderRadius: 10,
+  },
+  dPaymentHistoryTBody : {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#22364f',
+    padding: 10,
+    // borderRadius: 10,
+  },
+
+  paymentHistoryTBodyText : {
+    color: '#1d1d1d',
+    fontSize: 15,
+  },
+  dPaymentHistoryTBodyText : {
+    color: '#eee',
+    fontSize: 15,
+  },
+
+  PaymentButtonsCont : {
+    width: '100%',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginTop: 20,
+    flexDirection: 'row',
+  },
+
+  PaymentButton : {
+    backgroundColor: '#EAEAEA',
+    width: '40%',
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 10,
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  dPaymentButton : {
+    backgroundColor: '#23303C',
+    width: '40%',
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 10,
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  courseFeedbackTitle : {
+    color: '#1E63BB',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  dCourseFeedbackTitle : {
+    color: '#98BAFC',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+
+
+  myProfileDetailsText : {
+    color: '#3d3d3d',
+    fontSize: 15,
+    fontWeight: 'semibold',
+    marginLeft: 10,
+  },
+  dMyProfileDetailsText : {
+    color: '#cccccc',
+    fontSize: 15,
+    fontWeight: 'semibold',
+    marginLeft: 10,
+  },
+
+  myProfileDivider : {
+    width: '100%',
+    height: 1,
+    backgroundColor: '#1d1d1d',
+    marginVertical: 5,
+  },
+  dMyProfileDivider : {
+    width: '100%',
+    height: 1,
+    backgroundColor: '#777',
+    marginVertical: 5,
+  },
+
+  courseFBInput : {
+    width: '100%',
+    borderRadius: 8,
+    height: 250,
+    marginBottom: 10,
+    justifyContent: 'flex-start',
+    padding: 15,
+    borderWidth: 0,
+    borderWidth: 1,
+    marginTop: 20,
+    borderColor: '#1E63BB',
+  },
+  dCourseFBInput : {
+    width: '100%',
+    borderRadius: 8,
+    height: 250,
+    marginBottom: 10,
+    justifyContent: 'flex-start',
+    padding: 15,
+    borderWidth: 0,
+    borderWidth: 1,
+    marginTop: 20,
+    borderColor: '#98BAFC',
+  },
+
+  courseFBBtnCont: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  dCourseFBBtnCont: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+
+
+  courseFBBtn: {
+    backgroundColor: '#1E63BB',
+    borderRadius: 7,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '40%',
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginTop: 20,
+  },
+  dCourseFBBtn: {
+    backgroundColor: '#98BAFC',
+    borderRadius: 7,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '40%',
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginTop: 20,
+  },
+
+  courseFBBtnText: {
+    color: '#EAEAEA',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  dCourseFBBtnText: {
+    color: '#23303C',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+
+  courseRegistrationBtnCont: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+
+  courseRegistrationBtn: {
+    backgroundColor: '#1E63BB',
+    borderRadius: 50,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '40%',
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginTop: 20,
+  },
+  dCourseRegistrationBtn: {
+    backgroundColor: '#98BAFC',
+    borderRadius: 50,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '40%',
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginTop: 20,
+  },
+
+  courseRegistrationBtnText: {
+    color: '#EAEAEA',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  dCourseRegistrationBtnText: {
+    color: '#23303C',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+
+  AssignmentDetailsContainer : {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+
+  AssingmentTitle: {
+    color: '#1E63BB',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 20,
+  },
+  dAssingmentTitle: {
+    color: '#98BAFC',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 20,
+  },
+
+  AssingmentSubTitle: {
+    color: '#1d1d1d',
+    fontSize: 15,
+    marginTop: 5,
+  },
+  dAssingmentSubTitle: {
+    color: '#eee',
+    fontSize: 15,
+    marginTop: 5,
+  },
+
+  submissionDetails: {
+    color: '#1d1d1d',
+    fontSize: 15,
+    marginTop: 10,
+  },
+  dSubmissionDetails: {
+    color: '#eee',
+    fontSize: 15,
+    marginTop: 10,
+  },
+
+  AssignmentFileCont: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+
+  AssignmentFile : {
+    backgroundColor: '#EAEAEA',
+    borderRadius: 10,
+    width: '80%',
+    height: 80,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+  },
+  dAssignmentFile : {
+    backgroundColor: '#23303C',
+    borderRadius: 10,
+    width: '80%',
+    height: 80,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+  },
+
+  AssignmentFileText: {
+    color: '#1E63BB',
+    fontSize: 17,
+    marginLeft: 20,
+  },
+  dAssignmentFileText: {
+    color: '#98BAFC',
+    fontSize: 17,
+    marginLeft: 20,
+  },
+
+  uploadUrAssignmentCont: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: '#1E63BB',
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    paddingLeft: 15,
+
+  },
+  dUploadUrAssignmentCont: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: '#98BAFC',
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    paddingLeft: 15,
+  },
+
+  uploadBtnForAssignments: {
+    backgroundColor: '#1E63BB',
+    borderRadius: 7,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '50%',
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginTop: 20,
+  },
+  dUploadBtnForAssignments: {
+    backgroundColor: '#98BAFC',
+    borderRadius: 7,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '50%',
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginTop: 20,
+  },
+
+  uploadBtnForAssignmentsText: {
+    color: '#EAEAEA',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  dUploadBtnForAssignmentsText: {
+    color: '#23303C',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+
+  notificationSettingCont: {
+    width: '90%',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: 20,
+    backgroundColor: '#EAEAEA',
+    paddingTop: 10,
+    paddingLeft: 15,
+    borderRadius: 10,
+  },
+  dNotificationSettingCont: {
+    width: '90%',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: 20,
+    backgroundColor: '#23303C',
+    paddingTop: 10,
+    paddingLeft: 15,
+    borderRadius: 10,
+  },
+
+  myProfileDetailsCont : {
+    width: '100%',
+    // justifyContent: 'center',
+    // alignItems: 'flex-start',
+    height: '87%',
+    marginTop: 10,
+    // marginBottom: 50,
+    // paddingBottom: 50,
+  },
+
+  myProfileDetailsTitleText: {
+    color: '#1E63BB',
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 0,
+    marginTop: 10,
+  },
+  dMyProfileDetailsTitleText: {
+    color: '#98BAFC',
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 0,
+    marginTop: 10,
+  },
+
+  myProfileDetailsContContainer : {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: 20,
+    backgroundColor: '#EAEAEA',
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    paddingVertical: 10,
+  },
+  dMyProfileDetailsContContainer : {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: 20,
+    backgroundColor: '#23303C',
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    paddingVertical: 10,
+  },
+
+  tableForPaymentHistory : {
+    width: '100%',
+    marginTop: 20,
+  },
+
+  tableHeadCont : {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#EAEAEA',
+    padding: 10,
+    // borderRadius: 10,
+  },
+  dTableHeadCont : {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#23303C',
+    padding: 10,
+    // borderRadius: 10,
+  },
+
+  th : {
+    color: '#1E63BB',
+    fontSize: 15,
+    width: '30%',
+  },
+  dTh : {
+    color: '#98BAFC',
+    fontSize: 15,
+    width: '30%',
+  },
+
+  tableBody : {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#ECECEC',
+    padding: 10,
+    // borderRadius: 10,
+  },
+  dTableBody : {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#22364f',
+    padding: 10,
+    // borderRadius: 10,
+  },
+
+  tb : {
+    color: '#1E63BB',
+    fontSize: 15,
+    width: '30%',
+  },
+  dTb : {
+    color: '#98BAFC',
+    fontSize: 15,
+    width: '30%',
+  },
+
+
+
+
+
 });
+

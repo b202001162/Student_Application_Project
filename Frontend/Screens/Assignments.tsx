@@ -20,6 +20,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/FontAwesome6';
+import Icon2 from 'react-native-vector-icons/MaterialIcons';
 
 type AssignmentsProps = NativeStackScreenProps<
   RootStackParamList,
@@ -167,6 +168,9 @@ const Assignments = ({route}: AssignmentsProps) => {
                     ? mainStyle.headerText
                     : mainStyle.dHeaderText
                 }>
+                  <Icon2 name="assignment" size={23} color={theme==='light' ? "#1d1d1d" : "#eee"} >
+
+                  </Icon2>
                 Assignments
               </Text>
             </TouchableOpacity>

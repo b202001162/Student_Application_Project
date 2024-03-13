@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {mainStyle} from '../StyleSheet/StyleSheet';
 import axios from 'axios';
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/FontAwesome6';
@@ -152,6 +153,7 @@ const MyTerms = ({route}: MyTermsProps) => {
                     ? mainStyle.headerText
                     : mainStyle.dHeaderText
                 }>
+                   <Icon3 name="file-document-outline" size={23} color={theme==='light' ? "#3d3d3d" : "#bbb"} />
                 My Terms
               </Text>
             </TouchableOpacity>

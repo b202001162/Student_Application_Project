@@ -19,6 +19,9 @@ import {mainStyle} from '../StyleSheet/StyleSheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/MaterialIcons';
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon4 from 'react-native-vector-icons/FontAwesome6';
 
 type DashboardProps = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
@@ -88,8 +91,8 @@ const Dashboard = ({route}: DashboardProps) => {
                 alignItems: 'center',
               }}>
               <View style={{marginRight: 15}}>
-                <Icon
-                  name="bell-o"
+                <Icon4
+                  name="bell"
                   size={25}
                   color={theme === 'light' ? '#1d1d1d' : '#eee'}
                   onPress={() => navigation.navigate('Notifications')}
@@ -97,6 +100,7 @@ const Dashboard = ({route}: DashboardProps) => {
               </View>
               <View style={{marginRight: 5}}>
                 <Icon
+                  onPress={() => navigation.push('MyProfile')}
                   name="user-circle-o"
                   size={25}
                   color={theme === 'light' ? '#1d1d1d' : '#eee'}
@@ -121,10 +125,13 @@ const Dashboard = ({route}: DashboardProps) => {
                   ? mainStyle.ongoingEventsText
                   : mainStyle.dOngoingEventsText
               }>
+                <Icon name="bars" size={23} color={theme === 'light' ? '#1d1d1d' : '#eee'} style={{marginRight: 10}}
+                /> {" "}
               Ongoing events
             </Text>
             <View style={mainStyle.ongoingEventsButtonsContainer}>
               <TouchableOpacity
+                onPress={() => navigation.push('CourseRegistration')}
                 style={
                   theme === 'light'
                     ? mainStyle.ongoingEventsButtons
@@ -136,6 +143,7 @@ const Dashboard = ({route}: DashboardProps) => {
                       ? mainStyle.ongoingEventsButtonsText
                       : mainStyle.dOngoingEventsButtonsText
                   }>
+                    <Icon name="edit" size={25} color={theme==='light' ? "#1E63BB" : "#98BAFC"} /> {" "}
                   Course Registration
                 </Text>
                 <Icon
@@ -145,6 +153,7 @@ const Dashboard = ({route}: DashboardProps) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
+                onPress={() => navigation.push('Payment')}
                 style={
                   theme === 'light'
                     ? mainStyle.ongoingEventsButtons
@@ -156,6 +165,7 @@ const Dashboard = ({route}: DashboardProps) => {
                       ? mainStyle.ongoingEventsButtonsText
                       : mainStyle.dOngoingEventsButtonsText
                   }>
+                    <Icon2 name="payment" size={25} color={theme==='light' ? "#1E63BB" : "#98BAFC"} /> {" "}
                   Fee Payment
                 </Text>
                 <Icon
@@ -173,6 +183,7 @@ const Dashboard = ({route}: DashboardProps) => {
                   ? mainStyle.ongoingEventsText
                   : mainStyle.dOngoingEventsText
               }>
+                <Icon name="graduation-cap" size={23} color={theme==='light' ? "#3d3d3d" : "#ccc"} />{" "}
               Academics
             </Text>
             <View style={mainStyle.academicsButtonsContainer}>
@@ -196,6 +207,7 @@ const Dashboard = ({route}: DashboardProps) => {
                         ? mainStyle.academicsButtonsText
                         : mainStyle.dAcademicsButtonsText
                     }>
+                      <Icon3 name="bookshelf" size={23} color={theme==='light' ? "#3d3d3d" : "#bbb"} />{" "}
                     My Courses
                   </Text>
                 </TouchableOpacity>
@@ -212,6 +224,7 @@ const Dashboard = ({route}: DashboardProps) => {
                         ? mainStyle.academicsButtonsText
                         : mainStyle.dAcademicsButtonsText
                     }>
+                      <Icon3 name="file-document-outline" size={23} color={theme==='light' ? "#3d3d3d" : "#bbb"} />{" "}
                     My Terms
                   </Text>
                 </TouchableOpacity>
@@ -224,6 +237,7 @@ const Dashboard = ({route}: DashboardProps) => {
                   width: '100%',
                 }}>
                 <TouchableOpacity
+                  onPress={() => navigation.push('PaymentHistoryNew')}
                   style={
                     theme === 'light'
                       ? mainStyle.academicsButtons
@@ -235,11 +249,13 @@ const Dashboard = ({route}: DashboardProps) => {
                         ? mainStyle.academicsButtonsText
                         : mainStyle.dAcademicsButtonsText
                     }>
+                      <Icon3 name="account-cash" size={23} color={theme==='light' ? "#3d3d3d" : "#bbb"} />{" "}
                     Payment History
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress = {() => logoutHandler()}
+                  // onPress = {() => logoutHandler()}
+                  onPress={() => navigation.push('Results')}
                   style={
                     theme === 'light'
                       ? mainStyle.academicsButtons
@@ -251,7 +267,8 @@ const Dashboard = ({route}: DashboardProps) => {
                         ? mainStyle.academicsButtonsText
                         : mainStyle.dAcademicsButtonsText
                     }>
-                    LOGOUT
+                      <Icon3 name="file-certificate-outline" size={23} color={theme==='light' ? "#3d3d3d" : "#bbb"} />{" "}
+                      Results
                   </Text>
                 </TouchableOpacity>
               </View>
