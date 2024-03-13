@@ -23,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
+import Icon4 from 'react-native-vector-icons/FontAwesome5';
 
 type MyProfileProps = NativeStackScreenProps<RootStackParamList, 'MyProfile'>;
 
@@ -58,6 +59,12 @@ const MyProfile = ({route}: MyProfileProps) => {
       setLoading(false);
     }
   };
+  const logoutHandler = async () => {
+    await AsyncStorage.removeItem('jwtToken');
+    await AsyncStorage.removeItem('userId');
+    await AsyncStorage.removeItem('firstName');
+    navigation.replace('LoginPage');
+  };
   useEffect(() => {
     retrieveData();
     const colorTheme = Appearance.getColorScheme();
@@ -83,7 +90,7 @@ const MyProfile = ({route}: MyProfileProps) => {
               theme === 'light' ? mainStyle.headerMain : mainStyle.dHeaderMain
             }>
             <TouchableOpacity
-                onPress={() => navigation.goBack()}
+              onPress={() => navigation.goBack()}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -101,11 +108,11 @@ const MyProfile = ({route}: MyProfileProps) => {
                     ? mainStyle.headerText
                     : mainStyle.dHeaderText
                 }>
-                  <Icon2
+                <Icon2
                   name="user-circle-o"
                   size={25}
                   color={theme === 'light' ? '#1d1d1d' : '#eee'}
-                /> {" "}
+                />{' '}
                 Profile
               </Text>
             </TouchableOpacity>
@@ -432,6 +439,35 @@ const MyProfile = ({route}: MyProfileProps) => {
                       Fee Pattern name: {data.profileData.feePatterName}
                     </Text>
                   </View>
+                  <TouchableOpacity
+                    onPress={() => logoutHandler()}
+                    style={
+                      theme === 'light'
+                        ? mainStyle.logoutHandlerButton
+                        : mainStyle.dLogoutHandlerButton
+                    }>
+                    <Text
+                      style={
+                        theme === 'light'
+                          ? mainStyle.myProfileLogoutText
+                          : mainStyle.dMyProfileLogoutText
+                      }>
+                      <Icon4
+                        style={mainStyle.myProfileLogoutIcon}
+                        name="sign-out-alt"
+                        size={22}
+                        color={theme === 'light' ? '#DB1313' : '#DD696B'}
+                      />
+                    </Text>
+                    <Text
+                      style={
+                        theme === 'light'
+                          ? mainStyle.myProfileLogoutText
+                          : mainStyle.dMyProfileLogoutText
+                      }>{" "}
+                      LOGOUT
+                    </Text>
+                  </TouchableOpacity>
                 </>
               </ScrollView>
             )}

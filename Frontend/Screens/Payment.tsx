@@ -302,7 +302,7 @@ const Payment = ({route}: PaymentProps) => {
                     ? mainStyle.PaymentButtonText
                     : mainStyle.dPaymentButtonText
                 }>
-                Pay Now
+                Cancel
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -314,7 +314,7 @@ const Payment = ({route}: PaymentProps) => {
                     ? mainStyle.PaymentButtonText
                     : mainStyle.dPaymentButtonText
                 }>
-                Pay Later
+                Pay now
               </Text>
             </TouchableOpacity>
           </View>

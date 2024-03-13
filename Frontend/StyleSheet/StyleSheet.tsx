@@ -72,6 +72,7 @@ export const mainStyle = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    // height: 100,
   },
 
   ongoingEventsButtons: {
@@ -132,35 +133,45 @@ export const mainStyle = StyleSheet.create({
 
   academicsButtons: {
     backgroundColor: '#EAEAEA',
-    width: '47%',
+    // width: '47%',
     padding: 12,
     paddingHorizontal: 15,
     borderRadius: 10,
     marginTop: 10,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   dAcademicsButtons: {
     backgroundColor: '#23303C',
-    width: '47%',
+    width: 150,
+    height: 80,
     padding: 12,
     paddingHorizontal: 15,
     borderRadius: 10,
     marginTop: 10,
+    // flex: 1,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   academicsButtonsText: {
     color: '#1d1d1d',
-    fontSize: 17,
+    fontSize: 18,
     textAlign: 'center',
   },
   dAcademicsButtonsText: {
     color: '#eee',
-    fontSize: 17,
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  academicsButtonsIcon: {
+    color: '#1d1d1d',
+    textAlign: 'center',
+  },
+  dAcademicsButtonsIcon: {
+    color: '#eee',
     textAlign: 'center',
   },
 
@@ -673,7 +684,7 @@ export const mainStyle = StyleSheet.create({
     marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   dPaymentButton : {
     backgroundColor: '#23303C',
@@ -685,7 +696,7 @@ export const mainStyle = StyleSheet.create({
     marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
 
   courseFeedbackTitle : {
@@ -1001,7 +1012,7 @@ export const mainStyle = StyleSheet.create({
     width: '100%',
     // justifyContent: 'center',
     // alignItems: 'flex-start',
-    height: '87%',
+    height: '90%',
     marginTop: 10,
     // marginBottom: 50,
     // paddingBottom: 50,
@@ -1104,6 +1115,47 @@ export const mainStyle = StyleSheet.create({
     width: '30%',
   },
 
+  logoutHandlerButton : {
+    backgroundColor: '#EAEAEA',
+    borderRadius: 7,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: '100%',
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginTop: 20,
+    paddingLeft: 20,
+    flexDirection: 'row',
+  },
+  dLogoutHandlerButton : {
+    backgroundColor: '#23303C',
+    borderRadius: 7,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: '100%',
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginTop: 20,
+    paddingLeft: 20,
+    flexDirection: 'row',
+  },
+
+  myProfileLogoutText: {
+    color: '#DB1313',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  dMyProfileLogoutText: {
+    color: '#DD696B',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
+  myProfileLogoutIcon : {
+    transform: [{rotateY: '180deg'}],
+  }
 
 
 

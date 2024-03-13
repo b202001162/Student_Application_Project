@@ -151,12 +151,6 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
               Status: {`${item.staus}`}
             </Text>
           </View>
-          <Icon
-            style={(mainStyle.headerIcon, {position: 'absolute', right: 10})}
-            name="circle-chevron-right"
-            size={20}
-            color={theme === 'light' ? '#3d3d3d' : '#ccc'}
-          />
         </TouchableOpacity>
       </View>
     );
@@ -223,12 +217,6 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
               Date of pay: {`${item.dateOfPay}`}
             </Text>
           </View>
-          <Icon
-            style={(mainStyle.headerIcon, {position: 'absolute', right: 10})}
-            name="circle-chevron-right"
-            size={20}
-            color={theme === 'light' ? '#3d3d3d' : '#ccc'}
-          />
         </TouchableOpacity>
       </View>
     );
