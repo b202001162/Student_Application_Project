@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {DataTable} from 'react-native-paper';
 import {
   SafeAreaView,
   StyleSheet,
@@ -17,35 +18,61 @@ import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {mainStyle} from '../StyleSheet/StyleSheet';
 import axios from 'axios';
-import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/FontAwesome6';
 
-type MyTermsProps = NativeStackScreenProps<RootStackParamList, 'MyTerms'>;
+type MyTimeTableTermWiseProps = NativeStackScreenProps<
+  RootStackParamList,
+  'MyTimeTableTermWise'
+>;
 
-const MyTerms = ({route}: MyTermsProps) => {
-  //   const [tokenWithoutQuotes, setTokenWithoutQuotes] = useState();
-  useEffect(() => {
-    // setTokenWithoutQuotes(token.substring(1, token.length - 1));
-    retrieveData();
-  }, []);
+const MyTimeTableTermWise = ({route}: MyTimeTableTermWiseProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {code, name, levelId} = route.params;
+  console.log(code, name);
+
   const [theme, setTheme] = useState(Appearance.getColorScheme());
+  const [courses, setCourses] = useState([]);
   const [terms, setTerms] = useState([]);
+  const [jwtToken, setJwtToken] = useState('');
+  const [userId, setUserId] = useState('');
+  const [admissionId, setAdmissionId] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [gradeCardData, setGradeCardData] = useState([]);
+  const [tgpaData, setTgpaData] = useState({});
+  const [isLoading, setLoading] = useState(false);
+
   const retrieveData = async () => {
+    setLoading(true);
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
     console.log('Stored Token', token);
     const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
-    console.log('Stored Admission Id', admissionId);
-    
+    const firstName = JSON.parse(await AsyncStorage.getItem('firstName'));
 
-    setLoading(true); // Indicate loading state
+    await setJwtToken(token);
+    await setUserId(userId);
+    await setAdmissionId(admissionId);
+    await setFirstName(firstName);
+
     try {
+      //   const response = await axios.get(
+      //     `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyGradeMarks/${admissionId}/${levelId}`,
+      //     {
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //         Authorization: `Bearer ${token}`,
+      //       },
+      //     },
+      //   );
+      //   console.log(response.data.resData);
+      //   await setGradeCardData(response.data.resData.gradeCard);
+      //   await setTgpaData(response.data.resData.tgpaSgpa);
+
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyTerms/${admissionId}`,
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourses/${admissionId}/${levelId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -58,23 +85,18 @@ const MyTerms = ({route}: MyTermsProps) => {
         alert('Error fetching data');
         navigation.goBack();
       }
-
-      //   console.log(response.data);
-
-      if (response.data.sCode !== 1) {
-        alert('Error fetching data');
-        navigation.goBack();
+      await setCourses(response.data.resData.courses);
+      if (courses == null) {
+        alert('No courses found');
       }
-      setTerms(response.data.resData.levels);
     } catch (error) {
-      // Error retrieving data
-      console.log('Error notification retrieving data' + error);
+      console.log(error);
     } finally {
       setLoading(false);
     }
   };
   useEffect(() => {
-    // _retrieveData();
+    retrieveData();
     const colorTheme = Appearance.getColorScheme();
     console.log(colorTheme);
     if (theme === 'light') {
@@ -84,7 +106,35 @@ const MyTerms = ({route}: MyTermsProps) => {
     }
   }, []);
 
-  const TermItem = ({item}) => {
+  //   const item = ({item}) => (
+  //     <View style={{flexDirection: 'row'}}>
+  //       <View style={{width: 50, backgroundColor: 'lightyellow'}}>
+  //         <Text style={{fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>
+  //           {item.id}
+  //         </Text>
+  //       </View>
+  //       <View style={{width: 400, backgroundColor: 'lightpink'}}>
+  //         <Text style={{fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>
+  //           {item.name}
+  //         </Text>
+  //       </View>
+  //       <View style={{width: 400, backgroundColor: 'lavender'}}>
+  //         <Text style={{fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>
+  //           {item.email}
+  //         </Text>
+  //       </View>
+  //     </View>
+  //   );
+
+  //   const data = [
+  //     {id: 1, name: 'John', email: 'john@gmail.com'},
+  //     {id: 2, name: 'Bob', email: 'bob@gmail.com'},
+  //     {id: 3, name: 'Mei', email: 'mei@gmail.com'},
+  //     {id: 4, name: 'Steve', email: 'steve@gmail.com'},
+  //   ];
+
+
+  const CourseItem = ({item}) => {
     return (
       <View
         style={
@@ -92,17 +142,15 @@ const MyTerms = ({route}: MyTermsProps) => {
             ? mainStyle.myTermsItemContainer
             : mainStyle.dMyTermsItemContainer
         }>
-        <TouchableOpacity
-          style={{flexDirection: 'row', alignItems: 'center'}}
-          onPress={() => navigation.push('MyCourses', {levelId: item.id})}>
+        <TouchableOpacity onPress={()=> navigation.push("MyTimeTableCourseWise", {code: item.code, name: item.name, credit: item.value ,courseId: item.id, levelId: levelId})} style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={{maxWidth: '85%'}}>
             <Text
               style={
                 theme === 'light'
-                  ? mainStyle.myTermsItemTitle
-                  : mainStyle.dMyTermsItemTitle
+                  ? mainStyle.myCoursesItemTitle
+                  : mainStyle.dMyCoursesItemTitle
               }>
-              {item.code}
+              <Text style={{fontWeight: '600'}}>Course Code:</Text> {item.code}
             </Text>
             <Text
               style={
@@ -110,7 +158,15 @@ const MyTerms = ({route}: MyTermsProps) => {
                   ? mainStyle.myTermsItemDetails
                   : mainStyle.dMyTermsItemDetails
               }>
-              {`${item.name}`}
+              <Text style={{fontWeight: '600'}}>Name:</Text> {`${item.name}`}
+            </Text>
+            <Text
+              style={
+                theme === 'light'
+                  ? mainStyle.myTermsItemDetails
+                  : mainStyle.dMyTermsItemDetails
+              }>
+              <Text style={{fontWeight: '600'}}>Credit:</Text> {`${item.value}`}
             </Text>
           </View>
           <Icon
@@ -124,7 +180,6 @@ const MyTerms = ({route}: MyTermsProps) => {
     );
   };
 
-  const [isLoading, setLoading] = useState(false);
   return (
     <SafeAreaView>
       <View
@@ -156,8 +211,7 @@ const MyTerms = ({route}: MyTermsProps) => {
                     ? mainStyle.headerText
                     : mainStyle.dHeaderText
                 }>
-                   <Icon3 name="file-document-outline" size={23} color={theme==='light' ? "#3d3d3d" : "#bbb"} />
-                All Terms
+                Timetable for Term {name}
               </Text>
             </TouchableOpacity>
           </View>
@@ -174,19 +228,10 @@ const MyTerms = ({route}: MyTermsProps) => {
                 alignItems: 'center',
                 marginTop: 70,
               }}>
-              {terms.length === 0 ? (
-                <Text
-                  style={
-                    theme === 'light'
-                      ? mainStyle.noDataText
-                      : mainStyle.dNoDataText
-                  }>
-                  No terms available
-                </Text>
-              ) : (
+              {courses.length > 0 ? (
                 <FlatList
-                  data={terms}
-                  renderItem={({item}) => <TermItem item={item} />}
+                  data={courses}
+                  renderItem={({item}) => <CourseItem item={item} />}
                   contentContainerStyle={mainStyle.flatListStyle}
                   keyExtractor={item => item.id} // Use unique IDs for performance
                   ItemSeparatorComponent={() => (
@@ -196,6 +241,8 @@ const MyTerms = ({route}: MyTermsProps) => {
                   //   <Text style={mainStyle.header}>Courses</Text>
                   // )}
                 />
+              ) : (
+                <Text>No courses found</Text>
               )}
             </View>
           )}
@@ -205,4 +252,15 @@ const MyTerms = ({route}: MyTermsProps) => {
   );
 };
 
-export default MyTerms;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 100,
+    paddingHorizontal: 30,
+    backgroundColor: '#fff',
+  },
+  head: {height: 44, backgroundColor: 'lavender'},
+  row: {height: 40, backgroundColor: 'lightyellow'},
+});
+
+export default MyTimeTableTermWise;

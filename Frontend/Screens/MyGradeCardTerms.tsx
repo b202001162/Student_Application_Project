@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   FlatList,
   Appearance,
-  Button,
 } from 'react-native';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -18,18 +17,14 @@ import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {mainStyle} from '../StyleSheet/StyleSheet';
 import axios from 'axios';
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 
-type MyCoursesProps = NativeStackScreenProps<RootStackParamList, 'MyCourses'>;
+type MyGradeCardTermsProps = NativeStackScreenProps<RootStackParamList, 'MyGradeCardTerms'>;
 
-const MyCourses = ({route}: MyCoursesProps) => {
-  const {levelId} = route.params;
-  // if(levelId === undefined){
-  //     levelId = 8;
-  // }
+const MyGradeCardTerms = ({route}: MyGradeCardTermsProps) => {
   //   const [tokenWithoutQuotes, setTokenWithoutQuotes] = useState();
   useEffect(() => {
     // setTokenWithoutQuotes(token.substring(1, token.length - 1));
@@ -38,17 +33,19 @@ const MyCourses = ({route}: MyCoursesProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [theme, setTheme] = useState(Appearance.getColorScheme());
-  const [courses, setCourses] = useState([]);
+  const [terms, setTerms] = useState([]);
   const retrieveData = async () => {
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
-    const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
     console.log('Stored Token', token);
+    const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
+    console.log('Stored Admission Id', admissionId);
+    
 
     setLoading(true); // Indicate loading state
     try {
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourses/${admissionId}/${levelId}`,
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyTerms/${admissionId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -61,10 +58,14 @@ const MyCourses = ({route}: MyCoursesProps) => {
         alert('Error fetching data');
         navigation.goBack();
       }
-      await setCourses(response.data.resData.courses);
-      if (courses == null) {
-        alert('No courses found');
+
+      //   console.log(response.data);
+
+      if (response.data.sCode !== 1) {
+        alert('Error fetching data');
+        navigation.goBack();
       }
+      setTerms(response.data.resData.levels);
     } catch (error) {
       // Error retrieving data
       console.log('Error notification retrieving data' + error);
@@ -83,7 +84,7 @@ const MyCourses = ({route}: MyCoursesProps) => {
     }
   }, []);
 
-  const CourseItem = ({item}) => {
+  const TermItem = ({item}) => {
     return (
       <View
         style={
@@ -93,50 +94,23 @@ const MyCourses = ({route}: MyCoursesProps) => {
         }>
         <TouchableOpacity
           style={{flexDirection: 'row', alignItems: 'center'}}
-          onPress={() =>
-            navigation.push('MyCourseDetails', {
-              code: item.code,
-              name: item.name,
-              credit: item.value,
-              courseId: item.id,
-              levelId: levelId,
-            })
-          }>
+          onPress={() => navigation.push('MyGradeCard', {code: item.code, name: item.name, levelId: item.id})}>
           <View style={{maxWidth: '85%'}}>
-          <Text
+            <Text
               style={
                 theme === 'light'
-                  ? mainStyle.paymentHistoryStudentDetailsText
-                  : mainStyle.dPaymentHistoryStudentDetailsText, {fontSize: 15}
-              }>Course Code: {' '}
-              <Text style={
-                          theme === 'light'
-                            ? styles.valueText
-                            : styles.dValueText
-                        }>{item.code}</Text>
+                  ? mainStyle.myTermsItemTitle
+                  : mainStyle.dMyTermsItemTitle
+              }>
+              {item.code}
             </Text>
             <Text
               style={
                 theme === 'light'
-                  ? mainStyle.paymentHistoryStudentDetailsText
-                  : mainStyle.dPaymentHistoryStudentDetailsText, {fontSize: 15}
-              }>Name: {" "}
-              <Text style={
-                          theme === 'light'
-                            ? styles.valueText
-                            : styles.dValueText
-                        }>{`${item.name}`}</Text>
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.paymentHistoryStudentDetailsText
-                  : mainStyle.dPaymentHistoryStudentDetailsText, {fontSize: 15}
-              }>Credit:<Text style={
-                          theme === 'light'
-                            ? styles.valueText
-                            : styles.dValueText
-                        }> {" "}{`${item.value}`}</Text>
+                  ? mainStyle.myTermsItemDetails
+                  : mainStyle.dMyTermsItemDetails
+              }>
+              {`${item.name}`}
             </Text>
           </View>
           <Icon
@@ -182,55 +156,47 @@ const MyCourses = ({route}: MyCoursesProps) => {
                     ? mainStyle.headerText
                     : mainStyle.dHeaderText
                 }>
-                <Icon3
-                  name="bookshelf"
-                  size={23}
-                  color={theme === 'light' ? '#3d3d3d' : '#bbb'}
-                />
-                My Courses
+                  Results
               </Text>
             </TouchableOpacity>
           </View>
           {isLoading ? (
+            <ActivityIndicator
+              size="large"
+              color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+            />
+          ) : (
             <View
               style={{
+                width: '100%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: '100%',
-                width: '100%',
+                marginTop: 70,
               }}>
-              <ActivityIndicator
-                size="large"
-                color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
-              />
+              {terms.length === 0 ? (
+                <Text
+                  style={
+                    theme === 'light'
+                      ? mainStyle.noDataText
+                      : mainStyle.dNoDataText
+                  }>
+                  No terms available
+                </Text>
+              ) : (
+                <FlatList
+                  data={terms}
+                  renderItem={({item}) => <TermItem item={item} />}
+                  contentContainerStyle={mainStyle.flatListStyle}
+                  keyExtractor={item => item.id} // Use unique IDs for performance
+                  ItemSeparatorComponent={() => (
+                    <View style={mainStyle.separator} />
+                  )}
+                  // ListHeaderComponent={() => (
+                  //   <Text style={mainStyle.header}>Courses</Text>
+                  // )}
+                />
+              )}
             </View>
-          ) : (
-            <>
-              <View
-                style={{
-                  width: '100%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginTop: 70,
-                }}>
-                {courses.length > 0 ? (
-                  <FlatList
-                    data={courses}
-                    renderItem={({item}) => <CourseItem item={item} />}
-                    contentContainerStyle={mainStyle.flatListStyle}
-                    keyExtractor={item => item.id} // Use unique IDs for performance
-                    ItemSeparatorComponent={() => (
-                      <View style={mainStyle.separator} />
-                    )}
-                    // ListHeaderComponent={() => (
-                    //   <Text style={mainStyle.header}>Courses</Text>
-                    // )}
-                  />
-                ) : (
-                  <Text>No courses found</Text>
-                )}
-              </View>
-            </>
           )}
         </View>
       </View>
@@ -238,18 +204,4 @@ const MyCourses = ({route}: MyCoursesProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  valueText: {
-      color: '#1d1d1d',
-      fontWeight: 'bold',
-      fontSize: 17,
-    },
-    dValueText: {
-      color: '#eee',
-      fontWeight: 'bold',
-      fontSize: 17,
-    },
-});
-
-
-export default MyCourses;
+export default MyGradeCardTerms;

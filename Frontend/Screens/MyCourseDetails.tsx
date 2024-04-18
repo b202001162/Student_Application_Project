@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   FlatList,
   Appearance,
+  Modal,
+  Pressable,
 } from 'react-native';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -27,9 +29,20 @@ type MyCourseDetailsProps = NativeStackScreenProps<
 >;
 
 const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [theme, setTheme] = useState(Appearance.getColorScheme());
+  //   const [courses, setCourses] = useState([]);
+  const [faculty, setFaculty] = useState([]);
+  const [lessons, setLessons] = useState([]);
+  const [studentAttandanceData, setStudentAttandanceData] = useState({});
+  const [token, setToken] = useState('');
+  const [admissionId, setAdmissionId] = useState('');
   var facultyId = '',
     batchId = '';
   const {code, name, credit, courseId, levelId} = route.params;
+  const [modalVisible, setModalVisible] = useState(false);
+
   //   console.log(code + ' ' + name + ' ' + credit);
 
   // if(levelId === undefined){
@@ -44,12 +57,17 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
   const retrieveData = async () => {
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
+    const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
     console.log('Stored Token', token);
 
-    setLoading(true); // Indicate loading state
+    await setToken(token);
+    await setAdmissionId(admissionId);
+    console.log('Token', token);
+
     try {
+      setLoading(true);
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourseFaculty/${courseId}/${levelId}/8`,
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyClassAttendancePercentage/${courseId}/${levelId}/${admissionId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -57,45 +75,63 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
           },
         },
       );
-
-      //   console.log(response.data);
-
       if (response.data.sCode !== 1) {
         alert('Error fetching data');
         navigation.goBack();
       }
-      await setFaculty(response.data.resData.faculty);
-      setLoading(true); // Indicate loading state
-
-      const response1 = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyLessonPlans/${response.data.resData.faculty.id}/${levelId}/${response.data.resData.faculty.batchId}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        },
+      console.log(response.data.resData.studentAttandanceData);
+      await setStudentAttandanceData(
+        response.data.resData.studentAttandanceData,
       );
-
-      if (response1.data.sCode !== 1) {
-        alert('Error fetching data');
-        navigation.goBack();
-      }
-      setLessons(response1.data.resData.lessonPlans);
-    } catch (error) {
-      // Error retrieving data
-      console.log('Error notification retrieving data' + error);
+    } catch  (e) {
+      console.log(e);
     } finally {
       setLoading(false);
     }
-  };
 
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [theme, setTheme] = useState(Appearance.getColorScheme());
-  //   const [courses, setCourses] = useState([]);
-  const [faculty, setFaculty] = useState([]);
-  const [lessons, setLessons] = useState([]);
+    // setLoading(true); // Indicate loading state
+    // try {
+    //   const response = await axios.get(
+    //     `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourseFaculty/${courseId}/${levelId}/${admissionId}`,
+    //     {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     },
+    //   );
+
+    //   //   console.log(response.data);
+
+    //   if (response.data.sCode !== 1) {
+    //     alert('Error fetching data');
+    //     navigation.goBack();
+    //   }
+    //   await setFaculty(response.data.resData.faculty);
+    //   setLoading(true); // Indicate loading state
+
+    //   const response1 = await axios.get(
+    //     `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyLessonPlans/${response.data.resData.faculty.id}/${levelId}/${response.data.resData.faculty.batchId}`,
+    //     {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     },
+    //   );
+
+    //   if (response1.data.sCode !== 1) {
+    //     alert('Error fetching data');
+    //     navigation.goBack();
+    //   }
+    //   setLessons(response1.data.resData.lessonPlans);
+    // } catch (error) {
+    //   // Error retrieving data
+    //   console.log('Error notification retrieving data' + error);
+    // } finally {
+    //   setLoading(false);
+    // }
+  };
 
   useEffect(() => {
     // _retrieveData();
@@ -171,6 +207,31 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
     );
   };
 
+  const handleAttendancePress = async () => {
+    try {
+      const response = await axios.get(
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyClassAttendancePercentage/${courseId}/${levelId}/${admissionId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (response.data.sCode !== 1) {
+        alert('Error fetching data');
+        navigation.goBack();
+      }
+      console.log(response.data.resData.studentAttandanceData);
+      await setStudentAttandanceData(
+        response.data.resData.studentAttandanceData,
+      );
+    } catch (error) {
+      // Error retrieving data
+      console.log('Error retrieving data' + error);
+    }
+  };
+
   const [isLoading, setLoading] = useState(false);
   return (
     <SafeAreaView>
@@ -207,11 +268,107 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
               </Text>
             </TouchableOpacity>
           </View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.modalContainerView}>
+              <View
+                style={
+                  theme === 'light' ? styles.modalView : styles.dModalView
+                }>
+                <View style={{minWidth: '95%'}}>
+                  <Text
+                    style={
+                      theme === 'light'
+                        ? mainStyle.myTermsItemDetails
+                        : mainStyle.dMyTermsItemDetails
+                    }>
+                    Code: {code}
+                  </Text>
+                  <Text
+                    style={
+                      theme === 'light'
+                        ? mainStyle.myTermsItemDetails
+                        : mainStyle.dMyTermsItemDetails
+                    }>
+                    Name: {name}
+                  </Text>
+                  <Text
+                    style={
+                      theme === 'light'
+                        ? mainStyle.myTermsItemDetails
+                        : mainStyle.dMyTermsItemDetails
+                    }>
+                    Credit: {credit}
+                  </Text>
+                  <Text
+                    style={
+                      theme === 'light'
+                        ? mainStyle.myTermsItemDetails
+                        : mainStyle.dMyTermsItemDetails
+                    }>
+                    Credit hours:
+                  </Text>
+                  <Text
+                    style={
+                      theme === 'light'
+                        ? mainStyle.myTermsItemDetails
+                        : mainStyle.dMyTermsItemDetails
+                    }>
+                    Course Type:
+                  </Text>
+                  <Text
+                    style={
+                      theme === 'light'
+                        ? mainStyle.myTermsItemDetails
+                        : mainStyle.dMyTermsItemDetails
+                    }>
+                    Faculty ID:
+                  </Text>
+                  <Text
+                    style={
+                      theme === 'light'
+                        ? mainStyle.myTermsItemDetails
+                        : mainStyle.dMyTermsItemDetails
+                    }>
+                    Faculty Name:
+                  </Text>
+                  <Text
+                    style={
+                      theme === 'light'
+                        ? mainStyle.myTermsItemDetails
+                        : mainStyle.dMyTermsItemDetails
+                    }>
+                    Faculty email:
+                  </Text>
+                </View>
+                <Pressable
+                  style={
+                    theme === 'light'
+                      ? [styles.button, styles.buttonClose]
+                      : [styles.dButton, styles.dButtonClose]
+                  }
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text
+                    style={
+                      theme === 'light' ? styles.textStyle : styles.dTextStyle
+                    }>
+                    Back
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
           <View
             style={{
               width: '100%',
               justifyContent: 'center',
               alignItems: 'center',
+              marginTop: 70,
             }}>
             <View
               style={
@@ -219,46 +376,58 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
                   ? mainStyle.myCourseDetailsItemContainer
                   : mainStyle.dMyCourseDetailsItemContainer
               }>
+             <Text
+              style={
+                theme === 'light'
+                  ? styles.paymentHistoryStudentDetailsText
+                  : styles.dPaymentHistoryStudentDetailsText, {fontSize: 15}
+              }>
+                Course Code: <Text style={
+                          theme === 'light'
+                            ? styles.valueText
+                            : styles.dValueText
+                        }>{code} </Text>
+              </Text> 
               <Text
-                style={
-                  theme === 'light'
-                    ? mainStyle.myTermsItemTitle
-                    : mainStyle.dMyTermsItemTitle
-                }>
-                Course Code: {code}
+              style={
+                theme === 'light'
+                  ? styles.paymentHistoryStudentDetailsText
+                  : styles.dPaymentHistoryStudentDetailsText, {fontSize: 15}
+              }>
+                Course name: <Text style={
+                          theme === 'light'
+                            ? styles.valueText
+                            : styles.dValueText
+                        }>{`${name}`}</Text>
               </Text>
               <Text
-                style={
-                  theme === 'light'
-                    ? mainStyle.myCourseItemDetails
-                    : mainStyle.dMyCourseItemDetails
-                }>
-                Course name: {`${name}`}
+              style={
+                theme === 'light'
+                  ? styles.paymentHistoryStudentDetailsText
+                  : styles.dPaymentHistoryStudentDetailsText, {fontSize: 15}
+              }>
+                Course credit: <Text style={
+                          theme === 'light'
+                            ? styles.valueText
+                            : styles.dValueText
+                        }>{`${credit}`}</Text>
               </Text>
-              <Text
-                style={
-                  theme === 'light'
-                    ? mainStyle.myCourseItemDetails
-                    : mainStyle.dMyCourseItemDetails
-                }>
-                Course credit: {`${credit}`}
-              </Text>
-              <Text
+              {/* <Text
                 style={
                   theme === 'light'
                     ? mainStyle.myCourseItemDetails
                     : mainStyle.dMyCourseItemDetails
                 }>
                 Faculty ID: {faculty.id}
-              </Text>
-              <Text
+              </Text> */}
+              {/* <Text
                 style={
                   theme === 'light'
                     ? mainStyle.myCourseItemDetails
                     : mainStyle.dMyCourseItemDetails
                 }>
                 Batch ID: {faculty.batchId}
-              </Text>
+              </Text> */}
             </View>
           </View>
           {isLoading ? (
@@ -276,12 +445,52 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
                   height: '70%',
                   // paddingTop: 250,
                 }}>
+                <View style={mainStyle.ongoingEventsButtonsContainer, {justifyContent: "flex-start"}}>
+                  <Text style={
+                    theme === 'light'
+                      ? mainStyle.lessonPlanTitle
+                      : mainStyle.dLessonPlanTitle
+                  }>Attendance:</Text>
+                  {
+                    isLoading ? (<ActivityIndicator
+                      size="large"
+                      color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+                    />) : (<Text
+                      style={
+                        theme === 'light'
+                          ? styles.paymentHistoryStudentDetailsText
+                          : styles.dPaymentHistoryStudentDetailsText, {paddingLeft: 5,}
+                      }>
+                      Classes Scheduled: <Text style={
+                              theme === 'light'
+                                ? styles.valueText
+                                : styles.dValueText
+                            }>{studentAttandanceData.itemScheduled}</Text> {"\n"}
+                      Classes Completed: <Text style={
+                              theme === 'light'
+                                ? styles.valueText
+                                : styles.dValueText
+                            }>{studentAttandanceData.itemCompleted}</Text> {"\n"}
+                      Classes Attended: <Text style={
+                              theme === 'light'
+                                ? styles.valueText
+                                : styles.dValueText
+                            }>{studentAttandanceData.itemPresent} </Text>{"\n"}
+                      Attendance Percentage: <Text style={
+                              theme === 'light'
+                                ? styles.valueText
+                                : styles.dValueText
+                            }>{studentAttandanceData.attandancePerc}{"%"}</Text>
+                    </Text>)
+                  }
+                </View>
                 <Text
                   style={
                     theme === 'light'
                       ? mainStyle.lessonPlanTitle
                       : mainStyle.dLessonPlanTitle
                   }>
+                  {'\n'}
                   Lesson Plans
                 </Text>
                 {lessons.length === 0 ? (
@@ -315,5 +524,114 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  modalContainerView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  dModalView: {
+    margin: 20,
+    backgroundColor: '#1d1d1d',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  dModalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    color: '#eee',
+  },
+
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 10,
+  },
+  dButton: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 10,
+    backgroundColor: '#1d1d1d',
+  },
+
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#1E63BB',
+    padding: 10,
+    paddingHorizontal: 20,
+  },
+  dButtonClose: {
+    backgroundColor: '#98BAFC',
+    padding: 10,
+    paddingHorizontal: 20,
+  },
+
+  textStyle: {
+    color: '#EAEAEA',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  dTextStyle: {
+    color: '#23303C',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  valueText: {
+    color: '#2d2d2d',
+    fontWeight: 'bold',
+    fontSize: 17,
+  },
+  dValueText: {
+    color: '#ddd',
+    fontWeight: 'bold',
+    fontSize: 17,
+  },
+
+  paymentHistoryStudentDetailsText: {
+    color: '#1E63BB',
+    fontSize: 15,
+    fontWeight: 'semibold',
+  },
+  dPaymentHistoryStudentDetailsText : {
+    color: '#98BAFC',
+    fontSize: 15,
+    fontWeight: 'semibold',
+  }
+});
 
 export default MyCourseDetails;

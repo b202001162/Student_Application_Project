@@ -11,6 +11,7 @@ import {
   FlatList,
   Appearance,
   ScrollView,
+  Animated,
 } from 'react-native';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -38,12 +39,14 @@ const MyProfile = ({route}: MyProfileProps) => {
     setLoading(true);
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
+    const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
+    const refreshToken = JSON.parse(await AsyncStorage.getItem('refreshToken'));
     console.log('Stored Token', token);
     console.log('Stored Token', userId);
 
     try {
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchProfileDeatils/8`,
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchStudentProfile/${admissionId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -54,7 +57,38 @@ const MyProfile = ({route}: MyProfileProps) => {
       console.log(response.data.resData);
       await setData(response.data.resData);
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      if (
+        error.response.status === 401 ||
+        error.response.status === 403 ||
+        error.response.status === 404
+      ) {
+        console.log('Token Expired');
+        try {
+          const response = await axios.post(
+            `https://erp.campuslabs.in/TEST/api/nure-student/v1/refreshToken`,
+            {
+              refreshToken: refreshToken,
+            },
+          );
+          console.log(response.data.resData.jwtToken);
+          await AsyncStorage.setItem(
+            'jwtToken',
+            JSON.stringify(response.data.jwtToken),
+          );
+          // await setJwtToken(response.data.jwtToken);
+          await AsyncStorage.setItem(
+            'refreshToken',
+            JSON.stringify(response.data.refreshToken),
+          );
+          retrieveData();
+          // await setRefreshToken(response.data.refreshToken);
+        } catch (error) {
+          console.log('Error in refreshing token');
+          await logoutHandler();
+          navigation.replace('LoginPage');
+        }
+      }
     } finally {
       setLoading(false);
     }
@@ -63,6 +97,9 @@ const MyProfile = ({route}: MyProfileProps) => {
     await AsyncStorage.removeItem('jwtToken');
     await AsyncStorage.removeItem('userId');
     await AsyncStorage.removeItem('firstName');
+    await AsyncStorage.removeItem('refreshToken');
+    await AsyncStorage.removeItem('admissionId');
+    await AsyncStorage.removeItem('currentLevelId');
     navigation.replace('LoginPage');
   };
   useEffect(() => {
@@ -76,369 +113,441 @@ const MyProfile = ({route}: MyProfileProps) => {
     }
   }, []);
 
+  const scrollY = new Animated.Value(0);
+  const diffClamp = Animated.diffClamp(scrollY, 0, 45);
+  const translateY = diffClamp.interpolate({
+    inputRange: [0, 45],
+    outputRange: [0, -45],
+  });
+
   const [isLoading, setLoading] = useState(true);
   return (
     <SafeAreaView>
       <View
-        style={theme === 'light' ? mainStyle.container : mainStyle.dContainer}>
+        style={theme === 'light' ? [mainStyle.container, {paddingHorizontal: 0}] : [mainStyle.dContainer, {paddingHorizontal: 0}]}>
         <View
           style={
             theme === 'light' ? mainStyle.subContainer : mainStyle.dSubContainer
           }>
-          <View
-            style={
-              theme === 'light' ? mainStyle.headerMain : mainStyle.dHeaderMain
-            }>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon
-                style={mainStyle.headerIcon}
-                name="arrow-left-long"
-                size={20}
-                color={theme === 'light' ? '#1d1d1d' : '#eee'}
-              />
-              <Text
-                style={
-                  theme === 'light'
-                    ? mainStyle.headerText
-                    : mainStyle.dHeaderText
-                }>
-                <Icon2
-                  name="user-circle-o"
-                  size={25}
-                  color={theme === 'light' ? '#1d1d1d' : '#eee'}
-                />{' '}
-                Profile
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View
+          <Animated.View
             style={{
-              width: '100%',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              padding: 20,
-              paddingHorizontal: 10,
+              transform: [{translateY: translateY}],
+              elevation: 4,
+              width: 100 + '%',
+              zIndex: 100,
             }}>
-            {isLoading ? (
-              <ActivityIndicator size="large" color="#0000ff" />
-            ) : (
-              <ScrollView style={mainStyle.myProfileDetailsCont}>
+            <View
+              style={
+                theme === 'light' ? mainStyle.headerMain : mainStyle.dHeaderMain
+              }>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Icon
+                  style={mainStyle.headerIcon}
+                  name="arrow-left-long"
+                  size={20}
+                  color={theme === 'light' ? '#1d1d1d' : '#eee'}
+                />
+                <Text
+                  style={
+                    theme === 'light'
+                      ? mainStyle.headerText
+                      : mainStyle.dHeaderText
+                  }>
+                  <Icon2
+                    name="user-circle-o"
+                    size={25}
+                    color={theme === 'light' ? '#1d1d1d' : '#eee'}
+                  />{' '}
+                  Profile
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+          <ScrollView
+            style={{width: "100%", paddingHorizontal: 15}}
+            onScroll={e => {
+              scrollY.setValue(e.nativeEvent.contentOffset.y);
+            }}>
+            <View
+              style={{
+                width: '100%',
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                padding: 2,
+                paddingHorizontal: 2,
+                marginTop: 60,
+                marginBottom: 20,
+              }}>
+              {isLoading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+              ) : (
                 <>
                   <Text
                     style={
                       theme === 'light'
-                        ? mainStyle.myProfileDetailsTitleText
-                        : mainStyle.dMyProfileDetailsTitleText
+                        ? [mainStyle.myProfileDetailsTitleText, {marginTop: 20}]
+                        : [mainStyle.dMyProfileDetailsTitleText, {marginTop: 20}]
                     }>
                     Personal details
                   </Text>
-                  <View
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myProfileDetailsContContainer
-                        : mainStyle.dMyProfileDetailsContContainer
-                    }>
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      StudentID: {data.profileData.studentId}{' '}
-                    </Text>
+                  {data.profileData !== null ? (
                     <View
                       style={
                         theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }></View>
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
+                          ? [mainStyle.myProfileDetailsContContainer, {backgroundColor: "transparent", marginTop: 0}]
+                          : [mainStyle.dMyProfileDetailsContContainer, {backgroundColor: "transparent", marginTop: 0}]
                       }>
-                      Stdent name: {data.profileData.studentName}{' '}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }></View>
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Father name: {data.profileData.fatherName}{' '}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }></View>
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Mother name: {data.profileData.motherName}{' '}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }></View>
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Student Email: {data.profileData.emailId}{' '}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }></View>
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Student Mobile: {data.profileData.phoneNo}{' '}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }></View>
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Student Address: {data.profileData.studentAddress}{' '}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }></View>
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Student DOB: {data.profileData.studentDOB}
-                    </Text>
-                  </View>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Name:{' '}
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: '#1d1d1d', fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                            {'\n'}
+                          {data.profileData.studentName}{' '}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }></View>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Father name
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.fatherName === null ? "N/A" :  data.profileData.fatherName}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }></View>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Mother name
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.motherName  === null ? "N/A" : data.profileData.motherName }{' '}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }></View>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Email
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.emailId}{' '}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }></View>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Mobile
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.phoneNo}{' '}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }></View>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Address
+                        <Text
+                          style={
+                            theme === 'light'
+                              ?[styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.studentAddress  === null ? "N/A" : data.profileData.studentAddress }{' '}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }></View>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Date of Birth
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.studentDOB  === null ? "N/A" :  data.profileData.studentDOB}{' '}
+                        </Text>
+                      </Text>
+                    </View>
+                  ) : null}
                   <Text
                     style={
                       theme === 'light'
-                        ? mainStyle.myProfileDetailsTitleText
-                        : mainStyle.dMyProfileDetailsTitleText
+                        ? [mainStyle.myProfileDetailsTitleText, {marginTop: 30}]
+                        : [mainStyle.dMyProfileDetailsTitleText, {marginTop: 30}]
                     }>
                     Academics details
                   </Text>
-                  <View
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myProfileDetailsContContainer
-                        : mainStyle.dMyProfileDetailsContContainer
-                    }>
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      AdmissionId: {data.profileData.admissionId}
-                    </Text>
+                  {data.profileData !== null ? (
                     <View
                       style={
                         theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
+                          ?[mainStyle.myProfileDetailsContContainer, {backgroundColor: "transparent", padding: 0, marginTop: 0}]
+                          : [mainStyle.dMyProfileDetailsContContainer, {backgroundColor: "transparent", padding: 0, marginTop: 0}]
                       }>
-                      Admission No. : {data.profileData.admissionNo}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      TGPA: {data.profileData.tgpa}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      CGPA : {data.profileData.cgpa}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Credit Attempted : {data.profileData.creditAttempted}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Current Term ID: {data.profileData.currentTermId}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Degree Id: {data.profileData.degreeId}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Degree name: {data.profileData.degreeName}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Program Id: {data.profileData.programId}{' '}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Program Name: {data.profileData.programName}{' '}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Level Name: {data.profileData.levelName}{' '}
-                    </Text>
-                    <View
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDivider
-                          : mainStyle.dMyProfileDivider
-                      }
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.myProfileDetailsText
-                          : mainStyle.dMyProfileDetailsText
-                      }>
-                      Fee Pattern name: {data.profileData.feePatterName}
-                    </Text>
-                  </View>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Admission No.
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.admissionNo}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }
+                      />
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        TGPA
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.tgpa === null ? "N/A" : data.profileData.tgpa}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }
+                      />
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        CGPA
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.cgpa}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }
+                      />
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Credit Attempted
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.creditAttempted}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }
+                      />
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Degree name
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.degreeName}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }
+                      />
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Program Name
+                        <Text
+                          style={
+                            theme === 'light'
+                              ?[styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.programName}{' '}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }
+                      />
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Level Name
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? [styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.levelName}{' '}
+                        </Text>
+                      </Text>
+                      <View
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDivider
+                            : mainStyle.dMyProfileDivider
+                        }
+                      />
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.myProfileDetailsText
+                            : mainStyle.dMyProfileDetailsText
+                        }>
+                        Fee Pattern name
+                        <Text
+                          style={
+                            theme === 'light'
+                              ?[styles.valueText, {color: "#1d1d1d", fontSize: 20}]
+                              : [styles.valueText, {color: '#eee', fontSize: 20}]
+                          }>
+                          {'\n'}{data.profileData.feePatterName === null ? "N/A" : data.profileData.feePatterName}{' '}
+                        </Text>
+                      </Text>
+                    </View>
+                  ) : null}
                   <TouchableOpacity
                     onPress={() => logoutHandler()}
                     style={
@@ -464,14 +573,14 @@ const MyProfile = ({route}: MyProfileProps) => {
                         theme === 'light'
                           ? mainStyle.myProfileLogoutText
                           : mainStyle.dMyProfileLogoutText
-                      }>{" "}
+                      }>
+                      {' '}
                       LOGOUT
                     </Text>
                   </TouchableOpacity>
                 </>
-              </ScrollView>
-            )}
-            {/* <TextInput
+              )}
+              {/* <TextInput
               style={
                 theme === 'light'
                   ? mainStyle.courseFBInput
@@ -480,7 +589,7 @@ const MyProfile = ({route}: MyProfileProps) => {
               placeholder="Enter Feedback Here"
               placeholderTextColor={theme === 'light' ? '#003f5c' : '#ccc'}
             /> */}
-            {/* <View
+              {/* <View
               style={
                 theme === 'light'
                   ? mainStyle.courseFBBtnCont
@@ -502,7 +611,8 @@ const MyProfile = ({route}: MyProfileProps) => {
                 </Text>
               </TouchableOpacity>
             </View> */}
-          </View>
+            </View>
+          </ScrollView>
         </View>
       </View>
     </SafeAreaView>
@@ -518,6 +628,11 @@ const styles = StyleSheet.create({
   },
   head: {height: 44, backgroundColor: 'lavender'},
   row: {height: 40, backgroundColor: 'lightyellow'},
+  valueText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#1d1d1d',
+  },
 });
 
 export default MyProfile;
