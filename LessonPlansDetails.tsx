@@ -22,22 +22,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/FontAwesome6';
 
-type AssignmentDetailsProps = NativeStackScreenProps<
+type LessonPlansDetailsProps = NativeStackScreenProps<
   RootStackParamList,
-  'AssignmentDetails'
+  'LessonPlansDetails'
 >;
 
-const AssignmentDetails = ({route}: AssignmentDetailsProps) => {
+const LessonPlansDetails = ({route}: LessonPlansDetailsProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [theme, setTheme] = useState(Appearance.getColorScheme());
   const [terms, setTerms] = useState([]);
 
-  const retrieveData = async () => {
-    const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
-    const userId = JSON.parse(await AsyncStorage.getItem('userId'));
-    console.log('Stored Token', token);
-  };
   useEffect(() => {
     // _retrieveData();
     const colorTheme = Appearance.getColorScheme();
@@ -49,25 +44,6 @@ const AssignmentDetails = ({route}: AssignmentDetailsProps) => {
     }
   }, []);
 
-  const item = ({item}) => (
-    <View style={{flexDirection: 'row'}}>
-      <View style={{width: 50, backgroundColor: 'lightyellow'}}>
-        <Text style={{fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>
-          {item.id}
-        </Text>
-      </View>
-      <View style={{width: 400, backgroundColor: 'lightpink'}}>
-        <Text style={{fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>
-          {item.name}
-        </Text>
-      </View>
-      <View style={{width: 400, backgroundColor: 'lavender'}}>
-        <Text style={{fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>
-          {item.email}
-        </Text>
-      </View>
-    </View>
-  );
 
   const data = [
     {id: 1, name: 'John', email: 'john@gmail.com'},
@@ -90,7 +66,7 @@ const AssignmentDetails = ({route}: AssignmentDetailsProps) => {
               theme === 'light' ? mainStyle.headerMain : mainStyle.dHeaderMain
             }>
             <TouchableOpacity
-                onPress={() => navigation.goBack()}
+              //   onPress={() => navigation.goBack()}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -108,7 +84,7 @@ const AssignmentDetails = ({route}: AssignmentDetailsProps) => {
                     ? mainStyle.headerText
                     : mainStyle.dHeaderText
                 }>
-                Assignment Details
+                Lesson plans details
               </Text>
             </TouchableOpacity>
           </View>
@@ -119,7 +95,7 @@ const AssignmentDetails = ({route}: AssignmentDetailsProps) => {
                   ? mainStyle.AssingmentTitle
                   : mainStyle.dAssingmentTitle
               }>
-              Assignment 2 : Linux System Calls
+              Lecture 5 : Input Output Systems
             </Text>
             <Text
               style={
@@ -127,8 +103,7 @@ const AssignmentDetails = ({route}: AssignmentDetailsProps) => {
                   ? mainStyle.AssingmentSubTitle
                   : mainStyle.dAssingmentSubTitle
               }>
-              Posted By : Prof. or TA on 20 Jan, 24 Topics : File System, IO
-              Systems
+              Posted By : Prof. or TA on 27 Jan, 24
             </Text>
             <Text
               style={
@@ -136,8 +111,7 @@ const AssignmentDetails = ({route}: AssignmentDetailsProps) => {
                   ? mainStyle.submissionDetails
                   : mainStyle.dSubmissionDetails
               }>
-              Submission Details : Lorem ipsum dolor sit amet consectetur
-              adipiscing elit Ut et massa mi.
+              Overview : Analysis of input and output devices, communication protocols, and I/O system design. Understanding device drivers and interrupt handling.
             </Text>
             <View style={mainStyle.AssignmentFileCont}>
               <View
@@ -158,55 +132,8 @@ const AssignmentDetails = ({route}: AssignmentDetailsProps) => {
                       ? mainStyle.AssignmentFileText
                       : mainStyle.dAssignmentFileText
                   }>
-                  Assignment 2.pdf
+                    Lecture 5 : Input Output Systems
                 </Text>
-              </View>
-            </View>
-            <View
-              style={
-                theme === 'light'
-                  ? mainStyle.uploadUrAssignmentCont
-                  : mainStyle.dUploadUrAssignmentCont
-              }>
-              <Text style={{marginBottom: 10}}>Upload your Assignment</Text>
-              <View style={{width: '100%', alignItems: 'center'}}>
-                <View
-                  style={
-                    theme === 'light'
-                      ? mainStyle.AssignmentFile
-                      : mainStyle.dAssignmentFile
-                  }>
-                  <Icon
-                    style={mainStyle.headerIcon}
-                    name="file-circle-plus"
-                    size={20}
-                    color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
-                  />
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.AssignmentFileText
-                        : mainStyle.dAssignmentFileText
-                    }>
-                    {' '}
-                    Add your submission
-                  </Text>
-                </View>
-                <View
-                  style={
-                    theme === 'light'
-                      ? mainStyle.uploadBtnForAssignments
-                      : mainStyle.dUploadBtnForAssignments
-                  }>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.uploadBtnForAssignmentsText
-                        : mainStyle.dUploadBtnForAssignmentsText
-                    }>
-                    Submit Assignment
-                  </Text>
-                </View>
               </View>
             </View>
           </View>
@@ -227,4 +154,4 @@ const styles = StyleSheet.create({
   row: {height: 40, backgroundColor: 'lightyellow'},
 });
 
-export default AssignmentDetails;
+export default LessonPlansDetails;
