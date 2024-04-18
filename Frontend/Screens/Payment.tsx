@@ -118,6 +118,7 @@ const Payment = ({route}: PaymentProps) => {
               justifyContent: 'flex-start',
               alignItems: 'flex-start',
               padding: 20,
+              marginTop: 50,
             }}>
             <Text
               style={

@@ -125,7 +125,10 @@ const ResultTermWise = ({route}: ResultTermWiseProps) => {
                   ? mainStyle.paymentHistoryStudentDetailsText
                   : mainStyle.dPaymentHistoryStudentDetailsText
               }>
-              Semester : I {`\n`}
+              Semester : <Text
+                    style={
+                      theme === 'light' ? styles.valueText : styles.dValueText
+                    }>I</Text> {`\n`}
               Name : Karan Padhiyar {`\n`}
               Roll no. : 202001162 {`\n`}
               Mobile no : 95******** {`\n`}
@@ -383,6 +386,14 @@ const styles = StyleSheet.create({
   },
   head: {height: 44, backgroundColor: 'lavender'},
   row: {height: 40, backgroundColor: 'lightyellow'},
+  valueText: {
+    color: '#1d1d1d',
+    fontWeight: 'bold',
+  },
+  dValueText: {
+    color: '#eee',
+    fontWeight: 'bold',
+  },
 });
 
 export default ResultTermWise;

@@ -88,7 +88,7 @@ const Results = ({route}: ResultsProps) => {
               alignItems: 'center',
             }}>
             <TouchableOpacity
-            onPress={() => navigation.navigate('ResultTermWise')}
+            onPress={() => navigation.navigate('MyGradeCard')}
               style={
                 theme === 'light'
                   ? mainStyle.resultContainer

@@ -87,7 +87,8 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
     }
   };
 
-  const loginHandler = async (userName) => {
+  const loginHandler = async userName => {
+    await AsyncStorage.setItem('userName', await JSON.stringify(userName));
     setLoading(true); // Indicate loading state
 
     try {
@@ -105,20 +106,26 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
 
       // setState({jwtToken: jwtToken, firstName: firstName});
       const jwtToken = await JSON.stringify(response1.data.jwtToken);
+      const refreshToken = await JSON.stringify(response1.data.refreshToken);
       const firstName = await JSON.stringify(
         response1.data.resData.user.firstName,
       );
       const userId = await JSON.stringify(
         response1.data.resData.user.appUserId,
       );
+      const admissionId = await JSON.stringify(
+        response1.data.resData.user.admissionId,
+      );
 
       await AsyncStorage.setItem('jwtToken', jwtToken);
+      await AsyncStorage.setItem('refreshToken', refreshToken);
       await AsyncStorage.setItem('firstName', firstName);
       await AsyncStorage.setItem('userId', userId);
+      await AsyncStorage.setItem('admissionId', admissionId);
       const Id = JSON.parse(await AsyncStorage.getItem('userId'));
       console.log(Id);
 
-      navigation.replace('Dashboard');
+      navigation.replace('AppPinLock');
     } catch (error) {
       console.error('Login handler error: ', error);
       alert('Something went wrong, please try again later.');
