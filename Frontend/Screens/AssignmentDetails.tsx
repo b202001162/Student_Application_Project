@@ -90,7 +90,7 @@ const AssignmentDetails = ({route}: AssignmentDetailsProps) => {
               theme === 'light' ? mainStyle.headerMain : mainStyle.dHeaderMain
             }>
             <TouchableOpacity
-              //   onPress={() => navigation.goBack()}
+                onPress={() => navigation.goBack()}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',

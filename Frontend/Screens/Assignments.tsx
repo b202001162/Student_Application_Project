@@ -95,7 +95,9 @@ const Assignments = ({route}: AssignmentsProps) => {
 
   const AssignmentItem = ({item}) => {
     return (
-      <View
+      <TouchableOpacity
+        onPress={() =>
+          navigation.push('AssignmentDetails')}
         style={
           theme === 'light'
             ? mainStyle.assignmentItemContainer
@@ -132,7 +134,7 @@ const Assignments = ({route}: AssignmentsProps) => {
             </Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 

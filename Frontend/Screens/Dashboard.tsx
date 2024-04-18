@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {mainStyle} from '../StyleSheet/StyleSheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
@@ -33,32 +34,129 @@ const Dashboard = ({route}: DashboardProps) => {
   const [firstName, setFirstName] = useState('');
   const [jwtToken, setJwtToken] = useState('');
   const [userId, setUserId] = useState('');
+  const [admissionId, setAdmissionId] = useState('');
+  const [currentLevelId, setCurrentLevelId] = useState('');
+  const [refreshToken, setRefreshToken] = useState('');
+  const [userName, setUserName] = useState('');
 
   const retrieveData = async () => {
     setLoading(true); // Indicate loading state
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
+    const refreshToken = JSON.parse(await AsyncStorage.getItem('refreshToken'));
     if (token == null) {
       navigation.replace('LoginPage');
     }
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
     const firstName = JSON.parse(await AsyncStorage.getItem('firstName'));
-    setJwtToken(token);
-    setUserId(userId);
-    setFirstName(firstName);
+    const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
+    const userName = JSON.parse(await AsyncStorage.getItem('userName'));
+    await setJwtToken(token);
+    await setUserId(userId);
+    await setFirstName(firstName);
+    await setAdmissionId(admissionId);
+    await setRefreshToken(refreshToken);
+    await setUserName(userName);
+    console.log(refreshToken);
+
+    if ((await AsyncStorage.getItem('currentLevelId')) !== null) {
+      // await AsyncStorage.removeItem('currentLevelId');
+      await setCurrentLevelId(await AsyncStorage.getItem('currentLevelId'));
+      setLoading(false);
+
+      // for checking the expiry of the token
+      try {
+        const response = await axios.get(
+          `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchTermsForCourseRegistration/${admissionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+      } catch (error) {
+        console.log('Token Expired');
+        // console.log(refreshToken);
+        await loginHandler();
+      }
+      return;
+    }
     try {
+      const reponse = await axios.get(
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchTermsForCourseRegistration/${admissionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      // console.log(reponse.data.resData.termsForRegistration[0].id);
+      await AsyncStorage.setItem(
+        'currentLevelId',
+        JSON.stringify(reponse.data.resData.termsForRegistration[0].id),
+      );
+      await setCurrentLevelId(reponse.data.resData.termsForRegistration[0].id);
+      // console.log(await AsyncStorage.getItem('currentLevelId'));
     } catch (error) {
       // Error retrieving data
-      navigation.replace('LoginPage');
+      // navigation.replace('LoginPage');
+      await loginHandler();
       console.log('Error retrieving data');
     } finally {
       setLoading(false);
     }
   };
 
+  const loginHandler = async () => {
+    try {
+      const response1 = await axios.post(
+        'https://erp.campuslabs.in/TEST/api/nure-student/v1/signIn',
+        {
+          username: `${userName}`,
+          password: '',
+          phoneNumber: ``,
+          oneTimePassword: ``,
+        },
+      );
+      // const jwtToken = await JSON.stringify(response1.data.jwtToken);
+      // await setState({ jwtToken : await JSON.stringify(response1.data.jwtToken), firstName : await JSON.stringify(response1.data.resData.user.firstName)});
+
+      // setState({jwtToken: jwtToken, firstName: firstName});
+      const jwtToken = await JSON.stringify(response1.data.jwtToken);
+      const refreshToken = await JSON.stringify(response1.data.refreshToken);
+      const firstName = await JSON.stringify(
+        response1.data.resData.user.firstName,
+      );
+      const userId = await JSON.stringify(
+        response1.data.resData.user.appUserId,
+      );
+      const admissionId = await JSON.stringify(
+        response1.data.resData.user.admissionId,
+      );
+
+      await setJwtToken(jwtToken);
+      await setRefreshToken(refreshToken);
+      await setFirstName(firstName);
+      await setUserId(userId);
+      await setAdmissionId(admissionId);
+
+      await AsyncStorage.setItem('jwtToken', jwtToken);
+      await AsyncStorage.setItem('refreshToken', refreshToken);
+      await AsyncStorage.setItem('firstName', firstName);
+      await AsyncStorage.setItem('userId', userId);
+      await AsyncStorage.setItem('admissionId', admissionId);
+    } catch (error) {
+      console.log(error);
+      navigation.replace('LoginPage');
+    }
+  };
+
   const logoutHandler = async () => {
     await AsyncStorage.removeItem('jwtToken');
+    await AsyncStorage.removeItem('currentLevelId');
+    await AsyncStorage.removeItem('refreshToken');
     await AsyncStorage.removeItem('userId');
     await AsyncStorage.removeItem('firstName');
+    await AsyncStorage.removeItem('admissionId');
     navigation.replace('LoginPage');
   };
 
@@ -76,13 +174,51 @@ const Dashboard = ({route}: DashboardProps) => {
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState();
 
+  const handleCourseRegistration = async () => {
+    try {
+      setLoading(true);
+      console.log(admissionId);
+
+      const response = await axios.get(
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchTermsForCourseRegistration/${admissionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        },
+      );
+      if (response.data.resData.termsForRegistration[0].id !== null) {
+        await AsyncStorage.setItem(
+          'levelId',
+          JSON.stringify(response.data.resData.termsForRegistration[0].id),
+        );
+        await AsyncStorage.setItem(
+          'levelCode',
+          JSON.stringify(response.data.resData.termsForRegistration[0].code),
+        );
+        navigation.push('CourseRegistration2');
+      } else {
+        alert('No terms available for registration');
+        return;
+      }
+      console.log(response.data.resData.termsForRegistration[0].id);
+    } catch (error) {
+      console.log(error);
+      alert('No terms available for registration');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView>
       <View
         style={theme === 'light' ? mainStyle.container : mainStyle.dContainer}>
         <View
           style={
-            theme === 'light' ? mainStyle.subContainer : mainStyle.dSubContainer
+            theme === 'light'
+              ? [mainStyle.subContainer, {width: '90%'}]
+              : [mainStyle.dSubContainer, {width: '90%'}]
           }>
           <View style={mainStyle.header}>
             <View
@@ -136,7 +272,9 @@ const Dashboard = ({route}: DashboardProps) => {
             </Text>
             <View style={mainStyle.ongoingEventsButtonsContainer}>
               <TouchableOpacity
-                onPress={() => navigation.push('CourseRegistration')}
+                onPress={() => {
+                  handleCourseRegistration();
+                }}
                 style={
                   theme === 'light'
                     ? mainStyle.ongoingEventsButtons
@@ -162,7 +300,7 @@ const Dashboard = ({route}: DashboardProps) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.push('Payment')}
+                onPress={() => navigation.push('PaymentToBePaid')}
                 style={
                   theme === 'light'
                     ? mainStyle.ongoingEventsButtons
@@ -179,7 +317,7 @@ const Dashboard = ({route}: DashboardProps) => {
                     size={25}
                     color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
                   />{' '}
-                  Fee Payment
+                  Payment to be paid
                 </Text>
                 <Icon
                   name="chevron-right"
@@ -213,7 +351,11 @@ const Dashboard = ({route}: DashboardProps) => {
                 }}>
                 <View>
                   <TouchableOpacity
-                    // onPress={() => navigation.push('MyCourses')}
+                    onPress={() =>
+                      navigation.push('CurrentCourses', {
+                        levelId: currentLevelId,
+                      })
+                    }
                     style={
                       theme === 'light'
                         ? mainStyle.academicsButtons
@@ -239,7 +381,7 @@ const Dashboard = ({route}: DashboardProps) => {
                         : mainStyle.dAcademicsButtonsText
                     }>
                     {' '}
-                    My Courses
+                    Current Courses
                   </Text>
                 </View>
                 <View>
@@ -249,15 +391,17 @@ const Dashboard = ({route}: DashboardProps) => {
                         ? mainStyle.academicsButtons
                         : mainStyle.dAcademicsButtons
                     }
-                    onPress={() => navigation.push('MyTerms')}>
+                    onPress={() =>
+                      navigation.push('Schedule', {levelId: currentLevelId})
+                    }>
                     <Text
                       style={
                         theme === 'light'
                           ? mainStyle.academicsButtonsIcon
                           : mainStyle.dAcademicsButtonsIcon
                       }>
-                      <Icon3
-                        name="file-document-outline"
+                      <Icon4
+                        name="table"
                         size={50}
                         color={theme === 'light' ? '#3d3d3d' : '#bbb'}
                       />
@@ -269,7 +413,7 @@ const Dashboard = ({route}: DashboardProps) => {
                         ? mainStyle.academicsButtonsText
                         : mainStyle.dAcademicsButtonsText
                     }>
-                    My Terms
+                    Schedule
                   </Text>
                 </View>
               </View>
@@ -313,7 +457,7 @@ const Dashboard = ({route}: DashboardProps) => {
                 <View>
                   <TouchableOpacity
                     // onPress = {() => logoutHandler()}
-                    onPress={() => navigation.push('Results')}
+                    onPress={() => navigation.push('MyGradeCardTerms')}
                     style={
                       theme === 'light'
                         ? mainStyle.academicsButtons
@@ -342,13 +486,14 @@ const Dashboard = ({route}: DashboardProps) => {
                   </Text>
                 </View>
               </View>
-              <View style={{width: "100%", height: 20}}></View>
-              <TouchableOpacity
+              <View style={{width: '100%', height: 20}}></View>
+              {/* <TouchableOpacity
                 onPress={() => logoutHandler()}
                 style={
                   theme === 'light'
                     ? mainStyle.logoutHandlerButton
-                    : mainStyle.dLogoutHandlerButton }>
+                    : mainStyle.dLogoutHandlerButton
+                }>
                 <Text
                   style={
                     theme === 'light'
@@ -371,7 +516,7 @@ const Dashboard = ({route}: DashboardProps) => {
                   {' '}
                   LOGOUT
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </View>
