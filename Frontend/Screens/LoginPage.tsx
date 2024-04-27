@@ -158,7 +158,7 @@ const LoginPage = ({navigation}: LoginPageProps) => {
                         ? {
                             height: 18,
                             width: 18,
-                            backgroundColor: '#2196f3',
+                            backgroundColor: '#272D7A',
                             borderRadius: 50,
                             marginRight: 7,
                           }

@@ -2,29 +2,30 @@ import React, {useEffect, useState} from 'react';
 import {StatusBar, Appearance} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 // Screens
-import Dashboard from './Screens/Dashboard';
-import LoginPage from './Screens/LoginPage';
-import OTPVerification from './Screens/OTPVerification';
-import CourseRegistration2 from './Screens/CourseRegistration2';
-import Notifications from './Screens/Notifications';
-import MyTerms from './Screens/MyTerms';
-import MyCourses from './Screens/MyCourses';
-import MyCourseDetails from './Screens/MyCourseDetails';
-import LessonPlan from './Screens/LessonPlan';
-import Assignments from './Screens/Assignments';
-import Results from './Screens/Results';
-import AssignmentDetails from './Screens/AssignmentDetails';
-import LessonPlansDetails from './Screens/LessonPlansDetails';
-import MyTotalDues from './Screens/MyTotalDues';
-import MyProfile from './Screens/MyProfile';
-import PaymentHistoryNew from './Screens/PaymentHistoryNew';
-import MyGradeCard from './Screens/MyGradeCard';
-import MyGradeCardTerms from './Screens/MyGradeCardTerms';
-import PaymentToBePaid from './Screens/PaymentToBePaid';
-import Schedule from './Screens/Schedule';
-import AppPinLock from './Screens/AppPinLock';
-import VerifyPinLock from './Screens/VerifyPinLock';
-import CurrentCourses from './Screens/CurrentCourses';
+import AppPinLock from './screens/AppPinLock.tsx';
+import Assignments from './screens/Assignments.tsx';
+import AssignmentDetails from './screens/AssignmentDetails.tsx';
+import CourseRegistration2 from './screens/CourseRegistration2.tsx';
+import CurrentCourses from './screens/CurrentCourses.tsx';
+import Dashboard from './screens/Dashboard.tsx';
+import ForgotPin from './screens/ForgotPin.tsx';
+import LessonPlan from './screens/LessonPlan.tsx';
+import LessonPlansDetails from './screens/LessonPlansDetails.tsx';
+import LoginPage from './screens/LoginPage.tsx';
+import MyCourseDetails from './screens/MyCourseDetails.tsx';
+import MyCourses from './screens/MyCourses.tsx';
+import MyGradeCard from './screens/MyGradeCard.tsx';
+import MyGradeCardTerms from './screens/MyGradeCardTerms.tsx';
+import MyProfile from './screens/MyProfile.tsx';
+import MyTerms from './screens/MyTerms.tsx';
+import Notifications from './screens/Notifications.tsx';
+import OTPVerification from './screens/OTPVerification.tsx';
+import PaymentHistoryNew from './screens/PaymentHistoryNew.tsx';
+import PaymentToBePaid from './screens/PaymentToBePaid.tsx';
+import Results from './screens/Results.tsx';
+import Schedule from './screens/Schedule.tsx';
+import SwitchAccount from './screens/SwitchAccount.tsx';
+import VerifyPinLock from './screens/VerifyPinLock.tsx';
 
 // Stack Navigator
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -32,29 +33,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 // For parameter types in stack navigation
 export type RootStackParamList = {
-  Dashboard: {token: string; name: string};
-  LoginPage: undefined;
-  Notifications: undefined;
-  OTPVerification: {Number: string};
-  CourseRegistration2: undefined;
-  MyTerms: undefined;
-  MyCourses: undefined;
-  MyCourseDetails: undefined;
-  LessonPlan: undefined;
-  Assignments: undefined;
-  Results: undefined;
-  AssignmentDetails: undefined;
-  LessonPlansDetails: undefined;
-  MyTotalDues: undefined;
-  MyProfile: undefined;
-  PaymentHistoryNew: undefined;
-  MyGradeCard: undefined;
-  MyGradeCardTerms: undefined;
-  PaymentToBePaid: undefined;
-  Schedule: undefined;
-  AppPinLock: undefined;
-  VerifyPinLock: undefined;
-  CurrentCourses: undefined;
 };
 
 // Create stack navigator
@@ -75,7 +53,7 @@ const App = () => {
     <>
       <StatusBar
         animated={true}
-        backgroundColor={theme === 'light' ? '#DDDDDD' : '#0c1319'}
+        backgroundColor={theme === 'light' ? '#fff' : '#0c1319'}
         barStyle={theme === 'light' ? 'dark-content' : 'light-content'}
       />
       <NavigationContainer style={{fontFamily: 'arial'}}>
@@ -193,6 +171,16 @@ const App = () => {
           <Stack.Screen
             name="CurrentCourses"
             component={CurrentCourses}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SwitchAccount"
+            component={SwitchAccount}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ForgotPin"
+            component={ForgotPin}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

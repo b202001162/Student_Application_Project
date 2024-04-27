@@ -251,70 +251,18 @@ const Schedule = ({route}: ScheduleProps) => {
     }
   }, []);
 
-  const CourseItem = ({item}) => {
-    return (
-      <View
-        style={
-          theme === 'light'
-            ? mainStyle.myTermsItemContainer
-            : mainStyle.dMyTermsItemContainer
-        }>
-        <TouchableOpacity
-          style={{flexDirection: 'row', alignItems: 'center'}}
-          onPress={() =>
-            navigation.push('MyCourseDetails', {
-              code: item.code,
-              name: item.name,
-              credit: item.value,
-              courseId: item.id,
-              levelId: levelId,
-            })
-          }>
-          <View style={{maxWidth: '85%'}}>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myCoursesItemTitle
-                  : mainStyle.dMyCoursesItemTitle
-              }>
-              <Text style={{fontWeight: '600'}}>Course Code:</Text>{' '}
-              <Text style={{fontSize: 18}}>{item.code}</Text>
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              <Text style={{fontWeight: '600'}}>Credit:</Text> {`${item.value}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              <Text style={{fontWeight: '600'}}>Name:</Text>{' '}
-              <Text style={{fontSize: 18}}>{`${item.name}`}</Text>
-            </Text>
-          </View>
-          <Icon
-            style={(mainStyle.headerIcon, {position: 'absolute', right: 10})}
-            name="circle-chevron-right"
-            size={20}
-            color={theme === 'light' ? '#3d3d3d' : '#ccc'}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   const ResultItem = ({item, index}) => {
     return (
       <View
         style={theme === 'light' ? styles.scheduleCard : styles.dScheduleCard}>
         <View
-          style={{
+          style={theme === 'light' ? {
+            alignItems: 'flex-start',
+            borderRightWidth: 1,
+            borderColor: '#3d3d3d',
+            marginRight: 10,
+            paddingRight: 10,
+          } : {
             alignItems: 'flex-start',
             borderRightWidth: 1,
             borderColor: '#eee',
@@ -591,9 +539,11 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     elevation: 4,
-    backgroundColor: '#DDD',
+    backgroundColor: '#fefefe',
     borderBottomWidth: 1,
     borderBottomColor: '#1d1d1d',
+    paddingHorizontal: 15,
+
   },
   dHeaderMain: {
     width: '100%',
@@ -612,6 +562,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0c1319',
     borderBottomWidth: 1,
     borderBottomColor: '#555',
+    paddingHorizontal: 15
   },
   dFilterButtonText: {
     color: '#EAEAEA',
@@ -648,7 +599,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   activeFilterButton: {
-    backgroundColor: '1E63BB', // Change color as desired
+    backgroundColor: '#272D7A', // Change color as desired
     marginHorizontal: 10,
     marginTop: 10,
     borderColor: 'transparent',
@@ -681,11 +632,12 @@ const styles = StyleSheet.create({
 
   scheduleCard: {
     minWidth: '95%',
-    backgroundColor: '#EAEAEA',
+    backgroundColor: '#DDD',
     borderRadius: 10,
     marginVertical: 10,
     padding: 10,
     flexDirection: 'row',
+    marginHorizontal: 10,
   },
   dScheduleCard: {
     minWidth: '95%',
@@ -694,6 +646,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     padding: 10,
     flexDirection: 'row',
+    marginHorizontal: 10,
   },
 });
 

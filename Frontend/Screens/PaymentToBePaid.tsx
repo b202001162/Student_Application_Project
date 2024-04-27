@@ -406,7 +406,7 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
             style={
               theme === 'light'
                 ? {
-                    backgroundColor: '#1E63BB',
+                    backgroundColor: 'transparent',
                     width: '100%',
                     paddingVertical: 7,
                     justifyContent: 'center',
@@ -416,7 +416,7 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                     borderWidth: 1,
                   }
                 : {
-                    backgroundColor: '#23303C',
+                    backgroundColor: 'transparent',
                     width: '100%',
                     paddingVertical: 7,
                     justifyContent: 'center',
@@ -1066,7 +1066,6 @@ const styles = StyleSheet.create({
     color: '#3d3d3d',
     fontSize: 19,
     fontWeight: 'regular',
-    paddingLeft: 7,
     marginBottom: 10,
   },
 

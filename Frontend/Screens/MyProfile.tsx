@@ -94,12 +94,7 @@ const MyProfile = ({route}: MyProfileProps) => {
     }
   };
   const logoutHandler = async () => {
-    await AsyncStorage.removeItem('jwtToken');
-    await AsyncStorage.removeItem('userId');
-    await AsyncStorage.removeItem('firstName');
-    await AsyncStorage.removeItem('refreshToken');
-    await AsyncStorage.removeItem('admissionId');
-    await AsyncStorage.removeItem('currentLevelId');
+    await AsyncStorage.clear();
     navigation.replace('LoginPage');
   };
   useEffect(() => {
@@ -170,7 +165,7 @@ const MyProfile = ({route}: MyProfileProps) => {
             </View>
           </Animated.View>
           <ScrollView
-            style={{width: "100%", paddingHorizontal: 15}}
+            style={{width: "100%", paddingHorizontal: 20}}
             onScroll={e => {
               scrollY.setValue(e.nativeEvent.contentOffset.y);
             }}>

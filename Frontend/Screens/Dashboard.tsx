@@ -76,7 +76,7 @@ const Dashboard = ({route}: DashboardProps) => {
       } catch (error) {
         console.log('Token Expired');
         // console.log(refreshToken);
-        await loginHandler();
+        await loginHandler(userName);
       }
       return;
     }
@@ -99,14 +99,14 @@ const Dashboard = ({route}: DashboardProps) => {
     } catch (error) {
       // Error retrieving data
       // navigation.replace('LoginPage');
-      await loginHandler();
+      await loginHandler(userName);
       console.log('Error retrieving data');
     } finally {
       setLoading(false);
     }
   };
 
-  const loginHandler = async () => {
+  const loginHandler = async (userName) => {
     try {
       const response1 = await axios.post(
         'https://erp.campuslabs.in/TEST/api/nure-student/v1/signIn',
@@ -121,7 +121,7 @@ const Dashboard = ({route}: DashboardProps) => {
       // await setState({ jwtToken : await JSON.stringify(response1.data.jwtToken), firstName : await JSON.stringify(response1.data.resData.user.firstName)});
 
       // setState({jwtToken: jwtToken, firstName: firstName});
-      const jwtToken = await JSON.stringify(response1.data.jwtToken);
+      const token = await JSON.stringify(response1.data.jwtToken);
       const refreshToken = await JSON.stringify(response1.data.refreshToken);
       const firstName = await JSON.stringify(
         response1.data.resData.user.firstName,
@@ -133,13 +133,13 @@ const Dashboard = ({route}: DashboardProps) => {
         response1.data.resData.user.admissionId,
       );
 
-      await setJwtToken(jwtToken);
+      await setJwtToken(token);
       await setRefreshToken(refreshToken);
       await setFirstName(firstName);
       await setUserId(userId);
       await setAdmissionId(admissionId);
 
-      await AsyncStorage.setItem('jwtToken', jwtToken);
+      await AsyncStorage.setItem('jwtToken', token);
       await AsyncStorage.setItem('refreshToken', refreshToken);
       await AsyncStorage.setItem('firstName', firstName);
       await AsyncStorage.setItem('userId', userId);
@@ -151,12 +151,7 @@ const Dashboard = ({route}: DashboardProps) => {
   };
 
   const logoutHandler = async () => {
-    await AsyncStorage.removeItem('jwtToken');
-    await AsyncStorage.removeItem('currentLevelId');
-    await AsyncStorage.removeItem('refreshToken');
-    await AsyncStorage.removeItem('userId');
-    await AsyncStorage.removeItem('firstName');
-    await AsyncStorage.removeItem('admissionId');
+    await AsyncStorage.clear();
     navigation.replace('LoginPage');
   };
 
@@ -289,14 +284,14 @@ const Dashboard = ({route}: DashboardProps) => {
                   <Icon4
                     name="school-circle-check"
                     size={25}
-                    color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+                    color={theme === 'light' ? '#272D7A' : '#98BAFC'}
                   />{' '}
                   Course Registration
                 </Text>
                 <Icon
                   name="chevron-right"
                   size={18}
-                  color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+                  color={theme === 'light' ? '#272D7A' : '#98BAFC'}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -315,14 +310,14 @@ const Dashboard = ({route}: DashboardProps) => {
                   <Icon2
                     name="payment"
                     size={25}
-                    color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+                    color={theme === 'light' ? '#272D7A' : '#98BAFC'}
                   />{' '}
                   Payment to be paid
                 </Text>
                 <Icon
                   name="chevron-right"
                   size={18}
-                  color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+                  color={theme === 'light' ? '#272D7A' : '#98BAFC'}
                 />
               </TouchableOpacity>
             </View>

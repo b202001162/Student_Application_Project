@@ -90,23 +90,20 @@ const Notifications = ({route}: NotificationsProps) => {
         style={
           theme === 'light' ? mainStyle.itemContainer : mainStyle.dItemContainer
         }>
-        {item.data.date !== null || item.data.dueDate !== null ? (
-          <View style={{width: '100%', flexDirection: "row" , justifyContent: 'space-between'}}>
-            <Text
-              style={
-                (theme === 'light'
-                  ? {color: "#1d1d1d", fontSize: 12}
-                  : {color: "#eee", fontSize: 12})
-              }>
-              {item.data.date}
-            </Text>
+        {item.data.date !== null ? (
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}>
             <Text
               style={
                 theme === 'light'
-                  ? {color: "#FFAB00", fontSize: 15}
-                  : {color: "#FF7C44", fontSize: 15}
+                  ? {color: '#1d1d1d', fontSize: 12}
+                  : {color: '#eee', fontSize: 12}
               }>
-              Due date: {item.data.dueDate}
+              {item.data.date}
             </Text>
           </View>
         ) : null}
@@ -116,6 +113,16 @@ const Notifications = ({route}: NotificationsProps) => {
           }>
           {item.data.notificationData}
         </Text>
+        {item.data.dueDate !== null ? (
+          <Text
+            style={
+              theme === 'light'
+                ? {color: '#F89626', fontSize: 15}
+                : {color: '#FF7C44', fontSize: 15}
+            }>
+            Due date: <Text style={{fontWeight: "bold"}}>{item.data.dueDate}</Text>
+          </Text>
+        ) : null}
       </View>
     );
   };

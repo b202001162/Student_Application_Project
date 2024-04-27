@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 
 export const mainStyle = StyleSheet.create({
   container: {
-    backgroundColor: '#DDDDDD',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'start',
     height: '100%',
@@ -22,14 +22,16 @@ export const mainStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     // height: '100%',
-    width: '90%',
+    width: '100%',
+    // paddingHorizontal:10,
   },
   dSubContainer: {
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'flex-start',
     // height: '100%',
-    width: '90%',
+    width: '100%',
+    // paddingHorizontal: 10,
   },
 
   header: {
@@ -76,7 +78,7 @@ export const mainStyle = StyleSheet.create({
   },
 
   ongoingEventsButtons: {
-    backgroundColor: '#EAEAEA',
+    backgroundColor: '#DDD',
     width: '90%',
     padding: 10,
     paddingLeft: 30,
@@ -100,8 +102,44 @@ export const mainStyle = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
+  courseDetailsButtons: {
+    backgroundColor: '#EAEAEA',
+    width: '90%',
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 10,
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  dCourseDetailsButtons: {
+    backgroundColor: '#23303C',
+    width: '90%',
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 10,
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  courseDetailsButtonsText: {
+    color: '#1d1d1d',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  dCourseDetailsButtonsText: {
+    color: '#EAEAEA',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+
   ongoingEventsButtonsText: {
-    color: '#1E63BB',
+    color: '#272D7A',
     fontSize: 20,
     textAlign: 'center',
   },
@@ -132,12 +170,15 @@ export const mainStyle = StyleSheet.create({
   },
 
   academicsButtons: {
-    backgroundColor: '#EAEAEA',
+    backgroundColor: '#DDD',
     // width: '47%',
+    width: 150,
+    height: 80,
     padding: 12,
     paddingHorizontal: 15,
     borderRadius: 10,
     marginTop: 10,
+    // flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -219,6 +260,52 @@ export const mainStyle = StyleSheet.create({
     borderColor: '#777',
   },
 
+  timeTablePageTextInput: {
+    width: "100%",
+    borderRadius: 8,
+    marginBottom: 10,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    marginTop: 10,
+    // padding: 15,
+    // borderWidth: 2,
+    // borderColor: '#1d1d1d',
+  },
+  dTimeTablePageTextInput: {
+    width: "100%",
+    borderRadius: 8,
+    marginBottom: 10,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 10,
+    // padding: 15,
+    // borderWidth: 2,
+    // borderColor: '#777',
+  },
+
+  timeTablePageButton: {
+    backgroundColor: '#1E63BB',
+    borderRadius: 7,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    paddingTop: 10,
+    paddingHorizontal: 20,
+  },
+  dTimeTablePageButton: {
+    backgroundColor: '#98BAFC',
+    borderRadius: 7,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    paddingTop: 10,
+    paddingHorizontal: 20,
+  },
+
+
   loginInputText: {
     height: 50,
     fontSize: 20,
@@ -229,9 +316,26 @@ export const mainStyle = StyleSheet.create({
     fontSize: 20,
     color: '#bbb',
   },
+  
+  timeTablePageInputText: {
+    fontSize: 20,
+    color: '#3d3d3d',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#1d1d1d',
+    borderRadius: 8,
+  },
+  dTimeTablePageInputText: {
+    fontSize: 20,
+    color: '#bbb',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#777',
+    borderRadius: 8,
+  },
 
   loginButton: {
-    backgroundColor: '#2196f3',
+    backgroundColor: '#272D7A',
     borderRadius: 7,
     height: 50,
     alignItems: 'center',
@@ -276,6 +380,15 @@ export const mainStyle = StyleSheet.create({
     flexDirection: 'row',
     position: 'fixed',
     top: 0,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    elevation:4,
+    backgroundColor: '#fefefe',
+    borderBottomWidth: 1,
+    borderBottomColor: '#1d1d1d',
+    paddingHorizontal: 10,
   },
   dHeaderMain: {
     width: '100%',
@@ -285,6 +398,15 @@ export const mainStyle = StyleSheet.create({
     flexDirection: 'row',
     position: 'fixed',
     top: 0,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    elevation:4,
+    backgroundColor: '#0c1319',
+    borderBottomWidth: 1,
+    borderBottomColor: '#555',
+    paddingHorizontal: 10,
   },
 
   headerText: {
@@ -302,7 +424,7 @@ export const mainStyle = StyleSheet.create({
   },
 
   itemContainer: {
-    backgroundColor: '#EAEAEA',
+    backgroundColor: '#DDD',
     minWwidth: '95%',
     maxWidth: '95%',
     padding: 10,
@@ -318,15 +440,15 @@ export const mainStyle = StyleSheet.create({
     marginTop: 10,
   },
 
-  myProfilesItemContainer : {
-    backgroundColor: '#EAEAEA',
+  myProfilesItemContainer: {
+    backgroundColor: '#DDD',
     minWidth: '95%',
     maxWidth: '95%',
     padding: 10,
     borderRadius: 10,
     marginTop: 10,
   },
-  dMyProfilesItemContainer : {
+  dMyProfilesItemContainer: {
     backgroundColor: '#23303C',
     minWidth: '95%',
     maxWidth: '95%',
@@ -336,10 +458,10 @@ export const mainStyle = StyleSheet.create({
   },
 
   myTermsItemContainer: {
-    backgroundColor: '#EAEAEA',
+    backgroundColor: '#DDD',
     minWidth: '90%',
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     marginTop: 10,
     marginBottom: 10,
   },
@@ -347,28 +469,28 @@ export const mainStyle = StyleSheet.create({
     backgroundColor: '#23303C',
     minWidth: '90%',
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     marginTop: 10,
     marginBottom: 10,
   },
 
   myCourseDetailsItemContainer: {
-    backgroundColor: '#EAEAEA',
+    backgroundColor: '#ddd',
     minWidth: '90%',
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 8,
     marginTop: 10,
     marginBottom: 10,
-    color: '#1E63BB'
+    color: '#1E63BB',
   },
   dMyCourseDetailsItemContainer: {
     backgroundColor: '#23303C',
     minWidth: '90%',
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 8,
     marginTop: 5,
     marginBottom: 5,
-    color: '#98BAFC'
+    color: '#98BAFC',
   },
 
   itemTitle: {
@@ -424,28 +546,27 @@ export const mainStyle = StyleSheet.create({
     fontSize: 15,
   },
 
-  myProfilesItemDetails : {
+  myProfilesItemDetails: {
     color: '#1d1d1d',
     fontSize: 15,
   },
-  dMyProfilesItemDetails : {
+  dMyProfilesItemDetails: {
     color: '#eee',
     fontSize: 15,
   },
 
-  profileTitleText : {
+  profileTitleText: {
     color: '#1d1d1d',
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  dProfileTitleText : {
+  dProfileTitleText: {
     color: '#eee',
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-
 
   myTermsItemDetails: {
     color: '#1d1d1d',
@@ -480,7 +601,7 @@ export const mainStyle = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20
+    marginTop: 20,
   },
 
   myCourseDetailsButton: {
@@ -519,13 +640,13 @@ export const mainStyle = StyleSheet.create({
     textAlign: 'center',
   },
 
-  lessonPlanTitle : {
+  lessonPlanTitle: {
     color: '#4d4d4d',
     fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  dLessonPlanTitle : {
+  dLessonPlanTitle: {
     color: '#bbb',
     fontSize: 15,
     fontWeight: 'bold',
@@ -534,16 +655,16 @@ export const mainStyle = StyleSheet.create({
 
   assignmentItemContainer: {
     backgroundColor: '#EAEAEA',
-    minWidth: '95%',
+    minWidth: '100%',
     padding: 10,
     borderRadius: 10,
     marginTop: 10,
     marginBottom: 10,
-    height: 'auto',
+    // height: 'auto',
   },
   dAssignmentItemContainer: {
     backgroundColor: '#23303C',
-    minWidth: '95%',
+    minWidth: '100%',
     padding: 10,
     borderRadius: 10,
     marginTop: 10,
@@ -551,7 +672,7 @@ export const mainStyle = StyleSheet.create({
     height: 'auto',
   },
 
-  resultContainer : {
+  resultContainer: {
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: '#EAEAEA',
@@ -561,7 +682,7 @@ export const mainStyle = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  dResultContainer : {
+  dResultContainer: {
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: '#23303C',
@@ -572,34 +693,36 @@ export const mainStyle = StyleSheet.create({
     marginBottom: 7,
   },
 
-  resultPageText : {
+  resultPageText: {
     color: '#5d5d5d',
     fontSize: 17,
   },
-  dResultPageText : {
+  dResultPageText: {
     color: '#bbb',
     fontSize: 17,
   },
 
-  paymentHistoryStudentDetailsText : {
-    color: '#7d7d7d',
+  paymentHistoryStudentDetailsText: {
+    color: '#4d4d4d',
     fontSize: 15,
+    fontWeight: 'semibold',
   },
-  dPaymentHistoryStudentDetailsText : {
-    color: '#aaa',
+  dPaymentHistoryStudentDetailsText: {
+    color: '#ccc',
     fontSize: 15,
+    fontWeight: 'semibold',
   },
 
-  paymentHistoryTable : {
+  paymentHistoryTable: {
     width: '100%',
     marginTop: 40,
   },
-  dPaymentHistoryTable : {
+  dPaymentHistoryTable: {
     width: '100%',
     marginTop: 40,
   },
 
-  paymentHistoryTHead : {
+  paymentHistoryTHead: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -607,7 +730,7 @@ export const mainStyle = StyleSheet.create({
     padding: 10,
     // borderRadius: 10,
   },
-  dPaymentHistoryTHead : {
+  dPaymentHistoryTHead: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -616,23 +739,23 @@ export const mainStyle = StyleSheet.create({
     // borderRadius: 10,
   },
 
-  paymentHistoryTHeadText : {
+  paymentHistoryTHeadText: {
     color: '#1d1d1d',
     fontSize: 15,
   },
-  dPaymentHistoryTHeadText : {
+  dPaymentHistoryTHeadText: {
     color: '#eee',
     fontSize: 15,
   },
 
-  paymentHistoryTData : {
+  paymentHistoryTData: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 10,
     borderRadius: 10,
   },
-  dPaymentHistoryTData : {
+  dPaymentHistoryTData: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -640,7 +763,7 @@ export const mainStyle = StyleSheet.create({
     borderRadius: 10,
   },
 
-  paymentHistoryTBody : {
+  paymentHistoryTBody: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -648,7 +771,7 @@ export const mainStyle = StyleSheet.create({
     padding: 10,
     // borderRadius: 10,
   },
-  dPaymentHistoryTBody : {
+  dPaymentHistoryTBody: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -657,16 +780,16 @@ export const mainStyle = StyleSheet.create({
     // borderRadius: 10,
   },
 
-  paymentHistoryTBodyText : {
+  paymentHistoryTBodyText: {
     color: '#1d1d1d',
     fontSize: 15,
   },
-  dPaymentHistoryTBodyText : {
+  dPaymentHistoryTBodyText: {
     color: '#eee',
     fontSize: 15,
   },
 
-  PaymentButtonsCont : {
+  PaymentButtonsCont: {
     width: '100%',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -674,7 +797,7 @@ export const mainStyle = StyleSheet.create({
     flexDirection: 'row',
   },
 
-  PaymentButton : {
+  PaymentButton: {
     backgroundColor: '#EAEAEA',
     width: '40%',
     padding: 10,
@@ -686,7 +809,7 @@ export const mainStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  dPaymentButton : {
+  dPaymentButton: {
     backgroundColor: '#23303C',
     width: '40%',
     padding: 10,
@@ -699,45 +822,44 @@ export const mainStyle = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  courseFeedbackTitle : {
+  courseFeedbackTitle: {
     color: '#1E63BB',
     fontSize: 20,
     fontWeight: 'bold',
   },
-  dCourseFeedbackTitle : {
+  dCourseFeedbackTitle: {
     color: '#98BAFC',
     fontSize: 20,
     fontWeight: 'bold',
   },
 
-
-  myProfileDetailsText : {
-    color: '#3d3d3d',
-    fontSize: 15,
-    fontWeight: 'semibold',
+  myProfileDetailsText: {
+    color: '#5d5d5d',
+    fontSize: 13,
+    fontWeight: 'bold',
     marginLeft: 10,
   },
-  dMyProfileDetailsText : {
-    color: '#cccccc',
-    fontSize: 15,
-    fontWeight: 'semibold',
+  dMyProfileDetailsText: {
+    color: '#aaa',
+    fontSize: 13,
+    fontWeight: 'bold',
     marginLeft: 10,
   },
 
-  myProfileDivider : {
+  myProfileDivider: {
     width: '100%',
-    height: 1,
+    // height: 1,
     backgroundColor: '#1d1d1d',
     marginVertical: 5,
   },
-  dMyProfileDivider : {
+  dMyProfileDivider: {
     width: '100%',
-    height: 1,
+    // height: 1,
     backgroundColor: '#777',
     marginVertical: 5,
   },
 
-  courseFBInput : {
+  courseFBInput: {
     width: '100%',
     borderRadius: 8,
     height: 250,
@@ -749,7 +871,7 @@ export const mainStyle = StyleSheet.create({
     marginTop: 20,
     borderColor: '#1E63BB',
   },
-  dCourseFBInput : {
+  dCourseFBInput: {
     width: '100%',
     borderRadius: 8,
     height: 250,
@@ -774,7 +896,6 @@ export const mainStyle = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
-
 
   courseFBBtn: {
     backgroundColor: '#1E63BB',
@@ -801,12 +922,12 @@ export const mainStyle = StyleSheet.create({
 
   courseFBBtnText: {
     color: '#EAEAEA',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: 'bold',
   },
   dCourseFBBtnText: {
     color: '#23303C',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: 'bold',
   },
 
@@ -819,39 +940,102 @@ export const mainStyle = StyleSheet.create({
 
   courseRegistrationBtn: {
     backgroundColor: '#1E63BB',
-    borderRadius: 50,
-    height: 45,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '40%',
     paddingBottom: 10,
     paddingTop: 10,
-    marginTop: 20,
   },
   dCourseRegistrationBtn: {
     backgroundColor: '#98BAFC',
-    borderRadius: 50,
-    height: 45,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '40%',
     paddingBottom: 10,
     paddingTop: 10,
-    marginTop: 20,
+  },
+  courseRegistrationBtnOld: {
+    backgroundColor: '#1E63BB',
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    paddingTop: 10,
+    paddingHorizontal: 30,
+    marginTop: 10,
+  },
+  dCourseRegistrationBtnOld: {
+    backgroundColor: '#98BAFC',
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    paddingTop: 10,
+    paddingHorizontal: 30,
+    marginTop: 10,
   },
 
   courseRegistrationBtnText: {
     color: '#EAEAEA',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: 'bold',
   },
   dCourseRegistrationBtnText: {
     color: '#23303C',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: 'bold',
   },
 
-  AssignmentDetailsContainer : {
+  courseDeregistrationBtn: {
+    backgroundColor: '#DB1313',
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    paddingTop: 10,
+  },
+  dCourseDeregistrationBtn: {
+    backgroundColor: '#DD696B',
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    paddingTop: 10,
+  },
+  courseDeregistrationBtnOld: {
+    backgroundColor: '#DB1313',
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    paddingTop: 10,
+    paddingHorizontal: 30,
+    marginTop: 10,
+  },
+  dCourseDeregistrationBtnOld: {
+    backgroundColor: '#DD696B',
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    paddingTop: 10,
+    paddingHorizontal: 30,
+    marginTop: 10,
+  },
+
+  courseDeregistrationBtnText: {
+    color: '#EAEAEA',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  dCourseDeregistrationBtnText: {
+    color: '#23303C',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  
+
+  AssignmentDetailsContainer: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'flex-start',
@@ -899,7 +1083,7 @@ export const mainStyle = StyleSheet.create({
     marginTop: 20,
   },
 
-  AssignmentFile : {
+  AssignmentFile: {
     backgroundColor: '#EAEAEA',
     borderRadius: 10,
     width: '80%',
@@ -908,7 +1092,7 @@ export const mainStyle = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: 'row',
   },
-  dAssignmentFile : {
+  dAssignmentFile: {
     backgroundColor: '#23303C',
     borderRadius: 10,
     width: '80%',
@@ -939,7 +1123,6 @@ export const mainStyle = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 5,
     paddingLeft: 15,
-
   },
   dUploadUrAssignmentCont: {
     width: '100%',
@@ -1008,12 +1191,11 @@ export const mainStyle = StyleSheet.create({
     borderRadius: 10,
   },
 
-  myProfileDetailsCont : {
+  myProfileDetailsCont: {
     width: '100%',
     // justifyContent: 'center',
     // alignItems: 'flex-start',
-    height: '90%',
-    marginTop: 10,
+    height: '100%',
     // marginBottom: 50,
     // paddingBottom: 50,
   },
@@ -1033,33 +1215,33 @@ export const mainStyle = StyleSheet.create({
     marginTop: 10,
   },
 
-  myProfileDetailsContContainer : {
+  myProfileDetailsContContainer: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'flex-start',
     marginTop: 20,
     backgroundColor: '#EAEAEA',
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    paddingHorizontal: 2,
+    borderRadius: 8,
     paddingVertical: 10,
   },
-  dMyProfileDetailsContContainer : {
+  dMyProfileDetailsContContainer: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'flex-start',
     marginTop: 20,
     backgroundColor: '#23303C',
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    paddingHorizontal: 2,
+    borderRadius: 8,
     paddingVertical: 10,
   },
 
-  tableForPaymentHistory : {
+  tableForPaymentHistory: {
     width: '100%',
     marginTop: 20,
   },
 
-  tableHeadCont : {
+  tableHeadCont: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1067,7 +1249,7 @@ export const mainStyle = StyleSheet.create({
     padding: 10,
     // borderRadius: 10,
   },
-  dTableHeadCont : {
+  dTableHeadCont: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1076,18 +1258,18 @@ export const mainStyle = StyleSheet.create({
     // borderRadius: 10,
   },
 
-  th : {
+  th: {
     color: '#1E63BB',
     fontSize: 15,
     width: '30%',
   },
-  dTh : {
+  dTh: {
     color: '#98BAFC',
     fontSize: 15,
     width: '30%',
   },
 
-  tableBody : {
+  tableBody: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1095,7 +1277,7 @@ export const mainStyle = StyleSheet.create({
     padding: 10,
     // borderRadius: 10,
   },
-  dTableBody : {
+  dTableBody: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1104,19 +1286,19 @@ export const mainStyle = StyleSheet.create({
     // borderRadius: 10,
   },
 
-  tb : {
+  tb: {
     color: '#1E63BB',
     fontSize: 15,
     width: '30%',
   },
-  dTb : {
+  dTb: {
     color: '#98BAFC',
     fontSize: 15,
     width: '30%',
   },
 
-  logoutHandlerButton : {
-    backgroundColor: '#EAEAEA',
+  logoutHandlerButton: {
+    backgroundColor: '#DDD',
     borderRadius: 7,
     height: 50,
     alignItems: 'center',
@@ -1128,7 +1310,7 @@ export const mainStyle = StyleSheet.create({
     paddingLeft: 20,
     flexDirection: 'row',
   },
-  dLogoutHandlerButton : {
+  dLogoutHandlerButton: {
     backgroundColor: '#23303C',
     borderRadius: 7,
     height: 50,
@@ -1153,12 +1335,150 @@ export const mainStyle = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  myProfileLogoutIcon : {
+  myProfileLogoutIcon: {
     transform: [{rotateY: '180deg'}],
-  }
+  },
 
+  courseRegistrationTable: {
+    width: '100%',
+    marginTop: 20,
+  },
+  dCourseRegistrationTable : {
+    width: '100%',
+    marginTop: 20,
+  },
 
+  resultCGPATableHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    backgroundColor: '#EAEAEA',
+    padding: 10,
+    // borderRadius: 10,
+  },
+  dResultCGPATableHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    backgroundColor: '#23303C',
+    padding: 10,
+    // borderRadius: 10,
+  },
+  courseRegistrationTableHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#DADADA',
+    padding: 10,
+    // borderRadius: 10,
+  },
+  dCourseRegistrationTableHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#23303C',
+    padding: 10,
+    // borderRadius: 10,
+  },
 
+  courseRegistrationTableHeaderText: {
+    color: '#1E63BB',
+    fontSize: 15,
+  },
+  dCourseRegistrationTableHeaderText: {
+    color: '#98BAFC',
+    fontSize: 15,
+  },
+
+  courseRegistrationTableRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#DDD',
+    padding: 10,
+    // borderRadius: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#555',
+  },
+  dCourseRegistrationTableRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#22364f',
+    padding: 10,
+    // borderRadius: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#555',
+  },
+  resultCGPATableRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    backgroundColor: '#ECECEC',
+    padding: 10,
+    // borderRadius: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#555',
+  },
+  dResultCGPATableRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    backgroundColor: '#22364f',
+    padding: 10,
+    // borderRadius: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#555',
+  },
+
+  courseRegistrationTableCell: {
+    color: '#1E63BB',
+    fontSize: 15,
+    width: 110,
+  },
+  dCourseRegistrationTableCell: {
+    color: '#98BAFC',
+    fontSize: 15,
+    width: 110,
+  },
+
+  moreInfoBtn: {
+    backgroundColor: 'grey',
+    borderRadius: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 7,
+    paddingTop: 7,
+  },
+  dMoreInfoBtn: {
+    backgroundColor: 'grey',
+    borderRadius: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 7,
+    paddingTop: 7,
+  },
+
+  moreInfoBtnText: {
+    color: '#EAEAEA',
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+  dMoreInfoBtnText: {
+    color: '#23303C',
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+
+  courseRegistrationTableText: {
+    color: "#3d3d3d"
+  },
+  dCourseRegistrationTableText: {
+    color: "#cdcdcd"
+  },
 
 });
-

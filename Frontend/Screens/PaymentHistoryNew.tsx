@@ -441,7 +441,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
             style={
               theme === 'light'
                 ? {
-                    backgroundColor: '#1E63BB',
+                    backgroundColor: 'transparent',
                     width: '100%',
                     paddingVertical: 7,
                     justifyContent: 'center',
@@ -451,7 +451,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                     borderWidth: 1
                   }
                 : {
-                    backgroundColor: '#23303C',
+                    backgroundColor: 'transparent',
                     width: '100%',
                     paddingVertical: 7,
                     justifyContent: 'center',
@@ -733,7 +733,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             ? styles.detailsMainTexts
                             : styles.dDetailsMainTexts
                         }>
-                        Date:{'  '}
+                        Date:{'\n'}
                         <Text
                           style={
                             theme === 'light'
@@ -749,7 +749,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             ? styles.detailsMainTexts
                             : styles.dDetailsMainTexts
                         }>
-                        Amount:{'  '}
+                        Amount:{'\n'}
                         <Text
                           style={
                             theme === 'light'
@@ -765,7 +765,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             ? styles.detailsMainTexts
                             : styles.dDetailsMainTexts
                         }>
-                        Status:{'  '}
+                        Status:{'\n'}
                         <Text
                           style={
                             theme === 'light'
@@ -781,7 +781,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             ? styles.detailsMainTexts
                             : styles.dDetailsMainTexts
                         }>
-                        Transaction No.:{'  '}
+                        Transaction No.:{'\n'}
                         <Text
                           style={
                             theme === 'light'
@@ -797,7 +797,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             ? styles.detailsMainTexts
                             : styles.dDetailsMainTexts
                         }>
-                        Payment Mode:{'  '}
+                        Payment Mode:{'\n'}
                         <Text
                           style={
                             theme === 'light'
@@ -813,7 +813,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             ? styles.detailsMainTexts
                             : styles.dDetailsMainTexts
                         }>
-                        Bank Ref No.:{'  '}
+                        Bank Ref No.:{'\n'}
                         <Text
                           style={
                             theme === 'light'
@@ -829,7 +829,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             ? styles.detailsMainTexts
                             : styles.dDetailsMainTexts
                         }>
-                        Receipt No.:{'  '}
+                        Receipt No.:{'\n'}
                         <Text
                           style={
                             theme === 'light'
@@ -928,6 +928,7 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     marginTop: 10,
+    backgroundColor: "transparent"
   },
   dButton: {
     borderRadius: 20,
@@ -975,14 +976,14 @@ const styles = StyleSheet.create({
 
   detailsMainTexts: {
     color: '#1E63BB',
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 1,
   },
 
   dDetailsMainTexts: {
     color: '#98BAFC',
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 1,
   },

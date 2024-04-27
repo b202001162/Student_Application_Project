@@ -26,6 +26,7 @@ type AppPinLockProps = NativeStackScreenProps<RootStackParamList, 'AppPinLock'>;
 const AppPinLock = ({navigation}: AppPinLockProps) => {
   const [theme, setTheme] = useState(Appearance.getColorScheme());
   const [number, setNumber] = useState();
+  const [fullName, setFullName] = useState();
   const handleNumberChange = text => {
     // Regex to ensure only numbers are entered
     const cleanNumber = text.replace(/[^0-9]/g, '');
@@ -39,6 +40,7 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
     setNumber(cleanNumber);
   };
   useEffect(() => {
+    retrieveData();
     // requestStoragePermission();
     const colorTheme = Appearance.getColorScheme();
     console.log(colorTheme);
@@ -50,6 +52,18 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
   });
   const [isLoading, setLoading] = useState(false);
 
+  const retrieveData = async () => {
+    try {
+      const value = await JSON.parse(await AsyncStorage.getItem('userFullName'));
+      if (value !== null) {
+        setFullName(value);
+      }
+    } catch (error) {
+      console.log(error);
+      alert('Something went wrong, please try again later.');
+    }
+  };
+
   // generate api call
   const generateOTP = async () => {
     if (number.length !== 4) {
@@ -58,7 +72,8 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
     }
     setLoading(true);
     try {
-      await AsyncStorage.setItem('pin', number);
+      const Id = await JSON.parse(await AsyncStorage.getItem('userId'));
+      await AsyncStorage.setItem(`pin${Id}`, number);
       navigation.replace('VerifyPinLock');
     } catch (error) {
       console.error(error);
@@ -69,12 +84,7 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
   };
 
   const logoutHandler = async () => {
-    await AsyncStorage.removeItem('jwtToken');
-    await AsyncStorage.removeItem('currentLevelId');
-    await AsyncStorage.removeItem('refreshToken');
-    await AsyncStorage.removeItem('userId');
-    await AsyncStorage.removeItem('firstName');
-    await AsyncStorage.removeItem('admissionId');
+    await AsyncStorage.clear();
     navigation.replace('LoginPage');
   };
 
@@ -109,7 +119,7 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
                         marginBottom: 150,
                       }
                 }>
-                Set Pin {'(4 digit)'}
+                Set Pin {'(4 digit)'} for {fullName}
               </Text>
             </View>
             {!isLoading ? (
@@ -117,7 +127,19 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
                 <View
                   style={
                     theme === 'light'
-                      ? mainStyle.loginTextInput
+                      ? {
+                          height: 50,
+                          width: '50%',
+                          borderColor: '#4d4d4d',
+                          borderWidth: 1,
+                          borderRadius: 5,
+                          marginBottom: 10,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          flexDirection: 'row',
+                          paddingHorizontal: 5,
+                          marginBottom: 60,
+                        }
                       : {
                           height: 50,
                           width: '50%',
@@ -152,102 +174,58 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
                     onChangeText={handleNumberChange}
                   />
                 </View>
-                <TouchableOpacity
-                  style={
-                    theme === 'light'
-                      ? {
-                          backgroundColor: '#2196f3',
-                          borderRadius: 7,
-                          height: 50,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          // padding: 20,
-                          width: '35%',
-                          paddingBottom: 10,
-                          paddingTop: 10,
-                          marginTop: 20,
-                          marginBottom: 10,
-                        }
-                      : {
-                          backgroundColor: '#98BAFC',
-                          borderRadius: 50,
-                          height: 50,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          // padding: 20,
-                          width: '35%',
-                          paddingBottom: 10,
-                          paddingTop: 10,
-                          marginTop: 20,
-                          marginBottom: 10,
-                        }
-                  }
-                  onPress={() => {
-                    generateOTP();
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
                   }}>
-                  <Text
+                  <TouchableOpacity
                     style={
                       theme === 'light'
-                        ? mainStyle.loginButtonText
-                        : mainStyle.dLoginButtonText
-                    }>
-                    SET PIN
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => logoutHandler()}
-                  style={
-                    theme === 'light'
-                      ? {
-                          backgroundColor: '#EAEAEA',
-                          borderRadius: 7,
-                          height: 50,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '35%',
-                          paddingBottom: 10,
-                          paddingTop: 10,
-                          marginTop: 5,
-                          //   paddingLeft: 20,
-                          flexDirection: 'row',
-                        }
-                      : {
-                          backgroundColor: '#23303C',
-                          borderRadius: 7,
-                          height: 50,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '35%',
-                          paddingBottom: 10,
-                          paddingTop: 10,
-                          marginTop: 5,
-                          //   paddingLeft: 20,
-                          flexDirection: 'row',
-                        }
-                  }>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myProfileLogoutText
-                        : mainStyle.dMyProfileLogoutText
-                    }>
-                    <Icon5
-                      style={mainStyle.myProfileLogoutIcon}
-                      name="sign-out-alt"
-                      size={22}
-                      color={theme === 'light' ? '#DB1313' : '#DD696B'}
-                    />
-                  </Text>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myProfileLogoutText
-                        : mainStyle.dMyProfileLogoutText
-                    }>
-                    {' '}
-                    LOGOUT
-                  </Text>
-                </TouchableOpacity>
+                        ? {
+                            backgroundColor: '#272D7A',
+                            borderRadius: 50,
+                            height: 50,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            // padding: 20,
+                            // width: '35%',
+                            paddingBottom: 10,
+                            paddingTop: 10,
+                            marginTop: 20,
+                            marginBottom: 10,
+                            paddingHorizontal: 35,
+                          }
+                        : {
+                            backgroundColor: '#98BAFC',
+                            borderRadius: 50,
+                            height: 50,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            // padding: 20,
+                            // width: '35%',
+                            paddingBottom: 10,
+                            paddingTop: 10,
+                            marginTop: 20,
+                            marginBottom: 10,
+                            paddingHorizontal: 35,
+                          }
+                    }
+                    onPress={() => {
+                      generateOTP();
+                    }}>
+                    <Text
+                      style={
+                        theme === 'light'
+                          ? mainStyle.loginButtonText
+                          : mainStyle.dLoginButtonText
+                      }>
+                      SET PIN
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             ) : (
               <ActivityIndicator size="large" color="#2196f3" />

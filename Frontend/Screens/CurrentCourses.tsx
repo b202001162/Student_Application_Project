@@ -279,51 +279,7 @@ const CurrentCourses = ({route}: CurrentCoursesProps) => {
                             fontWeight: 'bold',
                           }
                     }>
-                    Previous Terms
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.goBack()}
-                  style={
-                    theme === 'light'
-                      ? {
-                          backgroundColor: 'transparent',
-                          padding: 10,
-                          borderRadius: 5,
-                          width: '100%',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginBottom: 10,
-                          borderColor: '#1E63BB',
-                          borderWidth: 1,
-                        }
-                      : {
-                          backgroundColor: 'transparent',
-                          padding: 10,
-                          borderRadius: 5,
-                          width: '100%',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginBottom: 10,
-                          borderColor: '#98BAFC',
-                          borderWidth: 1,
-                        }
-                  }>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? {
-                            color: '#1E63BB',
-                            fontSize: 16,
-                            fontWeight: 'bold',
-                          }
-                        : {
-                            color: '#98BAFC',
-                            fontSize: 16,
-                            fontWeight: 'bold',
-                          }
-                    }>
-                    Back
+                    Term selection
                   </Text>
                 </TouchableOpacity>
               </View>

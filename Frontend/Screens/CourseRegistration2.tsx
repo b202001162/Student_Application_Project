@@ -266,7 +266,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
             style={
               theme === 'light'
                 ? {
-                    backgroundColor: '#1E63BB',
+                    backgroundColor: 'transparent',
                     width: '100%',
                     paddingVertical: 7,
                     justifyContent: 'center',
@@ -276,7 +276,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                     borderWidth: 1,
                   }
                 : {
-                    backgroundColor: '#23303C',
+                    backgroundColor: 'transparent',
                     width: '100%',
                     paddingVertical: 7,
                     justifyContent: 'center',
@@ -316,7 +316,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
               style={
                 theme === 'light'
                   ? {
-                      backgroundColor: '#1E63BB',
+                      backgroundColor: 'transparent',
                       width: '100%',
                       paddingVertical: 7,
                       justifyContent: 'center',
@@ -326,7 +326,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       borderWidth: 1,
                     }
                   : {
-                      backgroundColor: '#23303C',
+                      backgroundColor: 'transparent',
                       width: '100%',
                       paddingVertical: 7,
                       justifyContent: 'center',
@@ -361,7 +361,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
               style={
                 theme === 'light'
                   ? {
-                      backgroundColor: '#1E63BB',
+                      backgroundColor: 'transparent',
                       width: '100%',
                       paddingVertical: 7,
                       justifyContent: 'center',
@@ -371,7 +371,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       borderWidth: 1,
                     }
                   : {
-                      backgroundColor: '#23303C',
+                      backgroundColor: 'transparent',
                       width: '100%',
                       paddingVertical: 7,
                       justifyContent: 'center',
@@ -603,25 +603,22 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                 <Text
                   style={
                     (theme === 'light'
-                      ? mainStyle.paymentHistoryStudentDetailsText
-                      : mainStyle.dPaymentHistoryStudentDetailsText,
-                    {fontSize: 13})
+                      ? [mainStyle.paymentHistoryStudentDetailsText, {fontSize: 13}]
+                      : [mainStyle.dPaymentHistoryStudentDetailsText, {fontSize: 13}])
                   }>
                   Level Code
                 </Text>
                 <Text
                   style={[
-                    theme === 'light' ? styles.valueText : styles.dValueText,
-                    {marginBottom: 5},
+                    theme === 'light' ? styles.valueText : styles.dValueText
                   ]}>
                   {levelCode}
                 </Text>
                 <Text
                   style={
                     (theme === 'light'
-                      ? mainStyle.paymentHistoryStudentDetailsText
-                      : mainStyle.dPaymentHistoryStudentDetailsText,
-                    {fontSize: 13})
+                      ? [mainStyle.paymentHistoryStudentDetailsText, {fontSize: 13}]
+                      : [mainStyle.dPaymentHistoryStudentDetailsText, {fontSize: 13}])
                   }>
                   Name
                 </Text>
@@ -732,8 +729,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={
                         (theme === 'light'
                           ? mainStyle.paymentHistoryStudentDetailsText
-                          : mainStyle.dPaymentHistoryStudentDetailsText,
-                        {marginBottom: 1, fontSize: 16})
+                          : mainStyle.dPaymentHistoryStudentDetailsText)
                       }>
                       Code
                     </Text>
@@ -741,8 +737,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={[
                         theme === 'light'
                           ? styles.valueText
-                          : styles.dValueText,
-                        {marginBottom: 7},
+                          : styles.dValueText
                       ]}>
                       {code}
                     </Text>
@@ -750,8 +745,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={
                         (theme === 'light'
                           ? mainStyle.paymentHistoryStudentDetailsText
-                          : mainStyle.dPaymentHistoryStudentDetailsText,
-                        {marginBottom: 1, fontSize: 16})
+                          : mainStyle.dPaymentHistoryStudentDetailsText)
                       }>
                       Name
                     </Text>
@@ -759,8 +753,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={[
                         theme === 'light'
                           ? styles.valueText
-                          : styles.dValueText,
-                        {marginBottom: 7},
+                          : styles.dValueText
                       ]}>
                       {name}
                     </Text>
@@ -768,8 +761,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={
                         (theme === 'light'
                           ? mainStyle.paymentHistoryStudentDetailsText
-                          : mainStyle.dPaymentHistoryStudentDetailsText,
-                        {marginBottom: 1, fontSize: 16})
+                          : mainStyle.dPaymentHistoryStudentDetailsText)
                       }>
                       Credit
                     </Text>
@@ -777,8 +769,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={[
                         theme === 'light'
                           ? styles.valueText
-                          : styles.dValueText,
-                        {marginBottom: 7},
+                          : styles.dValueText
                       ]}>
                       {credit}
                     </Text>
@@ -786,8 +777,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={
                         (theme === 'light'
                           ? mainStyle.paymentHistoryStudentDetailsText
-                          : mainStyle.dPaymentHistoryStudentDetailsText,
-                        {marginBottom: 1, fontSize: 16})
+                          : mainStyle.dPaymentHistoryStudentDetailsText)
                       }>
                       Credit hours
                     </Text>
@@ -795,8 +785,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={[
                         theme === 'light'
                           ? styles.valueText
-                          : styles.dValueText,
-                        {marginBottom: 7},
+                          : styles.dValueText
                       ]}>
                       {creditHours}
                     </Text>
@@ -804,14 +793,13 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={
                         (theme === 'light'
                           ? mainStyle.paymentHistoryStudentDetailsText
-                          : mainStyle.dPaymentHistoryStudentDetailsText,
-                        {marginBottom: 1, fontSize: 16})
+                          : mainStyle.dPaymentHistoryStudentDetailsText)
                       }>
                       Course Type
                     </Text>
                     <Text
                       style={
-                        [theme === 'light' ? styles.valueText : styles.dValueText, {marginBottom: 7}]
+                        [theme === 'light' ? styles.valueText : styles.dValueText]
                       }>
                       {courseType}
                     </Text>
@@ -819,8 +807,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={
                         (theme === 'light'
                           ? mainStyle.paymentHistoryStudentDetailsText
-                          : mainStyle.dPaymentHistoryStudentDetailsText,
-                        {marginBottom: 1, fontSize: 16})
+                          : mainStyle.dPaymentHistoryStudentDetailsText)
                       }>
                       Faculty ID
                     </Text>
@@ -828,7 +815,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                         style={
                           [theme === 'light'
                             ? styles.valueText
-                            : styles.dValueText, {marginBottom: 7}]
+                            : styles.dValueText]
                         }>
                         {facultyId}
                       </Text>
@@ -836,8 +823,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={
                         (theme === 'light'
                           ? mainStyle.paymentHistoryStudentDetailsText
-                          : mainStyle.dPaymentHistoryStudentDetailsText,
-                        {marginBottom: 1, fontSize: 16})
+                          : mainStyle.dPaymentHistoryStudentDetailsText)
                       }>
                       Faculty Name
                     </Text>
@@ -845,7 +831,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                         style={
                           [theme === 'light'
                             ? styles.valueText
-                            : styles.dValueText, {marginBottom: 7}]
+                            : styles.dValueText]
                         }>
                         {facultyName}
                       </Text>
@@ -853,8 +839,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                       style={
                         (theme === 'light'
                           ? mainStyle.paymentHistoryStudentDetailsText
-                          : mainStyle.dPaymentHistoryStudentDetailsText,
-                        {marginBottom: 1, fontSize: 16})
+                          : mainStyle.dPaymentHistoryStudentDetailsText)
                       }>
                       Faculty email
                     </Text>
@@ -862,7 +847,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                         style={
                           [theme === 'light'
                             ? styles.valueText
-                            : styles.dValueText, {marginBottom: 7}]
+                            : styles.dValueText]
                         }>
                         {facultyEmail}
                       </Text>
@@ -989,14 +974,14 @@ const styles = StyleSheet.create({
   valueText: {
     color: '#1d1d1d',
     fontWeight: 'bold',
-    paddingLeft: 10,
     fontSize: 16,
+    paddingBottom: 10,
   },
   dValueText: {
     color: '#eee',
     fontWeight: 'bold',
-    paddingLeft: 10,
     fontSize: 16,
+    paddingBottom: 10,
   },
 });
 

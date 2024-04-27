@@ -76,61 +76,18 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
         },
       );
       if (response.data.sCode !== 1) {
-        alert('Error fetching data');
-        navigation.goBack();
+        console.log('Attandance data error');
+        // navigation.goBack();
       }
       console.log(response.data.resData.studentAttandanceData);
       await setStudentAttandanceData(
         response.data.resData.studentAttandanceData,
       );
-    } catch  (e) {
+    } catch (e) {
       console.log(e);
     } finally {
       setLoading(false);
     }
-
-    // setLoading(true); // Indicate loading state
-    // try {
-    //   const response = await axios.get(
-    //     `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourseFaculty/${courseId}/${levelId}/${admissionId}`,
-    //     {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     },
-    //   );
-
-    //   //   console.log(response.data);
-
-    //   if (response.data.sCode !== 1) {
-    //     alert('Error fetching data');
-    //     navigation.goBack();
-    //   }
-    //   await setFaculty(response.data.resData.faculty);
-    //   setLoading(true); // Indicate loading state
-
-    //   const response1 = await axios.get(
-    //     `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyLessonPlans/${response.data.resData.faculty.id}/${levelId}/${response.data.resData.faculty.batchId}`,
-    //     {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     },
-    //   );
-
-    //   if (response1.data.sCode !== 1) {
-    //     alert('Error fetching data');
-    //     navigation.goBack();
-    //   }
-    //   setLessons(response1.data.resData.lessonPlans);
-    // } catch (error) {
-    //   // Error retrieving data
-    //   console.log('Error notification retrieving data' + error);
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   useEffect(() => {
@@ -205,31 +162,6 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
         </View>
       </TouchableOpacity>
     );
-  };
-
-  const handleAttendancePress = async () => {
-    try {
-      const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyClassAttendancePercentage/${courseId}/${levelId}/${admissionId}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      if (response.data.sCode !== 1) {
-        alert('Error fetching data');
-        navigation.goBack();
-      }
-      console.log(response.data.resData.studentAttandanceData);
-      await setStudentAttandanceData(
-        response.data.resData.studentAttandanceData,
-      );
-    } catch (error) {
-      // Error retrieving data
-      console.log('Error retrieving data' + error);
-    }
   };
 
   const [isLoading, setLoading] = useState(false);
@@ -370,47 +302,48 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
               alignItems: 'center',
               marginTop: 70,
             }}>
-            <View
+              <View
               style={
                 theme === 'light'
                   ? mainStyle.myCourseDetailsItemContainer
                   : mainStyle.dMyCourseDetailsItemContainer
               }>
-             <Text
-              style={
-                theme === 'light'
-                  ? styles.paymentHistoryStudentDetailsText
-                  : styles.dPaymentHistoryStudentDetailsText, {fontSize: 15}
-              }>
-                Course Code: <Text style={
-                          theme === 'light'
-                            ? styles.valueText
-                            : styles.dValueText
-                        }>{code} </Text>
-              </Text> 
               <Text
-              style={
-                theme === 'light'
-                  ? styles.paymentHistoryStudentDetailsText
-                  : styles.dPaymentHistoryStudentDetailsText, {fontSize: 15}
-              }>
-                Course name: <Text style={
-                          theme === 'light'
-                            ? styles.valueText
-                            : styles.dValueText
-                        }>{`${name}`}</Text>
+                style={
+                  (theme === 'light'
+                    ? styles.paymentHistoryStudentDetailsText
+                    : styles.dPaymentHistoryStudentDetailsText)
+                }>
+                  Code{' '}
+                <Text
+                  style={
+                    theme === 'light' ? styles.valueText : styles.dValueText
+                  }>
+                  {code}
+                </Text>
               </Text>
               <Text
-              style={
-                theme === 'light'
-                  ? styles.paymentHistoryStudentDetailsText
-                  : styles.dPaymentHistoryStudentDetailsText, {fontSize: 15}
-              }>
-                Course credit: <Text style={
-                          theme === 'light'
-                            ? styles.valueText
-                            : styles.dValueText
-                        }>{`${credit}`}</Text>
+                style={
+                  (theme === 'light'
+                    ? styles.paymentHistoryStudentDetailsText
+                    : styles.dPaymentHistoryStudentDetailsText)
+                }>
+                <Text
+                  style={
+                    theme === 'light' ? styles.valueText : styles.dValueText
+                  }>{`${name}`}</Text>
+              </Text>
+              <Text
+                style={
+                  (theme === 'light'
+                    ? styles.paymentHistoryStudentDetailsText
+                    : styles.dPaymentHistoryStudentDetailsText)
+                }>
+                credit{' '}
+                <Text
+                  style={
+                    theme === 'light' ? styles.valueText : styles.dValueText
+                  }>{`${credit}`}</Text>
               </Text>
               {/* <Text
                 style={
@@ -429,11 +362,11 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
                 Batch ID: {faculty.batchId}
               </Text> */}
             </View>
-          </View>
+            </View>
           {isLoading ? (
             <ActivityIndicator
               size="large"
-              color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+              color={theme === 'light' ? '#272D7A' : '#98BAFC'}
             />
           ) : (
             <>
@@ -445,44 +378,83 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
                   height: '70%',
                   // paddingTop: 250,
                 }}>
-                <View style={mainStyle.ongoingEventsButtonsContainer, {justifyContent: "flex-start"}}>
-                  <Text style={
-                    theme === 'light'
-                      ? mainStyle.lessonPlanTitle
-                      : mainStyle.dLessonPlanTitle
-                  }>Attendance:</Text>
-                  {
-                    isLoading ? (<ActivityIndicator
+                <View
+                  style={
+                    (mainStyle.ongoingEventsButtonsContainer,
+                    {justifyContent: 'flex-start'})
+                  }>
+                  <Text
+                    style={
+                      theme === 'light'
+                        ? mainStyle.lessonPlanTitle
+                        : mainStyle.dLessonPlanTitle
+                    }>
+                    Attendance:
+                  </Text>
+                  {isLoading ? (
+                    <ActivityIndicator
                       size="large"
                       color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
-                    />) : (<Text
-                      style={
-                        theme === 'light'
-                          ? styles.paymentHistoryStudentDetailsText
-                          : styles.dPaymentHistoryStudentDetailsText, {paddingLeft: 5,}
-                      }>
-                      Classes Scheduled: <Text style={
+                    />
+                  ) : (
+                    <>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? styles.paymentHistoryStudentDetailsText
+                            : [styles.dPaymentHistoryStudentDetailsText]
+                        }>
+                        Classes Scheduled:{' '}
+                        {studentAttandanceData ? (
+                          <Text
+                            style={
                               theme === 'light'
                                 ? styles.valueText
                                 : styles.dValueText
-                            }>{studentAttandanceData.itemScheduled}</Text> {"\n"}
-                      Classes Completed: <Text style={
+                            }>
+                            {studentAttandanceData.itemScheduled}
+                          </Text>
+                        ) : null}
+                        {'\n'}
+                        Classes Completed:{' '}
+                        {studentAttandanceData ? (
+                          <Text
+                            style={
                               theme === 'light'
                                 ? styles.valueText
                                 : styles.dValueText
-                            }>{studentAttandanceData.itemCompleted}</Text> {"\n"}
-                      Classes Attended: <Text style={
+                            }>
+                            {studentAttandanceData.itemCompleted}
+                          </Text>
+                        ) : null}
+                        {'\n'}
+                        Classes Attended:{' '}
+                        {studentAttandanceData ? (
+                          <Text
+                            style={
                               theme === 'light'
                                 ? styles.valueText
                                 : styles.dValueText
-                            }>{studentAttandanceData.itemPresent} </Text>{"\n"}
-                      Attendance Percentage: <Text style={
+                            }>
+                            {studentAttandanceData.itemPresent}{' '}
+                          </Text>
+                        ) : null}
+                        {'\n'}
+                        Attendance Percentage:{' '}
+                        {studentAttandanceData ? (
+                          <Text
+                            style={
                               theme === 'light'
                                 ? styles.valueText
                                 : styles.dValueText
-                            }>{studentAttandanceData.attandancePerc}{"%"}</Text>
-                    </Text>)
-                  }
+                            }>
+                            {studentAttandanceData.attandancePerc}
+                            {'%'}
+                          </Text>
+                        ) : null}
+                      </Text>
+                    </>
+                  )}
                 </View>
                 <Text
                   style={
@@ -497,8 +469,8 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
                   <Text
                     style={
                       theme === 'light'
-                        ? mainStyle.noLessonPlan
-                        : mainStyle.dNoLessonPlan
+                        ? styles.paymentHistoryStudentDetailsText
+                        : styles.dPaymentHistoryStudentDetailsText
                     }>
                     No lesson plans available
                   </Text>
@@ -612,7 +584,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   valueText: {
-    color: '#2d2d2d',
+    color: '#1d1d1d',
     fontWeight: 'bold',
     fontSize: 17,
   },
@@ -623,15 +595,17 @@ const styles = StyleSheet.create({
   },
 
   paymentHistoryStudentDetailsText: {
-    color: '#1E63BB',
+    color: '#1d1d1d',
     fontSize: 15,
-    fontWeight: 'semibold',
+    fontWeight: 'medium',
+    paddingLeft: 5,
   },
-  dPaymentHistoryStudentDetailsText : {
-    color: '#98BAFC',
+  dPaymentHistoryStudentDetailsText: {
+    color: '#eee',
     fontSize: 15,
     fontWeight: 'semibold',
-  }
+    paddingLeft: 5,
+  },
 });
 
 export default MyCourseDetails;
