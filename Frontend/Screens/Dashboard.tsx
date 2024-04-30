@@ -173,12 +173,13 @@ const Dashboard = ({route}: DashboardProps) => {
     try {
       setLoading(true);
       console.log(admissionId);
+      const token = await JSON.parse(await AsyncStorage.getItem('jwtToken'));
 
       const response = await axios.get(
         `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchTermsForCourseRegistration/${admissionId}`,
         {
           headers: {
-            Authorization: `Bearer ${jwtToken}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );

@@ -1073,7 +1073,6 @@ const styles = StyleSheet.create({
     color: '#CCC',
     fontSize: 19,
     fontWeight: 'regular',
-    paddingLeft: 7,
     marginBottom: 10,
   },
 
