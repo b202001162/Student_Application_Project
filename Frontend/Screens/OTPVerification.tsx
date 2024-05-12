@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   FlatList,
   Appearance,
+  Image,
 } from 'react-native';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -17,6 +18,10 @@ import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {mainStyle} from '../StyleSheet/StyleSheet';
 
+import OTPTextInput from 'react-native-otp-textinput';
+
+import Logo from '../Logo/Logo.png';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Iconn from 'react-native-vector-icons/FontAwesome6';
 import axios from 'axios';
@@ -24,13 +29,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { parse } from 'json'; // Assuming you have the 'json' package installed
 import Timer from '../Components/Timer';
 
+import OTPInputView from '@twotalltotems/react-native-otp-input';
+
 type OTPVerificationProps = NativeStackScreenProps<
   RootStackParamList,
   'OTPVerification'
 >;
 
+import {OtpInput} from 'react-native-otp-entry';
+import OtpInputs from 'react-native-otp-inputs';
+
 const OTPVerification = ({route}: OTPVerificationProps) => {
-  const {Number} = route.params;
+  const {Number, countryCode} = route.params;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [theme, setTheme] = useState(Appearance.getColorScheme());
@@ -79,6 +89,10 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
   }, []);
 
   const verifyOpt = async () => {
+    if (otp.length < 6) {
+      alert('Please enter a valid OTP');
+      return;
+    }
     setLoading(true); // Indicate loading state
 
     try {
@@ -228,6 +242,8 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
           response1.data.resData.user.lastName,
       );
 
+      const currencySymbol = await JSON.stringify(response1.data.resData.currency);
+
       await AsyncStorage.setItem('jwtToken', jwtToken);
       await AsyncStorage.setItem('refreshToken', refreshToken);
       await AsyncStorage.setItem('firstName', firstName);
@@ -236,6 +252,7 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
       await AsyncStorage.setItem('admissionId', admissionId);
       // await AsyncStorage.setItem('userName', userName);
       await AsyncStorage.setItem('userFullName', fullName);
+      await AsyncStorage.setItem('currencySymbol', currencySymbol);
       const Id = JSON.parse(await AsyncStorage.getItem('userId'));
       console.log(Id);
       const pinExists = await AsyncStorage.getItem(`pin${Id}`);
@@ -330,6 +347,14 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
     }
   };
 
+  clearText = () => {
+    this.otpInput.clear();
+}
+
+setText = () => {
+    this.otpInput.setOtp("1234");
+}
+
   return (
     <SafeAreaView>
       <View
@@ -345,6 +370,9 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
                   ? mainStyle.loginMainContainer
                   : mainStyle.dLoginMainContainer
               }>
+              <View style={{alignItems: 'center', marginBottom: 50}}>
+                <Image source={Logo} style={mainStyle.logo} />
+              </View>
               <View style={{alignItems: 'center'}}>
                 <Text
                   style={
@@ -367,8 +395,20 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
                 <Text
                   style={
                     theme === 'light'
-                      ? {color: '#4d4d4d', fontSize: 17, marginBottom: 10}
-                      : {color: '#bbb', fontSize: 17, marginBottom: 10}
+                      ? {
+                          color: '#4d4d4d',
+                          fontSize: 17,
+                          marginBottom: 10,
+                          marginTop: 10,
+                          paddingHorizontal: 5,
+                        }
+                      : {
+                          color: '#bbb',
+                          fontSize: 17,
+                          marginBottom: 10,
+                          marginTop: 10,
+                          paddingHorizontal: 5,
+                        }
                   }>
                   We have send 6 digit code to your mobile number...
                 </Text>
@@ -383,8 +423,7 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
                         ? {color: '#272D7A', fontSize: 20, marginBottom: 130}
                         : {color: '#98BAFC', fontSize: 20, marginBottom: 130}
                     }>
-                    {'+91 '}
-                    {Number} {'  '}
+                    {countryCode} {Number} {'  '}
                     <Icon
                       name="edit"
                       size={20}
@@ -400,19 +439,75 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
                       ? mainStyle.loginTextInput
                       : mainStyle.dLoginTextInput
                   }>
-                  <TextInput
+                  <Text
                     style={
-                      theme == 'light'
-                        ? mainStyle.loginInputText
-                        : mainStyle.dLoginInputText
-                    }
-                    keyboardType="numeric"
-                    placeholder="Enter Verification Code"
-                    placeholderTextColor={
-                      theme === 'light' ? '#003f5c' : '#ccc'
-                    }
-                    onChangeText={text => setOtp(text)}
+                      theme === 'light'
+                        ? mainStyle.loginTextInputText
+                        : mainStyle.dLoginTextInputText
+                    }>
+                    Enter OTP
+                  </Text>
+                  {/* <OtpInput
+                    numberOfDigits={6}
+                    focusColor="green"
+                    focusStickBlinkingDuration={500}
+                    onTextChange={text => setOtp(text)}
+                    onFilled={text => verifyOpt()}
+                    textInputProps={{
+                      accessibilityLabel: 'OTP Input',
+                    }}
+                    theme={{
+                      containerStyle: {
+                        width: '100%',
+                        justifyContent: 'space-evenly',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      },
+                      pinCodeContainerStyle: {
+                        width: 40,
+                        height: 40,
+                        borderRadius: 10,
+                        borderWidth: 1,
+                        borderColor: 'gray',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginHorizontal: 5,
+                      },
+                      pinCodeTextStyle: {
+                        fontSize: 20,
+                        color: 'black',
+                      },
+                      focusStickStyle: {
+                        width: 2,
+                        height: 20,
+                        backgroundColor: 'black',
+                      },
+                      focusedPinCodeContainerStyle: {
+                        borderColor: 'green',
+                      },
+                    }}
+                  /> */}
+                  <OTPTextInput 
+                  tintColor={theme === 'light' ? '#272D7A' : '#98BAFC'}
+                  offTintColor={theme === 'light' ? '#6d6d6d' : '#aaa'}
+                  inputCount={6}
+                  handleTextChange={text =>{ setOtp(text); console.log(text)}}
+                  handleCellTextChange={text => console.log(text)}
+                  containerStyle={{width: '100%', justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center'}}
+                  textInputStyle={theme === 'light' ? {borderWidth: 1, borderRadius: 10, borderColor: '#272D7A', height: 60, width: 50, textAlign: 'center', color: "#1d1d1d", fontSize: 20, fontWeight: 'bold'} : {borderWidth: 1, borderRadius: 10, borderColor: '#98BAFC', height: 60, width: 50, textAlign: 'center', color: "#eee", fontSize: 20, fontWeight: 'bold'}}
+                  autoFocus={true}
                   />
+                </View>
+                <View style={{width: '85%', marginTop: 25}}>
+                  {seconds === 0 && minutes === 0 ? null : (
+                    <Text>
+                      Resend button available in{' '}
+                      <Text style={{fontWeight: 'bold'}}>
+                        {minutes.toString().padStart(2, '0')}:
+                        {seconds.toString().padStart(2, '0')}
+                      </Text>
+                    </Text>
+                  )}
                 </View>
                 <View
                   style={{
@@ -473,13 +568,49 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
                           </Text>
                         </TouchableOpacity>
                       ) : (
-                        <Text>
-                          Resend button available in{' '}
-                          <Text style={{fontWeight: 'bold'}}>
-                            {minutes.toString().padStart(2, '0')}:
-                            {seconds.toString().padStart(2, '0')}
+                        <TouchableOpacity
+                          style={
+                            theme === 'light'
+                              ? [
+                                  mainStyle.loginButton,
+                                  {
+                                    backgroundColor: 'transparent',
+                                    borderColor: 'transparent',
+                                    borderWidth: 1.5,
+                                    borderRadius: 5,
+                                    width: 'auto',
+                                    padding: 10,
+                                    paddingHorizontal: 25,
+                                  },
+                                ]
+                              : [
+                                  mainStyle.dLoginButton,
+                                  {
+                                    backgroundColor: 'transparent',
+                                    borderColor: 'transparent',
+                                    borderWidth: 1.5,
+                                    borderRadius: 5,
+                                    width: 'auto',
+                                    padding: 10,
+                                    paddingHorizontal: 25,
+                                  },
+                                ]
+                          }>
+                          <Text
+                            style={
+                              theme === 'light'
+                                ? [
+                                    mainStyle.loginButtonText,
+                                    {color: 'transparent'},
+                                  ]
+                                : [
+                                    mainStyle.dLoginButtonText,
+                                    {color: 'transparent'},
+                                  ]
+                            }>
+                            RESEND OTP
                           </Text>
-                        </Text>
+                        </TouchableOpacity>
                       )}
                       <TouchableOpacity
                         onPress={() => {
@@ -563,7 +694,7 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
                       ? mainStyle.profileTitleText
                       : mainStyle.dProfileTitleText
                   }>
-                  User Profiles
+                  Accounts
                 </Text>
               </View>
               <FlatList

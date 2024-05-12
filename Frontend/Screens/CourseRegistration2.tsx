@@ -466,14 +466,6 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
                   ? mainStyle.myTermsItemDetails
                   : mainStyle.dMyTermsItemDetails
               }>
-              Faculty ID: {item.facultyId}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
               Faculty Name: {item.facultyName}
             </Text>
             <Text

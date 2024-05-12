@@ -10,7 +10,8 @@ import {
   FlatList,
   Appearance,
 } from 'react-native';
-
+import {OtpInput} from 'react-native-otp-entry';
+import OTPTextInput from 'react-native-otp-textinput';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {NativeStackNavigationProps} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
@@ -93,13 +94,12 @@ const ForgotPin = ({route}: ForgotPinProps) => {
 
       console.log(response.data);
 
-      if(response.data.sCode === 2) {
+      if (response.data.sCode === 2) {
         alert('Invalid OTP');
         return;
       }
 
       navigation.replace('AppPinLock');
-
     } catch (error) {
       console.error('OTP veri error:', error);
       alert('Something went wrong, please try again later.');
@@ -280,7 +280,7 @@ const ForgotPin = ({route}: ForgotPinProps) => {
         `https://erp.campuslabs.in/TEST/api/nure-student/v1/generateOTP/${Number}`,
       );
       console.log(response.data);
-    //   navigation.replace('OTPVerification', {Number: number});
+      //   navigation.replace('OTPVerification', {Number: number});
     } catch (error) {
       console.error(error);
       alert('Something went wrong, please try again later.');
@@ -362,10 +362,21 @@ const ForgotPin = ({route}: ForgotPinProps) => {
                 <Text
                   style={
                     theme === 'light'
-                      ? {color: '#4d4d4d', fontSize: 17, marginBottom: 10, textAlign: 'center'}
-                      : {color: '#bbb', fontSize: 17, marginBottom: 10, textAlign: 'center'}
+                      ? {
+                          color: '#4d4d4d',
+                          fontSize: 17,
+                          marginBottom: 10,
+                          textAlign: 'center',
+                        }
+                      : {
+                          color: '#bbb',
+                          fontSize: 17,
+                          marginBottom: 10,
+                          textAlign: 'center',
+                        }
                   }>
-                  We have send 6 digit code to {'\n'} your registered mobile number...
+                  We have send 6 digit code to {'\n'} your registered mobile
+                  number...
                 </Text>
               </View>
               <View
@@ -376,7 +387,7 @@ const ForgotPin = ({route}: ForgotPinProps) => {
                       ? mainStyle.loginTextInput
                       : mainStyle.dLoginTextInput
                   }>
-                  <TextInput
+                  {/* <TextInput
                     style={
                       theme == 'light'
                         ? mainStyle.loginInputText
@@ -388,6 +399,48 @@ const ForgotPin = ({route}: ForgotPinProps) => {
                       theme === 'light' ? '#003f5c' : '#ccc'
                     }
                     onChangeText={text => setOtp(text)}
+                  /> */}
+                  <OTPTextInput
+                    tintColor={theme === 'light' ? '#272D7A' : '#98BAFC'}
+                    offTintColor={theme === 'light' ? '#6d6d6d' : '#aaa'}
+                    inputCount={6}
+                    handleTextChange={text => {
+                      setOtp(text);
+                      console.log(text);
+                    }}
+                    handleCellTextChange={text => console.log(text)}
+                    containerStyle={{
+                      width: '100%',
+                      justifyContent: 'space-evenly',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                    textInputStyle={
+                      theme === 'light'
+                        ? {
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            borderColor: '#272D7A',
+                            height: 60,
+                            width: 50,
+                            textAlign: 'center',
+                            color: '#1d1d1d',
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                          }
+                        : {
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            borderColor: '#98BAFC',
+                            height: 60,
+                            width: 50,
+                            textAlign: 'center',
+                            color: '#eee',
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                          }
+                    }
+                    autoFocus={true}
                   />
                 </View>
                 <View

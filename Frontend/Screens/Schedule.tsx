@@ -160,7 +160,7 @@ const Schedule = ({route}: ScheduleProps) => {
         }
         // reverse the nextsevendaysSche function
         let temp = [];
-        for(let i = 0; i < nextsevendaysSche.length; i++) {
+        for (let i = 0; i < nextsevendaysSche.length; i++) {
           temp.push(nextsevendaysSche[nextsevendaysSche.length - i - 1]);
         }
         console.log('Next 7 days Schedule new', temp);
@@ -256,19 +256,23 @@ const Schedule = ({route}: ScheduleProps) => {
       <View
         style={theme === 'light' ? styles.scheduleCard : styles.dScheduleCard}>
         <View
-          style={theme === 'light' ? {
-            alignItems: 'flex-start',
-            borderRightWidth: 1,
-            borderColor: '#3d3d3d',
-            marginRight: 10,
-            paddingRight: 10,
-          } : {
-            alignItems: 'flex-start',
-            borderRightWidth: 1,
-            borderColor: '#eee',
-            marginRight: 10,
-            paddingRight: 10,
-          }}>
+          style={
+            theme === 'light'
+              ? {
+                  alignItems: 'flex-start',
+                  borderRightWidth: 1,
+                  borderColor: '#3d3d3d',
+                  marginRight: 10,
+                  paddingRight: 10,
+                }
+              : {
+                  alignItems: 'flex-start',
+                  borderRightWidth: 1,
+                  borderColor: '#eee',
+                  marginRight: 10,
+                  paddingRight: 10,
+                }
+          }>
           {item.date === formatDateOnly(todayDate) ? (
             <Text style={{color: 'yellow'}}>Today</Text>
           ) : item.date === formatDateOnly(tomorrowDate) ? (
@@ -372,18 +376,18 @@ const Schedule = ({route}: ScheduleProps) => {
                       filterStatus === 'today' &&
                         (theme === 'light'
                           ? styles.activeFilterButton
-                          : styles.dActiveFilterButton),
+                          : styles.dActiveFilterButton), {marginLeft: 10}
                     ]}
                     onPress={() => handleFilterChange('today')}>
                     <Text
                       style={
-                        (theme === 'light'
-                          ? styles.filterButtonText
-                          : styles.dFilterButtonText,
-                        filterStatus === 'today' &&
-                          (theme === 'light'
+                        filterStatus === 'today'
+                          ? (theme === 'light'
                             ? styles.activeFilterText
-                            : styles.dActiveFilteText))
+                            : styles.dActiveFilteText)
+                          : (theme === 'light'
+                          ? styles.filterButtonText
+                          : styles.dFilterButtonText)
                       }>
                       Today's
                     </Text>
@@ -401,13 +405,13 @@ const Schedule = ({route}: ScheduleProps) => {
                     onPress={() => handleFilterChange('tomorrow')}>
                     <Text
                       style={
-                        (theme === 'light'
-                          ? styles.filterButtonText
-                          : styles.dFilterButtonText,
-                        filterStatus === 'tomorrow' &&
-                          (theme === 'light'
+                        filterStatus === 'tomorrow'
+                          ? (theme === 'light'
                             ? styles.activeFilterText
-                            : styles.dActiveFilteText))
+                            : styles.dActiveFilteText)
+                          : (theme === 'light'
+                          ? styles.filterButtonText
+                          : styles.dFilterButtonText)
                       }>
                       Tomorrow's
                     </Text>
@@ -425,13 +429,13 @@ const Schedule = ({route}: ScheduleProps) => {
                     onPress={() => handleFilterChange('nextsevendays')}>
                     <Text
                       style={
-                        (theme === 'light'
-                          ? styles.filterButtonText
-                          : styles.dFilterButtonText,
-                        filterStatus === 'nextsevendays' &&
-                          (theme === 'light'
+                        filterStatus === 'nextsevendays'
+                          ? (theme === 'light'
                             ? styles.activeFilterText
-                            : styles.dActiveFilteText))
+                            : styles.dActiveFilteText)
+                          : (theme === 'light'
+                          ? styles.filterButtonText
+                          : styles.dFilterButtonText)
                       }>
                       Next 7 Days'
                     </Text>
@@ -543,7 +547,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#1d1d1d',
     paddingHorizontal: 15,
-
   },
   dHeaderMain: {
     width: '100%',
@@ -562,7 +565,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0c1319',
     borderBottomWidth: 1,
     borderBottomColor: '#555',
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
   dFilterButtonText: {
     color: '#EAEAEA',
@@ -586,17 +589,16 @@ const styles = StyleSheet.create({
   row: {height: 40, backgroundColor: 'lightyellow'},
   filterContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
     marginBottom: 10,
   },
   filterButton: {
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'black',
+    borderRadius: 5,
     marginHorizontal: 10,
     marginTop: 10,
+    backgroundColor: '#DDD',
   },
   activeFilterButton: {
     backgroundColor: '#272D7A', // Change color as desired
@@ -612,15 +614,15 @@ const styles = StyleSheet.create({
   },
   filterButtonText: {
     color: 'black',
+    fontWeight: 'bold',
   },
   dFilterButton: {
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#EAEAEA',
+    borderRadius: 5,
     marginHorizontal: 10,
     marginTop: 10,
+    backgroundColor: '#23303C',
   },
 
   scheduleCardContainer: {

@@ -61,6 +61,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
   const [bankRefNo, setBankRefNo] = useState('');
   const [receiptNo, setReceiptNo] = useState('');
   const [transactionNo, setTransactionNo] = useState('');
+  const [currencySymbol, setCurrencySymbol] = useState();
 
   const TermItem = ({item}) => {
     return (
@@ -236,11 +237,13 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
 
   const retrieveData = async () => {
     setLoading(true);
-    const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
-    const userId = JSON.parse(await AsyncStorage.getItem('userId'));
-    const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
+    const token = await JSON.parse(await AsyncStorage.getItem('jwtToken'));
+    const userId = await JSON.parse(await AsyncStorage.getItem('userId'));
+    const admissionId = await JSON.parse(await AsyncStorage.getItem('admissionId'));
+    const currencySymbol = await JSON.parse(await AsyncStorage.getItem('currencySymbol'));
     console.log('Stored Token', token);
     console.log('Stored Token', userId);
+    await setCurrencySymbol(currencySymbol);
 
     try {
       const response = await axios.get(
@@ -416,7 +419,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                 ? mainStyle.courseRegistrationTableText
                 : mainStyle.dCourseRegistrationTableText
             }>
-            {item.status}
+            {currencySymbol}
           </Text>
         </View>
         <View
@@ -674,7 +677,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                               ? mainStyle.courseRegistrationTableHeaderText
                               : mainStyle.dCourseRegistrationTableHeaderText
                           }>
-                          Status
+                          Currency
                         </Text>
                       </View>
                       <View
@@ -757,6 +760,22 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                               : styles.dDetailsTexts
                           }>
                           {amount}
+                        </Text>
+                      </Text>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? styles.detailsMainTexts
+                            : styles.dDetailsMainTexts
+                        }>
+                        Currency:{'\n'}
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? styles.detailsTexts
+                              : styles.dDetailsTexts
+                          }>
+                          {currencySymbol}
                         </Text>
                       </Text>
                       <Text

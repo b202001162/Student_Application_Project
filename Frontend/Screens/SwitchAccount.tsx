@@ -99,6 +99,10 @@ const SwitchAccount = ({route}: SwitchAccountProps) => {
           response1.data.resData.user.lastName,
       );
 
+      const currencySymbol = await JSON.stringify(response1.data.resData.currency);
+      console.log(currencySymbol);
+      
+
       await AsyncStorage.setItem('jwtToken', jwtToken);
       await AsyncStorage.setItem('refreshToken', refreshToken);
       await AsyncStorage.setItem('firstName', firstName);
@@ -107,6 +111,7 @@ const SwitchAccount = ({route}: SwitchAccountProps) => {
       await AsyncStorage.setItem('admissionId', admissionId);
       // await AsyncStorage.setItem('userName', userName);
       await AsyncStorage.setItem('userFullName', fullName);
+      await AsyncStorage.setItem('currencySymbol', currencySymbol);
       const Id = JSON.parse(await AsyncStorage.getItem('userId'));
       console.log(Id);
 
@@ -205,7 +210,7 @@ const SwitchAccount = ({route}: SwitchAccountProps) => {
                       ? mainStyle.profileTitleText
                       : mainStyle.dProfileTitleText
                   }>
-                  User Profiles
+                  Accounts
                 </Text>
               </View>
               <FlatList

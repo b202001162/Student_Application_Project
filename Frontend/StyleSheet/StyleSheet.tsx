@@ -244,9 +244,7 @@ export const mainStyle = StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'center',
     padding: 15,
-    borderWidth: 0,
-    borderBottomWidth: 2,
-    borderColor: '#1d1d1d',
+    // flexDirection: 'row',
   },
   dLoginTextInput: {
     width: '90%',
@@ -255,9 +253,7 @@ export const mainStyle = StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'center',
     padding: 15,
-    borderWidth: 0,
-    borderBottomWidth: 2,
-    borderColor: '#777',
+    // flexDirection: 'row',
   },
 
   timeTablePageTextInput: {
@@ -344,12 +340,12 @@ export const mainStyle = StyleSheet.create({
     width: '40%',
     paddingBottom: 10,
     paddingTop: 10,
-    marginTop: 20,
+    marginTop: 30,
     marginBottom: 90,
   },
   dLoginButton: {
     backgroundColor: '#98BAFC',
-    borderRadius: 50,
+    borderRadius: 7,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
@@ -357,7 +353,7 @@ export const mainStyle = StyleSheet.create({
     width: '40%',
     paddingBottom: 10,
     paddingTop: 10,
-    marginTop: 20,
+    marginTop: 30,
     marginBottom: 90,
   },
 
@@ -425,16 +421,14 @@ export const mainStyle = StyleSheet.create({
 
   itemContainer: {
     backgroundColor: '#DDD',
-    minWwidth: '95%',
-    maxWidth: '95%',
+    width: '95%',
     padding: 10,
     borderRadius: 10,
     marginTop: 10,
   },
   dItemContainer: {
     backgroundColor: '#23303C',
-    minWidth: '95%',
-    maxWidth: '95%',
+    width: '95%',
     padding: 10,
     borderRadius: 10,
     marginTop: 10,

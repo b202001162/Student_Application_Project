@@ -18,6 +18,9 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PermissionsAndroid} from 'react-native';
 
+import {OtpInput} from 'react-native-otp-entry';
+import OTPTextInput from 'react-native-otp-textinput';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -54,7 +57,9 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
 
   const retrieveData = async () => {
     try {
-      const value = await JSON.parse(await AsyncStorage.getItem('userFullName'));
+      const value = await JSON.parse(
+        await AsyncStorage.getItem('userFullName'),
+      );
       if (value !== null) {
         setFullName(value);
       }
@@ -129,9 +134,7 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
                     theme === 'light'
                       ? {
                           height: 50,
-                          width: '50%',
-                          borderColor: '#4d4d4d',
-                          borderWidth: 1,
+                          width: '70%',
                           borderRadius: 5,
                           marginBottom: 10,
                           justifyContent: 'center',
@@ -142,9 +145,7 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
                         }
                       : {
                           height: 50,
-                          width: '50%',
-                          borderColor: '#ccc',
-                          borderWidth: 1,
+                          width: '70%',
                           borderRadius: 5,
                           marginBottom: 10,
                           justifyContent: 'center',
@@ -154,7 +155,7 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
                           marginBottom: 60,
                         }
                   }>
-                  <TextInput
+                  {/* <TextInput
                     style={
                       theme == 'light'
                         ? {
@@ -172,6 +173,48 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
                       theme === 'light' ? '#003f5c' : '#ccc'
                     }
                     onChangeText={handleNumberChange}
+                  /> */}
+                  <OTPTextInput
+                    tintColor={theme === 'light' ? '#272D7A' : '#98BAFC'}
+                    offTintColor={theme === 'light' ? '#6d6d6d' : '#aaa'}
+                    inputCount={4}
+                    handleTextChange={text => {
+                      handleNumberChange(text);
+                      console.log(text);
+                    }}
+                    handleCellTextChange={text => console.log(text)}
+                    containerStyle={{
+                      width: '100%',
+                      justifyContent: 'space-evenly',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                    textInputStyle={
+                      theme === 'light'
+                        ? {
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            borderColor: '#272D7A',
+                            height: 60,
+                            width: 50,
+                            textAlign: 'center',
+                            color: '#1d1d1d',
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                          }
+                        : {
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            borderColor: '#98BAFC',
+                            height: 60,
+                            width: 50,
+                            textAlign: 'center',
+                            color: '#eee',
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                          }
+                    }
+                    autoFocus={true}
                   />
                 </View>
                 <View

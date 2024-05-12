@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   FlatList,
   Appearance,
+  ScrollView,
 } from 'react-native';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -30,8 +31,8 @@ type MyGradeCardProps = NativeStackScreenProps<
 const MyGradeCard = ({route}: MyGradeCardProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {code, name, levelId} = route.params;
-  console.log(code, name);
+  // const {} = route.params;
+  // console.log(code, name);
 
   const [theme, setTheme] = useState(Appearance.getColorScheme());
   const [terms, setTerms] = useState([]);
@@ -42,6 +43,15 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
   const [gradeCardData, setGradeCardData] = useState([]);
   const [tgpaData, setTgpaData] = useState({});
   const [isLoading, setLoading] = useState(false);
+  const [todaysSchedule, setTodaysSchedule] = useState([]); // [course1, course2, course3, ...
+  const [tomorrowsSchedule, setTomorrowsSchedule] = useState([]); // [course1, course2, course3, ...
+  const [nextsevensdaysSchedule, setNextsevensdaysSchedule] = useState([]); // [course1, course2, course3, ...
+  const [filterStatus, setFilterStatus] = useState('today');
+  const [timeTableData, setTimeTableData] = useState([]);
+  const [todayDate, setTodayDate] = useState(new Date());
+  const [tomorrowDate, setTomorrowDate] = useState();
+  const [name, setName] = useState('');
+  const [code, setCode] = useState('');
 
   const retrieveData = async () => {
     setLoading(true);
@@ -57,8 +67,35 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
     await setFirstName(firstName);
 
     try {
+      const response1 = await axios.get(
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyTerms/${admissionId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response1.data.sCode !== 1) {
+        alert('Error fetching data');
+        navigation.goBack();
+      }
+
+      //   console.log(response.data);
+
+      if (response1.data.sCode !== 1) {
+        alert('Error fetching data');
+        navigation.goBack();
+      }
+      console.log(response1.data.resData.levels);
+
+      await setTerms(response1.data.resData.levels);
+      await setFilterStatus(response1.data.resData.levels[0].code);
+      await setCode(response1.data.resData.levels[0].code);
+      await setName(response1.data.resData.levels[0].name);
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyGradeMarks/${admissionId}/${levelId}`,
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyGradeMarks/${admissionId}/${response1.data.resData.levels[0].id}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -223,6 +260,32 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
       </View>
     );
   };
+
+  const handleFilterChange = async (value: string, id: string, name: string) => {
+    try {
+      await setLoading(true);
+      const response = await axios.get(
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyGradeMarks/${admissionId}/${id}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        },
+      );
+      console.log(response.data.resData);
+      await setCode(value);
+      await setName(name);
+      await setGradeCardData(response.data.resData.gradeCard);
+      await setTgpaData(response.data.resData.tgpaSgpa);
+      await setFilterStatus(value);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      await setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView>
       <View
@@ -232,9 +295,7 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
             theme === 'light' ? mainStyle.subContainer : mainStyle.dSubContainer
           }>
           <View
-            style={
-              theme === 'light' ? mainStyle.headerMain : mainStyle.dHeaderMain
-            }>
+            style={theme === 'light' ? styles.headerMain : styles.dHeaderMain}>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
               style={{
@@ -257,6 +318,40 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
                 Result - {name}
               </Text>
             </TouchableOpacity>
+            <View style={styles.filterContainer}>
+              {terms ? (
+                <ScrollView horizontal={true}>
+                  {terms.map((term, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        theme === 'light'
+                          ? styles.filterButton
+                          : styles.dFilterButton,
+                        filterStatus === term.code &&
+                          (theme === 'light'
+                            ? styles.activeFilterButton
+                            : styles.dActiveFilterButton),
+                        {marginLeft: 10},
+                      ]}
+                      onPress={() => handleFilterChange(term.code, term.id, term.name)}>
+                      <Text
+                        style={
+                          filterStatus === term.code
+                            ? theme === 'light'
+                              ? styles.activeFilterText
+                              : styles.dActiveFilteText
+                            : theme === 'light'
+                            ? styles.filterButtonText
+                            : styles.dFilterButtonText
+                        }>
+                        {term.code}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              ) : null}
+            </View>
           </View>
           <View
             style={{
@@ -264,7 +359,7 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
               justifyContent: 'flex-start',
               alignItems: 'flex-start',
               padding: 15,
-              marginTop: 50,
+              marginTop: 100,
             }}>
             <Text
               style={
@@ -294,14 +389,6 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
                   theme === 'light' ? styles.valueText : styles.dValueText
                 }>
                 {firstName}
-              </Text>{' '}
-              {`\n`}
-              Admission ID:{' '}
-              <Text
-                style={
-                  theme === 'light' ? styles.valueText : styles.dValueText
-                }>
-                {admissionId}
               </Text>{' '}
               {`\n`}
               Mobile no :{' '}
@@ -537,6 +624,63 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
 };
 
 const styles = StyleSheet.create({
+  valueText: {
+    color: '#1d1d1d',
+    fontWeight: 'bold',
+  },
+  dValueText: {
+    color: '#eeeeee',
+    fontWeight: 'bold',
+  },
+  headerMain: {
+    width: '100%',
+    paddingTop: 15,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    position: 'fixed',
+    top: 0,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    elevation: 4,
+    backgroundColor: '#fefefe',
+    borderBottomWidth: 1,
+    borderBottomColor: '#1d1d1d',
+    paddingHorizontal: 15,
+  },
+  dHeaderMain: {
+    width: '100%',
+    // paddingVertical: 15,
+    paddingTop: 15,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    position: 'fixed',
+    top: 0,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    elevation: 4,
+    backgroundColor: '#0c1319',
+    borderBottomWidth: 1,
+    borderBottomColor: '#555',
+    paddingHorizontal: 15,
+  },
+  dFilterButtonText: {
+    color: '#EAEAEA',
+    borderColor: '#EAEAEA',
+  },
+  activeFilterText: {
+    color: '#EAEAEA',
+    borderColor: 'transparent',
+  },
+  dActiveFilteText: {
+    color: '#23303C',
+    borderColor: 'transparent',
+  },
   container: {
     flex: 1,
     paddingTop: 100,
@@ -545,13 +689,69 @@ const styles = StyleSheet.create({
   },
   head: {height: 44, backgroundColor: 'lavender'},
   row: {height: 40, backgroundColor: 'lightyellow'},
-  valueText: {
-    color: '#1d1d1d',
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginBottom: 10,
+  },
+  filterButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    // marginHorizontal: 5,
+    marginTop: 10,
+    marginHorizontal: 10,
+    backgroundColor: '#DDD',
+  },
+  activeFilterButton: {
+    backgroundColor: '#272D7A', // Change color as desired
+    marginHorizontal: 10,
+    marginTop: 10,
+    borderColor: 'transparent',
+  },
+  dActiveFilterButton: {
+    backgroundColor: '#98BAFC',
+    marginHorizontal: 10,
+    marginTop: 10,
+    borderColor: 'transparent',
+  },
+  filterButtonText: {
+    color: '#272D7A',
     fontWeight: 'bold',
   },
-  dValueText: {
-    color: '#eee',
-    fontWeight: 'bold',
+  dFilterButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    // marginHorizontal: 5,
+    marginTop: 10,
+    backgroundColor: '#23303C',
+  },
+
+  scheduleCardContainer: {
+    minWidth: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: '#EAEAEA',
+  },
+
+  scheduleCard: {
+    minWidth: '95%',
+    backgroundColor: '#DDD',
+    borderRadius: 10,
+    marginVertical: 10,
+    padding: 10,
+    flexDirection: 'row',
+    marginHorizontal: 10,
+  },
+  dScheduleCard: {
+    minWidth: '95%',
+    backgroundColor: '#23303C',
+    borderRadius: 10,
+    marginVertical: 10,
+    padding: 10,
+    flexDirection: 'row',
+    marginHorizontal: 10,
   },
 });
 

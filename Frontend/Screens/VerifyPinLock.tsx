@@ -11,6 +11,9 @@ import {
   Appearance,
 } from 'react-native';
 
+import {OtpInput} from 'react-native-otp-entry';
+import OTPTextInput from 'react-native-otp-textinput';
+
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
 import {mainStyle} from '../StyleSheet/StyleSheet';
@@ -107,7 +110,9 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
               const difference = currentDate - bannedDate;
               if (difference > 60000) {
                 await AsyncStorage.removeItem(`numberOfAttemptsBanned${Id}`);
-                await AsyncStorage.removeItem(`numberOfAttemptsBannedTime${Id}`);
+                await AsyncStorage.removeItem(
+                  `numberOfAttemptsBannedTime${Id}`,
+                );
                 await AsyncStorage.removeItem(`numberOfAttempts${Id}`);
               }
             }
@@ -251,32 +256,28 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
                     theme === 'light'
                       ? {
                           height: 50,
-                          width: '50%',
-                          borderColor: '#4d4d4d',
-                          borderWidth: 1,
+                          width: '70%',
                           borderRadius: 5,
                           marginBottom: 10,
                           justifyContent: 'center',
                           alignItems: 'center',
                           flexDirection: 'row',
                           paddingHorizontal: 5,
-                          marginBottom: 10,
+                          marginBottom: 20,
                         }
                       : {
                           height: 50,
-                          width: '50%',
-                          borderColor: '#ccc',
-                          borderWidth: 1,
+                          width: '70%',
                           borderRadius: 5,
                           marginBottom: 10,
                           justifyContent: 'center',
                           alignItems: 'center',
                           flexDirection: 'row',
                           paddingHorizontal: 5,
-                          marginBottom: 10,
+                          marginBottom: 20,
                         }
                   }>
-                  <TextInput
+                  {/* <TextInput
                     style={
                       theme == 'light'
                         ? {
@@ -294,6 +295,61 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
                       theme === 'light' ? '#003f5c' : '#ccc'
                     }
                     onChangeText={handleNumberChange}
+                  /> */}
+                  {/* <OtpInput
+                    onPress={() => {
+                      navigation.replace('VerifyPinLock');
+                    }}
+                    numberOfDigits={4}
+                    focusColor="green"
+                    // focusStickBlinkingDuration={500}
+                    onTextChange={text => handleNumberChange(text)}
+                    // onFilled={text => verifyOpt()}
+                    textInputProps={{
+                      accessibilityLabel: 'Pin Input',
+                    }}
+                    focusStickBlinkingDuration={500}
+                    theme={{
+                      containerStyle: {
+                        width: '100%',
+                        justifyContent: 'space-evenly',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      },
+                      pinCodeContainerStyle: {
+                        width: 40,
+                        height: 40,
+                        borderRadius: 10,
+                        borderWidth: 1,
+                        borderColor: 'gray',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginHorizontal: 5,
+                      },
+                      pinCodeTextStyle: {
+                        fontSize: 20,
+                        color: 'black',
+                      },
+                      focusStickStyle: {
+                        width: 2,
+                        height: 20,
+                        backgroundColor: 'black',
+                      },
+                      focusedPinCodeContainerStyle: {
+                        borderColor: 'green',
+                      },
+                    }}
+                    autoFocus
+                  /> */}
+                  <OTPTextInput 
+                  tintColor={theme === 'light' ? '#272D7A' : '#98BAFC'}
+                  offTintColor={theme === 'light' ? '#6d6d6d' : '#aaa'}
+                  inputCount={4}
+                  handleTextChange={text =>{ handleNumberChange(text); console.log(text)}}
+                  handleCellTextChange={text => console.log(text)}
+                  containerStyle={{width: '100%', justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center'}}
+                  textInputStyle={theme === 'light' ? {borderWidth: 1, borderRadius: 10, borderColor: '#272D7A', height: 60, width: 50, textAlign: 'center', color: "#1d1d1d", fontSize: 20, fontWeight: 'bold'} : {borderWidth: 1, borderRadius: 10, borderColor: '#98BAFC', height: 60, width: 50, textAlign: 'center', color: "#eee", fontSize: 20, fontWeight: 'bold'}}
+                  autoFocus={true}
                   />
                 </View>
                 <TouchableOpacity

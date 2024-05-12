@@ -62,6 +62,7 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
   const [refundAmount, setRefundAmount] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [isHandleRunning, setIsHandleRunning] = useState(false);
+  const [currencySymbol, setCurrencySymbol] = useState();
 
   const TermItem = ({item}) => {
     return (
@@ -137,111 +138,20 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
       </View>
     );
   };
-  const ExtraItem = ({item}) => {
-    return (
-      <View
-        style={
-          theme === 'light'
-            ? mainStyle.myTermsItemContainer
-            : mainStyle.dMyTermsItemContainer
-        }>
-        <View
-          style={{flexDirection: 'row', alignItems: 'center'}}
-          //   onPress={() => navigation.push('MyCourses', {levelId: item.id})}
-        >
-          <View style={{maxWidth: '85%'}}>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemTitle
-                  : mainStyle.dMyTermsItemTitle
-              }>
-              Id: {item.id}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Fee name: {`${item.feeName}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Amount: {`${item.amount} INR`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Fine code: {`${item.fineCode}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Date of Time: {`${item.dateOfFine}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Date of pay: {`${item.dateOfPay}`}
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  };
-
-  const apiResponse = {
-    timestamp: '2024-02-28T10:40:28.142625Z',
-    sCode: 1,
-    code: null,
-    message: 'Data fetched successfully.',
-    resData: {
-      feeData: [
-        {
-          id: 6,
-          feeDate: '2023-11-29',
-          amountDue: 150,
-          reciptNo: '16',
-          lateFeeAmount: 0,
-          paidAmount: 150,
-          staus: '0',
-        },
-        {
-          id: 9,
-          feeDate: '2024-02-22',
-          amountDue: 50000,
-          reciptNo: '1',
-          lateFeeAmount: 0,
-          paidAmount: 50000,
-          staus: '1',
-        },
-      ],
-    },
-    jwtToken: null,
-    refreshToken: null,
-  };
 
   const retrieveData = async () => {
     setLoading(true);
-    const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
-    const userId = JSON.parse(await AsyncStorage.getItem('userId'));
-    const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
+    const token = await JSON.parse(await AsyncStorage.getItem('jwtToken'));
+    const userId = await JSON.parse(await AsyncStorage.getItem('userId'));
+    const admissionId = await JSON.parse(
+      await AsyncStorage.getItem('admissionId'),
+    );
+    const currencySymbol = await JSON.parse(
+      await AsyncStorage.getItem('currencySymbol'),
+    );
     console.log('Stored Token', token);
     console.log('Stored Token', userId);
+    await setCurrencySymbol(currencySymbol);
 
     try {
       const response = await axios.get(
@@ -380,6 +290,7 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                 ? mainStyle.courseRegistrationTableText
                 : mainStyle.dCourseRegistrationTableText
             }>
+            {currencySymbol}
             {item.amount}
           </Text>
         </View>
@@ -444,70 +355,6 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* <View
-          style={
-            (theme === 'light'
-              ? mainStyle.courseRegistrationTableCell
-              : mainStyle.dCourseRegistrationTableCell,
-            {width: 120, justifyContent: 'center'})
-          }>
-          <Text
-            style={
-              theme === 'light'
-                ? mainStyle.courseRegistrationTableText
-                : mainStyle.dCourseRegistrationTableText
-            }>
-            {item.demandCode}
-          </Text>
-        </View> */}
-        {/* <View
-          style={
-            (theme === 'light'
-              ? mainStyle.courseRegistrationTableCell
-              : mainStyle.dCourseRegistrationTableCell,
-            {width: 100, justifyContent: 'center'})
-          }>
-          <Text
-            style={
-              theme === 'light'
-                ? mainStyle.courseRegistrationTableText
-                : mainStyle.dCourseRegistrationTableText
-            }>
-            {item.status}
-          </Text>
-        </View> */}
-        {/* <View
-          style={
-            (theme === 'light'
-              ? mainStyle.courseRegistrationTableCell
-              : mainStyle.dCourseRegistrationTableCell,
-            {width: 110, justifyContent: 'center'})
-          }>
-          <Text
-            style={
-              theme === 'light'
-                ? mainStyle.courseRegistrationTableText
-                : mainStyle.dCourseRegistrationTableText
-            }>
-            {item.revokeStatus}
-          </Text>
-        </View> */}
-        {/* <View
-          style={
-            (theme === 'light'
-              ? mainStyle.courseRegistrationTableCell
-              : mainStyle.dCourseRegistrationTableCell,
-            {width: 110, justifyContent: 'center'})
-          }>
-          <Text
-            style={
-              theme === 'light'
-                ? mainStyle.courseRegistrationTableText
-                : mainStyle.dCourseRegistrationTableText
-            }>
-            {item.refundAmount}
-          </Text>
-        </View> */}
       </View>
     );
   };
@@ -620,12 +467,13 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                         fontSize: 20,
                         color: theme === 'light' ? '#3d3d3d' : '#ccc',
                       }}>
-                      Amount to be paid:{' '}
+                      Total amount to be paid:{' '}
                       <Text
                         style={{
                           fontWeight: 'bold',
                           color: theme === 'light' ? '#1d1d1d' : '#eee',
                         }}>
+                        {currencySymbol}
                         {amountToPaid}
                       </Text>
                     </Text>
@@ -672,7 +520,7 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                                 ? mainStyle.courseRegistrationTableHeaderText
                                 : mainStyle.dCourseRegistrationTableHeaderText
                             }>
-                            Date of fine
+                            Due date
                           </Text>
                         </View>
                         <View
@@ -826,7 +674,7 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                                     ? styles.detailsMainTexts
                                     : styles.dDetailsMainTexts
                                 }>
-                                Date of Fine
+                                Due date
                               </Text>
                               <Text
                                 style={
@@ -851,6 +699,22 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                                     : styles.dDetailsTexts
                                 }>
                                 {amount}
+                              </Text>
+                              <Text
+                                style={
+                                  theme === 'light'
+                                    ? styles.detailsMainTexts
+                                    : styles.dDetailsMainTexts
+                                }>
+                                Currency
+                              </Text>
+                              <Text
+                                style={
+                                  theme === 'light'
+                                    ? styles.detailsTexts
+                                    : styles.dDetailsTexts
+                                }>
+                                {currencySymbol}
                               </Text>
                               <Text
                                 style={

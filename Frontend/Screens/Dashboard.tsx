@@ -453,7 +453,7 @@ const Dashboard = ({route}: DashboardProps) => {
                 <View>
                   <TouchableOpacity
                     // onPress = {() => logoutHandler()}
-                    onPress={() => navigation.push('MyGradeCardTerms')}
+                    onPress={() => navigation.push('MyGradeCard')}
                     style={
                       theme === 'light'
                         ? mainStyle.academicsButtons

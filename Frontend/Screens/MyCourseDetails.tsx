@@ -11,6 +11,8 @@ import {
   Appearance,
   Modal,
   Pressable,
+  ScrollView,
+  Animated,
 } from 'react-native';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -38,8 +40,8 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
   const [studentAttandanceData, setStudentAttandanceData] = useState({});
   const [token, setToken] = useState('');
   const [admissionId, setAdmissionId] = useState('');
-  var facultyId = '',
-    batchId = '';
+    const [facultyId, setFacultyId] = useState();
+    const [batchId, setBatchId] = useState();
   const {code, name, credit, courseId, levelId} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -88,6 +90,49 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
     } finally {
       setLoading(false);
     }
+    let response1 = null;
+    try {
+      setLoading(true);
+      console.log(courseId, levelId, admissionId);
+
+      response1 = await axios.get(
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourseFaculty/${courseId}/${levelId}/${admissionId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      console.log('Lessons', response1.data.resData);
+      await setFacultyId(response1.data.resData.faculty.id);
+      await setBatchId(response1.data.resData.faculty.batchId);
+    } catch (e) {
+      console.log('Lessons: ', e);
+    } finally {
+      setLoading(false);
+    }
+
+    try {
+      setLoading(true);
+      console.log(facultyId, levelId, batchId);
+
+      const reponse2 = await axios.get(
+        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyLessonPlans/${response1.data.resData.faculty.id}/${levelId}/${response1.data.resData.faculty.batchId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      console.log(reponse2.data.resData);
+      await setLessons(reponse2.data.resData.lessonPlans);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -104,53 +149,80 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
   const LessonItem = ({item}) => {
     return (
       <TouchableOpacity
-        onPress={() =>
+        onPress={() =>{
           navigation.push('Assignments', {
             code: code,
             name: name,
             credit: credit,
-            facultyId: faculty.id,
-            batchId: faculty.batchId,
+            facultyId: facultyId,
+            batchId: batchId,
             lessonPlanId: item.id,
             plan: item.plan,
-          })
+          });
+        }
         }
         style={
           theme === 'light'
-            ? mainStyle.myCourseDetailsItemContainer
-            : mainStyle.dMyCourseDetailsItemContainer
+            ? [mainStyle.myCourseDetailsItemContainer, {width: '95%'}]
+            : [mainStyle.dMyCourseDetailsItemContainer, {width: '95%'}]
         }>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View style={{maxWidth: '85%'}}>
+          <View style={{maxWidth: '90%'}}>
             <Text
               style={
                 theme === 'light'
-                  ? mainStyle.myCoursesItemTitle
-                  : mainStyle.dMyCoursesItemTitle
+                  ? styles.myCoursesItemTitle
+                  : styles.dMyCoursesItemTitle
               }>
-              <Text style={{fontWeight: '600'}}>Topic:</Text> {item.topic}
-              {'\n'}
-              <Text style={{fontWeight: '500'}}>Session no.:</Text>{' '}
-              {item.sessionNo}
+              Topic:{' '}
+              <Text
+                style={
+                  theme === 'light'
+                    ? [{fontWeight: '500', color: '#1d1d1d'}]
+                    : [{fontWeight: 'bold', color: '#eee'}]
+                }>
+                {item.topic}
+              </Text>
             </Text>
             <Text
               style={
                 theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
+                  ? styles.myCoursesItemTitle
+                  : styles.dMyCoursesItemTitle
               }>
-              <Text style={{fontWeight: '600'}}>Plan:</Text> {`${item.plan}`}
+              Session no.:{' '}
+              <Text
+                style={
+                  theme === 'light'
+                    ? [{fontWeight: '500', color: '#1d1d1d'}]
+                    : [{fontWeight: 'bold', color: '#eee'}]
+                }>
+                {item.sessionNo}
+              </Text>
             </Text>
             <Text
               style={
                 theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
+                  ? styles.myTermsItemDetails
+                  : styles.dMyTermsItemDetails
               }>
-              <Text style={{fontWeight: '600'}}>Start date:</Text>{' '}
-              {`${item.startDate}`} {'\n'}
-              <Text style={{fontWeight: '600'}}>End date:</Text>{' '}
-              {`${item.endDate}`}
+              <Text
+                style={
+                  theme === 'light'
+                    ? [{fontWeight: '500', color: '#1d1d1d'}]
+                    : [{fontWeight: 'bold', color: '#eee'}]
+                }>
+                {`${item.startDate}`}
+              </Text>{' '}
+              to{' '}
+              <Text
+                style={
+                  theme === 'light'
+                    ? [{fontWeight: '500', color: '#1d1d1d'}]
+                    : [{fontWeight: 'bold', color: '#eee'}]
+                }>
+                {`${item.endDate}`}
+              </Text>
             </Text>
           </View>
           <Icon
@@ -164,6 +236,13 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
     );
   };
 
+  const scrollY = new Animated.Value(0);
+  const diffClamp = Animated.diffClamp(scrollY, 0, 45);
+  const translateY = diffClamp.interpolate({
+    inputRange: [0, 45],
+    outputRange: [0, -45],
+  });
+
   const [isLoading, setLoading] = useState(false);
   return (
     <SafeAreaView>
@@ -173,324 +252,246 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
           style={
             theme === 'light' ? mainStyle.subContainer : mainStyle.dSubContainer
           }>
-          <View
-            style={
-              theme === 'light' ? mainStyle.headerMain : mainStyle.dHeaderMain
-            }>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon
-                style={mainStyle.headerIcon}
-                name="arrow-left-long"
-                size={20}
-                color={theme === 'light' ? '#1d1d1d' : '#eee'}
-              />
-              <Text
-                style={
-                  theme === 'light'
-                    ? mainStyle.headerText
-                    : mainStyle.dHeaderText
-                }>
-                Course details
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
+          <Animated.View
+            style={{
+              transform: [{translateY: translateY}],
+              elevation: 4,
+              width: 100 + '%',
+              zIndex: 100,
             }}>
-            <View style={styles.modalContainerView}>
-              <View
-                style={
-                  theme === 'light' ? styles.modalView : styles.dModalView
-                }>
-                <View style={{minWidth: '95%'}}>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myTermsItemDetails
-                        : mainStyle.dMyTermsItemDetails
-                    }>
-                    Code: {code}
-                  </Text>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myTermsItemDetails
-                        : mainStyle.dMyTermsItemDetails
-                    }>
-                    Name: {name}
-                  </Text>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myTermsItemDetails
-                        : mainStyle.dMyTermsItemDetails
-                    }>
-                    Credit: {credit}
-                  </Text>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myTermsItemDetails
-                        : mainStyle.dMyTermsItemDetails
-                    }>
-                    Credit hours:
-                  </Text>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myTermsItemDetails
-                        : mainStyle.dMyTermsItemDetails
-                    }>
-                    Course Type:
-                  </Text>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myTermsItemDetails
-                        : mainStyle.dMyTermsItemDetails
-                    }>
-                    Faculty ID:
-                  </Text>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myTermsItemDetails
-                        : mainStyle.dMyTermsItemDetails
-                    }>
-                    Faculty Name:
-                  </Text>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.myTermsItemDetails
-                        : mainStyle.dMyTermsItemDetails
-                    }>
-                    Faculty email:
-                  </Text>
-                </View>
-                <Pressable
+            <View
+              style={
+                theme === 'light' ? mainStyle.headerMain : mainStyle.dHeaderMain
+              }>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Icon
+                  style={mainStyle.headerIcon}
+                  name="arrow-left-long"
+                  size={20}
+                  color={theme === 'light' ? '#1d1d1d' : '#eee'}
+                />
+                <Text
                   style={
                     theme === 'light'
-                      ? [styles.button, styles.buttonClose]
-                      : [styles.dButton, styles.dButtonClose]
-                  }
-                  onPress={() => setModalVisible(!modalVisible)}>
+                      ? mainStyle.headerText
+                      : mainStyle.dHeaderText
+                  }>
+                  Course details
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+          <ScrollView
+            style={{width: '100%', paddingHorizontal: 5}}
+            onScroll={e => {
+              scrollY.setValue(e.nativeEvent.contentOffset.y);
+            }}>
+            <View
+              style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 70,
+              }}>
+              <View
+                style={
+                  theme === 'light'
+                    ? mainStyle.myCourseDetailsItemContainer
+                    : mainStyle.dMyCourseDetailsItemContainer
+                }>
+                <Text
+                  style={
+                    theme === 'light'
+                      ? styles.paymentHistoryStudentDetailsText
+                      : styles.dPaymentHistoryStudentDetailsText
+                  }>
+                  Code{' '}
                   <Text
                     style={
-                      theme === 'light' ? styles.textStyle : styles.dTextStyle
+                      theme === 'light' ? styles.valueText : styles.dValueText
                     }>
-                    Back
+                    {code}
                   </Text>
-                </Pressable>
+                </Text>
+                <Text
+                  style={
+                    theme === 'light'
+                      ? styles.paymentHistoryStudentDetailsText
+                      : styles.dPaymentHistoryStudentDetailsText
+                  }>
+                  <Text
+                    style={
+                      theme === 'light' ? styles.valueText : styles.dValueText
+                    }>{`${name}`}</Text>
+                </Text>
+                <Text
+                  style={
+                    theme === 'light'
+                      ? styles.paymentHistoryStudentDetailsText
+                      : styles.dPaymentHistoryStudentDetailsText
+                  }>
+                  Credit{' '}
+                  <Text
+                    style={
+                      theme === 'light' ? styles.valueText : styles.dValueText
+                    }>{`${credit}`}</Text>
+                </Text>
               </View>
             </View>
-          </Modal>
-          <View
-            style={{
-              width: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 70,
-            }}>
-              <View
-              style={
-                theme === 'light'
-                  ? mainStyle.myCourseDetailsItemContainer
-                  : mainStyle.dMyCourseDetailsItemContainer
-              }>
-              <Text
-                style={
-                  (theme === 'light'
-                    ? styles.paymentHistoryStudentDetailsText
-                    : styles.dPaymentHistoryStudentDetailsText)
-                }>
-                  Code{' '}
-                <Text
-                  style={
-                    theme === 'light' ? styles.valueText : styles.dValueText
-                  }>
-                  {code}
-                </Text>
-              </Text>
-              <Text
-                style={
-                  (theme === 'light'
-                    ? styles.paymentHistoryStudentDetailsText
-                    : styles.dPaymentHistoryStudentDetailsText)
-                }>
-                <Text
-                  style={
-                    theme === 'light' ? styles.valueText : styles.dValueText
-                  }>{`${name}`}</Text>
-              </Text>
-              <Text
-                style={
-                  (theme === 'light'
-                    ? styles.paymentHistoryStudentDetailsText
-                    : styles.dPaymentHistoryStudentDetailsText)
-                }>
-                credit{' '}
-                <Text
-                  style={
-                    theme === 'light' ? styles.valueText : styles.dValueText
-                  }>{`${credit}`}</Text>
-              </Text>
-              {/* <Text
-                style={
-                  theme === 'light'
-                    ? mainStyle.myCourseItemDetails
-                    : mainStyle.dMyCourseItemDetails
-                }>
-                Faculty ID: {faculty.id}
-              </Text> */}
-              {/* <Text
-                style={
-                  theme === 'light'
-                    ? mainStyle.myCourseItemDetails
-                    : mainStyle.dMyCourseItemDetails
-                }>
-                Batch ID: {faculty.batchId}
-              </Text> */}
-            </View>
-            </View>
-          {isLoading ? (
-            <ActivityIndicator
-              size="large"
-              color={theme === 'light' ? '#272D7A' : '#98BAFC'}
-            />
-          ) : (
-            <>
-              <View
-                style={{
-                  width: '90%',
-                  // paddingBottom: 100,
-                  // paddingBottom: 250,
-                  height: '70%',
-                  // paddingTop: 250,
-                }}>
-                <View
-                  style={
-                    (mainStyle.ongoingEventsButtonsContainer,
-                    {justifyContent: 'flex-start'})
-                  }>
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? mainStyle.lessonPlanTitle
-                        : mainStyle.dLessonPlanTitle
-                    }>
-                    Attendance:
-                  </Text>
-                  {isLoading ? (
-                    <ActivityIndicator
-                      size="large"
-                      color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
-                    />
-                  ) : (
-                    <>
+            <View
+              style={{
+                // justifyContent: 'center',
+                alignItems: 'center',
+                paddingTop: 20,
+                paddingBottom: 20,
+                width: '95%',
+              }}>
+              {isLoading ? (
+                <ActivityIndicator
+                  size="large"
+                  color={theme === 'light' ? '#272D7A' : '#98BAFC'}
+                />
+              ) : (
+                <>
+                  <View
+                    style={{
+                      width: '100%',
+                      paddingHorizontal: 20,
+                      // paddingBottom: 100,
+                      // paddingBottom: 250,
+                      // paddingTop: 250,
+                    }}>
+                    <View
+                      style={
+                        (mainStyle.ongoingEventsButtonsContainer,
+                        {justifyContent: 'flex-start'})
+                      }>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.lessonPlanTitle
+                            : mainStyle.dLessonPlanTitle
+                        }>
+                        Attendance:
+                      </Text>
+                      {isLoading ? (
+                        <ActivityIndicator
+                          size="large"
+                          color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+                        />
+                      ) : (
+                        <>
+                          <Text
+                            style={
+                              theme === 'light'
+                                ? styles.paymentHistoryStudentDetailsText
+                                : [styles.dPaymentHistoryStudentDetailsText]
+                            }>
+                            Classes Scheduled:{' '}
+                            {studentAttandanceData ? (
+                              <Text
+                                style={
+                                  theme === 'light'
+                                    ? styles.valueText
+                                    : styles.dValueText
+                                }>
+                                {studentAttandanceData.itemScheduled}
+                              </Text>
+                            ) : null}
+                            {'\n'}
+                            Classes Completed:{' '}
+                            {studentAttandanceData ? (
+                              <Text
+                                style={
+                                  theme === 'light'
+                                    ? styles.valueText
+                                    : styles.dValueText
+                                }>
+                                {studentAttandanceData.itemCompleted}
+                              </Text>
+                            ) : null}
+                            {'\n'}
+                            Classes Attended:{' '}
+                            {studentAttandanceData ? (
+                              <Text
+                                style={
+                                  theme === 'light'
+                                    ? styles.valueText
+                                    : styles.dValueText
+                                }>
+                                {studentAttandanceData.itemPresent}{' '}
+                              </Text>
+                            ) : null}
+                            {'\n'}
+                            Attendance Percentage:{' '}
+                            {studentAttandanceData ? (
+                              <Text
+                                style={
+                                  theme === 'light'
+                                    ? styles.valueText
+                                    : styles.dValueText
+                                }>
+                                {studentAttandanceData.attandancePerc}
+                                {'%'}
+                              </Text>
+                            ) : null}
+                          </Text>
+                        </>
+                      )}
+                    </View>
+                    <Text
+                      style={
+                        theme === 'light'
+                          ? mainStyle.lessonPlanTitle
+                          : mainStyle.dLessonPlanTitle
+                      }>
+                      {'\n'}
+                      Lesson Plans
+                    </Text>
+                    {lessons.length === 0 ? (
                       <Text
                         style={
                           theme === 'light'
                             ? styles.paymentHistoryStudentDetailsText
-                            : [styles.dPaymentHistoryStudentDetailsText]
+                            : styles.dPaymentHistoryStudentDetailsText
                         }>
-                        Classes Scheduled:{' '}
-                        {studentAttandanceData ? (
-                          <Text
-                            style={
-                              theme === 'light'
-                                ? styles.valueText
-                                : styles.dValueText
-                            }>
-                            {studentAttandanceData.itemScheduled}
-                          </Text>
-                        ) : null}
-                        {'\n'}
-                        Classes Completed:{' '}
-                        {studentAttandanceData ? (
-                          <Text
-                            style={
-                              theme === 'light'
-                                ? styles.valueText
-                                : styles.dValueText
-                            }>
-                            {studentAttandanceData.itemCompleted}
-                          </Text>
-                        ) : null}
-                        {'\n'}
-                        Classes Attended:{' '}
-                        {studentAttandanceData ? (
-                          <Text
-                            style={
-                              theme === 'light'
-                                ? styles.valueText
-                                : styles.dValueText
-                            }>
-                            {studentAttandanceData.itemPresent}{' '}
-                          </Text>
-                        ) : null}
-                        {'\n'}
-                        Attendance Percentage:{' '}
-                        {studentAttandanceData ? (
-                          <Text
-                            style={
-                              theme === 'light'
-                                ? styles.valueText
-                                : styles.dValueText
-                            }>
-                            {studentAttandanceData.attandancePerc}
-                            {'%'}
-                          </Text>
-                        ) : null}
+                        No lesson plans available
                       </Text>
-                    </>
-                  )}
-                </View>
-                <Text
-                  style={
-                    theme === 'light'
-                      ? mainStyle.lessonPlanTitle
-                      : mainStyle.dLessonPlanTitle
-                  }>
-                  {'\n'}
-                  Lesson Plans
-                </Text>
-                {lessons.length === 0 ? (
-                  <Text
-                    style={
-                      theme === 'light'
-                        ? styles.paymentHistoryStudentDetailsText
-                        : styles.dPaymentHistoryStudentDetailsText
-                    }>
-                    No lesson plans available
-                  </Text>
-                ) : (
-                  <FlatList
-                    data={lessons}
-                    renderItem={({item}) => <LessonItem item={item} />}
-                    contentContainerStyle={mainStyle.flatListStyle}
-                    keyExtractor={item => item.id} // Use unique IDs for performance
-                    ItemSeparatorComponent={() => (
-                      <View style={mainStyle.separator} />
+                    ) : (
+                      <View
+                        style={{
+                          // justifyContent: 'center',
+                          alignItems: 'center',
+                          // marginLeft: 10,
+                          // paddingTop: 20,
+                          // paddingBottom: 20,
+                          width: '100%',
+                        }}>
+                        {lessons ? (
+                          <>
+                            {lessons.map(item => (
+                              <LessonItem item={item} key={item.id} />
+                            ))}
+                          </>
+                        ) : (
+                          <ActivityIndicator
+                            size="large"
+                            color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+                          />
+                        )}
+                      </View>
                     )}
-                    // ListHeaderComponent={() => (
-                    //   <Text style={mainStyle.header}>Courses</Text>
-                    // )}
-                  />
-                )}
-              </View>
-            </>
-          )}
+                  </View>
+                </>
+              )}
+            </View>
+          </ScrollView>
         </View>
       </View>
     </SafeAreaView>
@@ -605,6 +606,22 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'semibold',
     paddingLeft: 5,
+  },
+  myCoursesItemTitle: {
+    color: '#3d3d3d',
+    fontSize: 17,
+  },
+  dMyCoursesItemTitle: {
+    color: '#ccc',
+    fontSize: 17,
+  },
+  myTermsItemDetails: {
+    color: '#3d3d3d',
+    fontSize: 17,
+  },
+  dMyTermsItemDetails: {
+    color: '#ccc',
+    fontSize: 17,
   },
 });
 
