@@ -35,17 +35,18 @@ const MyGradeCardTerms = ({route}: MyGradeCardTermsProps) => {
   const [theme, setTheme] = useState(Appearance.getColorScheme());
   const [terms, setTerms] = useState([]);
   const retrieveData = async () => {
-    const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
-    const userId = JSON.parse(await AsyncStorage.getItem('userId'));
+    const token = await JSON.parse(await AsyncStorage.getItem('jwtToken'));
+    const userId = await JSON.parse(await AsyncStorage.getItem('userId'));
     console.log('Stored Token', token);
-    const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
+    const admissionId = await JSON.parse(await AsyncStorage.getItem('admissionId'));
     console.log('Stored Admission Id', admissionId);
+    const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
     
 
     setLoading(true); // Indicate loading state
     try {
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyTerms/${admissionId}`,
+        `${baseURL}/nure-student/v1/fetchMyTerms/${admissionId}`,
         {
           headers: {
             'Content-Type': 'application/json',

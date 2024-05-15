@@ -44,6 +44,7 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
     const [batchId, setBatchId] = useState();
   const {code, name, credit, courseId, levelId} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
+  const [baseURL, setBaseURL] = useState();
 
   //   console.log(code + ' ' + name + ' ' + credit);
 
@@ -60,16 +61,18 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
     const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
+    const baseURL = JSON.parse(await AsyncStorage.getItem('baseURL'));
     console.log('Stored Token', token);
 
     await setToken(token);
     await setAdmissionId(admissionId);
+    await setBaseURL(baseURL);
     console.log('Token', token);
 
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyClassAttendancePercentage/${courseId}/${levelId}/${admissionId}`,
+        `${baseURL}/nure-student/v1/fetchMyClassAttendancePercentage/${courseId}/${levelId}/${admissionId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -96,7 +99,7 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
       console.log(courseId, levelId, admissionId);
 
       response1 = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourseFaculty/${courseId}/${levelId}/${admissionId}`,
+        `${baseURL}/nure-student/v1/fetchMyCourseFaculty/${courseId}/${levelId}/${admissionId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -118,7 +121,7 @@ const MyCourseDetails = ({route}: MyCourseDetailsProps) => {
       console.log(facultyId, levelId, batchId);
 
       const reponse2 = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyLessonPlans/${response1.data.resData.faculty.id}/${levelId}/${response1.data.resData.faculty.batchId}`,
+        `${baseURL}/nure-student/v1/fetchMyLessonPlans/${response1.data.resData.faculty.id}/${levelId}/${response1.data.resData.faculty.batchId}`,
         {
           headers: {
             'Content-Type': 'application/json',

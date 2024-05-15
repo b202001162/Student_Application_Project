@@ -90,7 +90,7 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
 
   const logoutHandler = async () => {
     await AsyncStorage.clear();
-    navigation.replace('LoginPage');
+    navigation.replace('LandingPage');
   };
 
   return (

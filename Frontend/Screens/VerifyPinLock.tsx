@@ -174,12 +174,12 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
       }
       if (Id === null) {
         await AsyncStorage.clear();
-        navigation.replace('LoginPage');
+        navigation.replace('LandingPage');
       }
       const pin = await JSON.parse(await AsyncStorage.getItem(`pin${Id}`));
       if (pin === null) {
         await AsyncStorage.clear();
-        navigation.replace('LoginPage');
+        navigation.replace('LandingPage');
       }
       const userFullName =
         (await AsyncStorage.getItem('userFullName')) || 'User';
@@ -245,7 +245,8 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
                         textAlign: 'center',
                       }
                 }>
-                {!isLoading ? <Text>{userFullName}</Text> : null}
+                {!isLoading ? 
+                `Welcome, ${userFullName.replace(/['"]+/g, '')}` : null}
                 {'\n'}Verify Pin {'(4 digit)'}
               </Text>
             </View>

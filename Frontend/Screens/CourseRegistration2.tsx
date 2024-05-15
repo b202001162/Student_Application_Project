@@ -52,6 +52,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
   const [facultyName, setFacultyName] = useState('');
   const [facultyEmail, setFacultyEmail] = useState('');
   const [courseType, setCourseType] = useState('');
+  const [baseURL, setBaseURL] = useState();
 
   const retrieveData = async () => {
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
@@ -61,6 +62,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
     const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
     const levelId = JSON.parse(await AsyncStorage.getItem('levelId'));
     const levelCode = JSON.parse(await AsyncStorage.getItem('levelCode'));
+    const baseURL = JSON.parse(await AsyncStorage.getItem('baseURL'));
 
     await setJwtToken(token);
     await setUserId(userId);
@@ -68,9 +70,10 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
     await setAdmissionId(admissionId);
     await setLevelId(levelId);
     await setLevelCode(levelCode);
+    await setBaseURL(baseURL);
 
     const response = await axios.get(
-      `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchOfferedCourses/${admissionId}/${levelId}`,
+      `${baseURL}/nure-student/v1/fetchOfferedCourses/${admissionId}/${levelId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -134,7 +137,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
     console.log('Course Registration');
     try {
       const response = await axios.post(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/courseEnrolment`,
+        `${baseURL}/nure-student/v1/courseEnrolment`,
         {
           id: admissionId,
           levelId: levelId,
@@ -160,7 +163,7 @@ const CourseRegistration2 = ({route}: CourseRegistration2Props) => {
     console.log('Course Deregistration');
     try {
       const response = await axios.post(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/cancelCourseEnrolment`,
+        `${baseURL}/nure-student/v1/cancelCourseEnrolment`,
         {
           id: admissionId,
           levelId: levelId,

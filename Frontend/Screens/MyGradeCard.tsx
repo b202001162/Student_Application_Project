@@ -52,23 +52,26 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
   const [tomorrowDate, setTomorrowDate] = useState();
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
+  const [baseURL, setBaseURL] = useState();
 
   const retrieveData = async () => {
     setLoading(true);
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
     console.log('Stored Token', token);
-    const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
-    const firstName = JSON.parse(await AsyncStorage.getItem('firstName'));
+    const admissionId = await JSON.parse(await AsyncStorage.getItem('admissionId'));
+    const firstName = await JSON.parse(await AsyncStorage.getItem('firstName'));
+    const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
 
     await setJwtToken(token);
     await setUserId(userId);
     await setAdmissionId(admissionId);
     await setFirstName(firstName);
+    await setBaseURL(baseURL);
 
     try {
       const response1 = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyTerms/${admissionId}`,
+        `${baseURL}/nure-student/v1/fetchMyTerms/${admissionId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -95,7 +98,7 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
       await setCode(response1.data.resData.levels[0].code);
       await setName(response1.data.resData.levels[0].name);
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyGradeMarks/${admissionId}/${response1.data.resData.levels[0].id}`,
+        `${baseURL}/nure-student/v1/fetchMyGradeMarks/${admissionId}/${response1.data.resData.levels[0].id}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -261,11 +264,15 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
     );
   };
 
-  const handleFilterChange = async (value: string, id: string, name: string) => {
+  const handleFilterChange = async (
+    value: string,
+    id: string,
+    name: string,
+  ) => {
     try {
       await setLoading(true);
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyGradeMarks/${admissionId}/${id}`,
+        `${baseURL}/nure-student/v1/fetchMyGradeMarks/${admissionId}/${id}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -334,7 +341,9 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
                             : styles.dActiveFilterButton),
                         {marginLeft: 10},
                       ]}
-                      onPress={() => handleFilterChange(term.code, term.id, term.name)}>
+                      onPress={() =>
+                        handleFilterChange(term.code, term.id, term.name)
+                      }>
                       <Text
                         style={
                           filterStatus === term.code
@@ -390,14 +399,6 @@ const MyGradeCard = ({route}: MyGradeCardProps) => {
                 }>
                 {firstName}
               </Text>{' '}
-              {`\n`}
-              Mobile no :{' '}
-              <Text
-                style={
-                  theme === 'light' ? styles.valueText : styles.dValueText
-                }>
-                9876543210
-              </Text>
             </Text>
             <View
               style={

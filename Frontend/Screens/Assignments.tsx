@@ -57,6 +57,7 @@ const Assignments = ({route}: AssignmentsProps) => {
   const retrieveData = async () => {
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
+    const baseURL = JSON.parse(await AsyncStorage.getItem('baseURL'));
     console.log('Stored Token', token);
 
     setLoading(true); // Indicate loading state
@@ -64,7 +65,7 @@ const Assignments = ({route}: AssignmentsProps) => {
       console.log(lessonPlanId, facultyId);
 
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyAssignments/${lessonPlanId}/${facultyId}`,
+        `${baseURL}/nure-student/v1/fetchMyAssignments/${lessonPlanId}/${facultyId}`,
         {
           headers: {
             'Content-Type': 'application/json',

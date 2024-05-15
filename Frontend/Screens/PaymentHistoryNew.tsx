@@ -62,192 +62,26 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
   const [receiptNo, setReceiptNo] = useState('');
   const [transactionNo, setTransactionNo] = useState('');
   const [currencySymbol, setCurrencySymbol] = useState();
-
-  const TermItem = ({item}) => {
-    return (
-      <View
-        style={
-          theme === 'light'
-            ? mainStyle.myTermsItemContainer
-            : mainStyle.dMyTermsItemContainer
-        }>
-        <View
-          style={{flexDirection: 'row', alignItems: 'center'}}
-          //   onPress={() => navigation.push('MyCourses', {levelId: item.id})}
-        >
-          <View style={{maxWidth: '85%'}}>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemTitle
-                  : mainStyle.dMyTermsItemTitle
-              }>
-              Id: {item.id}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Fee date: {`${item.feeDate}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Receipt no.: {`${item.reciptNo}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Amount Due: {`${item.amountDue} INR`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Late fee amount: {`${item.lateFeeAmount} INR`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Paid amount: {`${item.paidAmount} INR`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Status: {`${item.staus}`}
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  };
-  const ExtraItem = ({item}) => {
-    return (
-      <View
-        style={
-          theme === 'light'
-            ? mainStyle.myTermsItemContainer
-            : mainStyle.dMyTermsItemContainer
-        }>
-        <View
-          style={{flexDirection: 'row', alignItems: 'center'}}
-          //   onPress={() => navigation.push('MyCourses', {levelId: item.id})}
-        >
-          <View style={{maxWidth: '85%'}}>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemTitle
-                  : mainStyle.dMyTermsItemTitle
-              }>
-              Id: {item.id}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Fee name: {`${item.feeName}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Amount: {`${item.amount} INR`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Fine code: {`${item.fineCode}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Date of Time: {`${item.dateOfFine}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Date of pay: {`${item.dateOfPay}`}
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  };
-
-  const apiResponse = {
-    timestamp: '2024-02-28T10:40:28.142625Z',
-    sCode: 1,
-    code: null,
-    message: 'Data fetched successfully.',
-    resData: {
-      feeData: [
-        {
-          id: 6,
-          feeDate: '2023-11-29',
-          amountDue: 150,
-          reciptNo: '16',
-          lateFeeAmount: 0,
-          paidAmount: 150,
-          staus: '0',
-        },
-        {
-          id: 9,
-          feeDate: '2024-02-22',
-          amountDue: 50000,
-          reciptNo: '1',
-          lateFeeAmount: 0,
-          paidAmount: 50000,
-          staus: '1',
-        },
-      ],
-    },
-    jwtToken: null,
-    refreshToken: null,
-  };
+  const [totalFeesPaid, setTotalFeesPaid] = useState(0);
 
   const retrieveData = async () => {
     setLoading(true);
     const token = await JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const userId = await JSON.parse(await AsyncStorage.getItem('userId'));
-    const admissionId = await JSON.parse(await AsyncStorage.getItem('admissionId'));
-    const currencySymbol = await JSON.parse(await AsyncStorage.getItem('currencySymbol'));
+    const admissionId = await JSON.parse(
+      await AsyncStorage.getItem('admissionId'),
+    );
+    const currencySymbol = await JSON.parse(
+      await AsyncStorage.getItem('currencySymbol'),
+    );
+    const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
     console.log('Stored Token', token);
     console.log('Stored Token', userId);
     await setCurrencySymbol(currencySymbol);
 
     try {
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyFeePaidHistory/${admissionId}`,
+        `${baseURL}/nure-student/v1/fetchMyFeePaidHistory/${admissionId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -256,6 +90,12 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
       );
       console.log('Response', response.data);
       await setFeeData(response.data.resData.feeData);
+      let total = 0;
+      if (response.data.resData.feeData !== null)
+        for (let i = 0; i < response.data.resData.feeData.length; i++) {
+          total += response.data.resData.feeData[i].amount;
+        }
+      await setTotalFeesPaid(total);
     } catch (error) {
       console.error(error);
     } finally {
@@ -263,45 +103,6 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
     }
   };
   useEffect(() => {
-    // setExtraData([
-    //   {
-    //     id: 1,
-    //     feeName: 'LIBRARY FEE',
-    //     amount: 5000,
-    //     fineCode: 'Extra Demand',
-    //     dateOfFine: '2026-03-02',
-    //     dateOfPay: '2024-02-22',
-    //   },
-    // ]);
-    // setTerms([
-    //   {
-    //     id: 6,
-    //     feeDate: '2023-11-29',
-    //     amountDue: 150,
-    //     reciptNo: '16',
-    //     lateFeeAmount: 0,
-    //     paidAmount: 150,
-    //     staus: '0',
-    //   },
-    //   {
-    //     id: 9,
-    //     feeDate: '2024-02-22',
-    //     amountDue: 50000,
-    //     reciptNo: '1',
-    //     lateFeeAmount: 0,
-    //     paidAmount: 50000,
-    //     staus: '1',
-    //   },
-    //   {
-    //     id: 10,
-    //     feeDate: '2024-02-22',
-    //     amountDue: 50000,
-    //     reciptNo: '1',
-    //     lateFeeAmount: 0,
-    //     paidAmount: 50000,
-    //     staus: '1',
-    //   },
-    // ]);
     retrieveData();
     const colorTheme = Appearance.getColorScheme();
     console.log(colorTheme);
@@ -342,38 +143,6 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
             ? mainStyle.courseRegistrationTableRow
             : mainStyle.dCourseRegistrationTableRow
         }>
-        {/* <View
-          style={
-            (theme === 'light'
-              ? mainStyle.courseRegistrationTableCell
-              : mainStyle.dCourseRegistrationTableCell,
-            {width: 100, justifyContent: 'center'})
-          }>
-          <Text
-            style={
-              theme === 'light'
-                ? mainStyle.courseRegistrationTableText
-                : mainStyle.dCourseRegistrationTableText
-            }>
-            {item.transactionNo}
-          </Text>
-        </View> */}
-        <View
-          style={
-            (theme === 'light'
-              ? mainStyle.courseRegistrationTableCell
-              : mainStyle.dCourseRegistrationTableCell,
-            {width: 85})
-          }>
-          <Text
-            style={
-              theme === 'light'
-                ? mainStyle.courseRegistrationTableText
-                : mainStyle.dCourseRegistrationTableText
-            }>
-            {item.date}
-          </Text>
-        </View>
         <View
           style={
             (theme === 'light'
@@ -387,6 +156,23 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                 ? mainStyle.courseRegistrationTableText
                 : mainStyle.dCourseRegistrationTableText
             }>
+            {item.remarks}
+          </Text>
+        </View>
+        <View
+          style={
+            (theme === 'light'
+              ? mainStyle.courseRegistrationTableCell
+              : mainStyle.dCourseRegistrationTableCell,
+            {width: 60, justifyContent: 'center', alignItems: 'flex-end'})
+          }>
+          <Text
+            style={
+              theme === 'light'
+                ? mainStyle.courseRegistrationTableText
+                : mainStyle.dCourseRegistrationTableText
+            }>
+            {currencySymbol}
             {item.amount}
           </Text>
         </View>
@@ -411,7 +197,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
             (theme === 'light'
               ? mainStyle.courseRegistrationTableCell
               : mainStyle.dCourseRegistrationTableCell,
-            {width: 60, justifyContent: 'center'})
+            {width: 85})
           }>
           <Text
             style={
@@ -419,7 +205,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                 ? mainStyle.courseRegistrationTableText
                 : mainStyle.dCourseRegistrationTableText
             }>
-            {currencySymbol}
+            {item.date}
           </Text>
         </View>
         <View
@@ -450,8 +236,8 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderRadius: 5,
-                    borderColor: "4d4d4d",
-                    borderWidth: 1
+                    borderColor: '4d4d4d',
+                    borderWidth: 1,
                   }
                 : {
                     backgroundColor: 'transparent',
@@ -460,8 +246,8 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderRadius: 5,
-                    borderColor: "#ccc",
-                    borderWidth: 1
+                    borderColor: '#ccc',
+                    borderWidth: 1,
                   }
             }>
             <Text
@@ -621,6 +407,38 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                           (theme === 'light'
                             ? mainStyle.courseRegistrationTableCell
                             : mainStyle.dCourseRegistrationTableCell,
+                          {width: 80})
+                        }>
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? mainStyle.courseRegistrationTableHeaderText
+                              : mainStyle.dCourseRegistrationTableHeaderText
+                          }>
+                          Fee
+                        </Text>
+                      </View>
+                      <View
+                        style={
+                          (theme === 'light'
+                            ? mainStyle.courseRegistrationTableCell
+                            : mainStyle.dCourseRegistrationTableCell,
+                          {width: 60, alignItems: 'flex-end'})
+                        }>
+                        <Text
+                          style={[
+                            theme === 'light'
+                              ? mainStyle.courseRegistrationTableHeaderText
+                              : mainStyle.dCourseRegistrationTableHeaderText,
+                          ]}>
+                          Amount
+                        </Text>
+                      </View>
+                      <View
+                        style={
+                          (theme === 'light'
+                            ? mainStyle.courseRegistrationTableCell
+                            : mainStyle.dCourseRegistrationTableCell,
                           {width: 85})
                         }>
                         <Text
@@ -630,22 +448,6 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                               : mainStyle.dCourseRegistrationTableHeaderText
                           }>
                           Date
-                        </Text>
-                      </View>
-                      <View
-                        style={
-                          (theme === 'light'
-                            ? mainStyle.courseRegistrationTableCell
-                            : mainStyle.dCourseRegistrationTableCell,
-                          {width: 80})
-                        }>
-                        <Text
-                          style={
-                            theme === 'light'
-                              ? mainStyle.courseRegistrationTableHeaderText
-                              : mainStyle.dCourseRegistrationTableHeaderText
-                          }>
-                          Amount
                         </Text>
                       </View>
                       {/* <View
@@ -664,22 +466,6 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             Payment mode
                           </Text>
                         </View> */}
-                      <View
-                        style={
-                          (theme === 'light'
-                            ? mainStyle.courseRegistrationTableCell
-                            : mainStyle.dCourseRegistrationTableCell,
-                          {width: 60})
-                        }>
-                        <Text
-                          style={
-                            theme === 'light'
-                              ? mainStyle.courseRegistrationTableHeaderText
-                              : mainStyle.dCourseRegistrationTableHeaderText
-                          }>
-                          Currency
-                        </Text>
-                      </View>
                       <View
                         style={
                           (theme === 'light'
@@ -759,55 +545,8 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                               ? styles.detailsTexts
                               : styles.dDetailsTexts
                           }>
-                          {amount}
-                        </Text>
-                      </Text>
-                      <Text
-                        style={
-                          theme === 'light'
-                            ? styles.detailsMainTexts
-                            : styles.dDetailsMainTexts
-                        }>
-                        Currency:{'\n'}
-                        <Text
-                          style={
-                            theme === 'light'
-                              ? styles.detailsTexts
-                              : styles.dDetailsTexts
-                          }>
                           {currencySymbol}
-                        </Text>
-                      </Text>
-                      <Text
-                        style={
-                          theme === 'light'
-                            ? styles.detailsMainTexts
-                            : styles.dDetailsMainTexts
-                        }>
-                        Status:{'\n'}
-                        <Text
-                          style={
-                            theme === 'light'
-                              ? styles.detailsTexts
-                              : styles.dDetailsTexts
-                          }>
-                          {status}
-                        </Text>
-                      </Text>
-                      <Text
-                        style={
-                          theme === 'light'
-                            ? styles.detailsMainTexts
-                            : styles.dDetailsMainTexts
-                        }>
-                        Transaction No.:{'\n'}
-                        <Text
-                          style={
-                            theme === 'light'
-                              ? styles.detailsTexts
-                              : styles.dDetailsTexts
-                          }>
-                          {transactionNo}
+                          {amount}
                         </Text>
                       </Text>
                       <Text
@@ -832,7 +571,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             ? styles.detailsMainTexts
                             : styles.dDetailsMainTexts
                         }>
-                        Bank Ref No.:{'\n'}
+                        Reference no.:{'\n'}
                         <Text
                           style={
                             theme === 'light'
@@ -858,6 +597,22 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                           {receiptNo}
                         </Text>
                       </Text>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? styles.detailsMainTexts
+                            : styles.dDetailsMainTexts
+                        }>
+                        Transaction No.:{'\n'}
+                        <Text
+                          style={
+                            theme === 'light'
+                              ? styles.detailsTexts
+                              : styles.dDetailsTexts
+                          }>
+                          {transactionNo}
+                        </Text>
+                      </Text>
                     </View>
                     <Pressable
                       style={
@@ -879,6 +634,30 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                 )}
               </View>
             </Modal>
+            <View
+              style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+                marginTop: 20,
+                paddingHorizontal: 20,
+              }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: theme === 'light' ? '#3d3d3d' : '#ccc',
+                }}>
+                Total Fee paid:{' '}
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    color: theme === 'light' ? '#1d1d1d' : '#eee',
+                  }}>
+                  {currencySymbol}
+                  {totalFeesPaid}
+                </Text>
+              </Text>
+            </View>
           </ScrollView>
         </View>
       </View>
@@ -947,7 +726,7 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     marginTop: 10,
-    backgroundColor: "transparent"
+    backgroundColor: 'transparent',
   },
   dButton: {
     borderRadius: 20,
@@ -964,7 +743,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     paddingHorizontal: 20,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   dButtonClose: {
     borderColor: '#98BAFC',

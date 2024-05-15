@@ -40,15 +40,18 @@ const MyCourses = ({route}: MyCoursesProps) => {
   const [theme, setTheme] = useState(Appearance.getColorScheme());
   const [courses, setCourses] = useState([]);
   const retrieveData = async () => {
-    const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
-    const userId = JSON.parse(await AsyncStorage.getItem('userId'));
-    const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
+    const token = await JSON.parse(await AsyncStorage.getItem('jwtToken'));
+    const userId = await JSON.parse(await AsyncStorage.getItem('userId'));
+    const admissionId = await JSON.parse(
+      await AsyncStorage.getItem('admissionId'),
+    );
+    const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
     console.log('Stored Token', token);
 
     setLoading(true); // Indicate loading state
     try {
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourses/${admissionId}/${levelId}`,
+        `${baseURL}/nure-student/v1/fetchMyCourses/${admissionId}/${levelId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -103,40 +106,49 @@ const MyCourses = ({route}: MyCoursesProps) => {
             })
           }>
           <View style={{maxWidth: '85%'}}>
-          <Text
+            <Text
               style={
-                theme === 'light'
+                (theme === 'light'
                   ? mainStyle.paymentHistoryStudentDetailsText
-                  : mainStyle.dPaymentHistoryStudentDetailsText, {fontSize: 15}
-              }>Course Code: {' '}
-              <Text style={
-                          theme === 'light'
-                            ? styles.valueText
-                            : styles.dValueText
-                        }>{item.code}</Text>
+                  : mainStyle.dPaymentHistoryStudentDetailsText,
+                {fontSize: 15})
+              }>
+              Course Code:{' '}
+              <Text
+                style={
+                  theme === 'light' ? styles.valueText : styles.dValueText
+                }>
+                {item.code}
+              </Text>
             </Text>
             <Text
               style={
-                theme === 'light'
+                (theme === 'light'
                   ? mainStyle.paymentHistoryStudentDetailsText
-                  : mainStyle.dPaymentHistoryStudentDetailsText, {fontSize: 15}
-              }>Name: {" "}
-              <Text style={
-                          theme === 'light'
-                            ? styles.valueText
-                            : styles.dValueText
-                        }>{`${item.name}`}</Text>
+                  : mainStyle.dPaymentHistoryStudentDetailsText,
+                {fontSize: 15})
+              }>
+              Name:{' '}
+              <Text
+                style={
+                  theme === 'light' ? styles.valueText : styles.dValueText
+                }>{`${item.name}`}</Text>
             </Text>
             <Text
               style={
-                theme === 'light'
+                (theme === 'light'
                   ? mainStyle.paymentHistoryStudentDetailsText
-                  : mainStyle.dPaymentHistoryStudentDetailsText, {fontSize: 15}
-              }>Credit:<Text style={
-                          theme === 'light'
-                            ? styles.valueText
-                            : styles.dValueText
-                        }> {" "}{`${item.value}`}</Text>
+                  : mainStyle.dPaymentHistoryStudentDetailsText,
+                {fontSize: 15})
+              }>
+              Credit:
+              <Text
+                style={
+                  theme === 'light' ? styles.valueText : styles.dValueText
+                }>
+                {' '}
+                {`${item.value}`}
+              </Text>
             </Text>
           </View>
           <Icon
@@ -240,16 +252,15 @@ const MyCourses = ({route}: MyCoursesProps) => {
 
 const styles = StyleSheet.create({
   valueText: {
-      color: '#1d1d1d',
-      fontWeight: 'bold',
-      fontSize: 17,
-    },
-    dValueText: {
-      color: '#eee',
-      fontWeight: 'bold',
-      fontSize: 17,
-    },
+    color: '#1d1d1d',
+    fontWeight: 'bold',
+    fontSize: 17,
+  },
+  dValueText: {
+    color: '#eee',
+    fontWeight: 'bold',
+    fontSize: 17,
+  },
 });
-
 
 export default MyCourses;
