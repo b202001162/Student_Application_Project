@@ -27,14 +27,14 @@ import Schedule from './Screens/Schedule.tsx';
 import SwitchAccount from './Screens/SwitchAccount.tsx';
 import VerifyPinLock from './Screens/VerifyPinLock.tsx';
 import MyTotalDues from './Screens/MyTotalDues.tsx';
+import LandingPage from './Screens/LandingPage.tsx';
 
 // Stack Navigator
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 // import Component from './components/Component';
 
 // For parameter types in stack navigation
-export type RootStackParamList = {
-};
+export type RootStackParamList = {};
 
 // Create stack navigator
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -182,6 +182,11 @@ const App = () => {
           <Stack.Screen
             name="ForgotPin"
             component={ForgotPin}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="LandingPage"
+            component={LandingPage}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

@@ -64,81 +64,6 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
   const [isHandleRunning, setIsHandleRunning] = useState(false);
   const [currencySymbol, setCurrencySymbol] = useState();
 
-  const TermItem = ({item}) => {
-    return (
-      <View
-        style={
-          theme === 'light'
-            ? mainStyle.myTermsItemContainer
-            : mainStyle.dMyTermsItemContainer
-        }>
-        <View
-          style={{flexDirection: 'row', alignItems: 'center'}}
-          //   onPress={() => navigation.push('MyCourses', {levelId: item.id})}
-        >
-          <View style={{maxWidth: '85%'}}>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemTitle
-                  : mainStyle.dMyTermsItemTitle
-              }>
-              Id: {item.id}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Fee date: {`${item.feeDate}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Receipt no.: {`${item.reciptNo}`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Amount Due: {`${item.amountDue} INR`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Late fee amount: {`${item.lateFeeAmount} INR`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Paid amount: {`${item.paidAmount} INR`}
-            </Text>
-            <Text
-              style={
-                theme === 'light'
-                  ? mainStyle.myTermsItemDetails
-                  : mainStyle.dMyTermsItemDetails
-              }>
-              Status: {`${item.staus}`}
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  };
-
   const retrieveData = async () => {
     setLoading(true);
     const token = await JSON.parse(await AsyncStorage.getItem('jwtToken'));
@@ -152,65 +77,35 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
     console.log('Stored Token', token);
     console.log('Stored Token', userId);
     await setCurrencySymbol(currencySymbol);
+    const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
 
     try {
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyFeesToBePaid/${admissionId}`,
+        `${baseURL}/nure-student/v1/fetchMyFeesToBePaid/${admissionId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         },
       );
-      console.log('Response', response.data.resData.feeExtraColl);
-      await setAmountToPaid(response.data.resData.totalDue);
-      await setFeeData(response.data.resData.feeExtraColl);
+      console.log('Response', response.data);
+      if(response.data.sCode === 2 || response.data === null ){
+        alert('Not available');
+        navigation.goBack();
+      }
+      await setFeeData(response.data.resData.feesToBePaid);
+      let totalFees = 0;
+      for (let i = 0; i < response.data.resData.feesToBePaid.length; i++) {
+        totalFees += response.data.resData.feesToBePaid[i].amount;
+      }
+      await setAmountToPaid(totalFees);
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      await setLoading(false);
     }
   };
   useEffect(() => {
-    // setExtraData([
-    //   {
-    //     id: 1,
-    //     feeName: 'LIBRARY FEE',
-    //     amount: 5000,
-    //     fineCode: 'Extra Demand',
-    //     dateOfFine: '2026-03-02',
-    //     dateOfPay: '2024-02-22',
-    //   },
-    // ]);
-    // setTerms([
-    //   {
-    //     id: 6,
-    //     feeDate: '2023-11-29',
-    //     amountDue: 150,
-    //     reciptNo: '16',
-    //     lateFeeAmount: 0,
-    //     paidAmount: 150,
-    //     staus: '0',
-    //   },
-    //   {
-    //     id: 9,
-    //     feeDate: '2024-02-22',
-    //     amountDue: 50000,
-    //     reciptNo: '1',
-    //     lateFeeAmount: 0,
-    //     paidAmount: 50000,
-    //     staus: '1',
-    //   },
-    //   {
-    //     id: 10,
-    //     feeDate: '2024-02-22',
-    //     amountDue: 50000,
-    //     reciptNo: '1',
-    //     lateFeeAmount: 0,
-    //     paidAmount: 50000,
-    //     staus: '1',
-    //   },
-    // ]);
     retrieveData();
     const colorTheme = Appearance.getColorScheme();
     console.log(colorTheme);
@@ -229,12 +124,12 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
             ? mainStyle.courseRegistrationTableRow
             : mainStyle.dCourseRegistrationTableRow
         }>
-        {/* <View
+        <View
           style={
             (theme === 'light'
               ? mainStyle.courseRegistrationTableCell
               : mainStyle.dCourseRegistrationTableCell,
-            {width: 50, justifyContent: 'center'})
+            {width: 155})
           }>
           <Text
             style={
@@ -242,9 +137,31 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                 ? mainStyle.courseRegistrationTableText
                 : mainStyle.dCourseRegistrationTableText
             }>
-            {index}
+            {item.remarks}
           </Text>
-        </View> */}
+        </View>
+        <View
+          style={
+            (theme === 'light'
+              ? mainStyle.courseRegistrationTableCell
+              : mainStyle.dCourseRegistrationTableCell,
+            {
+              width: 80,
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              paddingRight: 20,
+            })
+          }>
+          <Text
+            style={
+              theme === 'light'
+                ? mainStyle.courseRegistrationTableText
+                : mainStyle.dCourseRegistrationTableText
+            }>
+            {currencySymbol}
+            {item.amount}
+          </Text>
+        </View>
         <View
           style={
             (theme === 'light'
@@ -258,102 +175,8 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                 ? mainStyle.courseRegistrationTableText
                 : mainStyle.dCourseRegistrationTableText
             }>
-            {formatDate(item.dateOfFine)}
+            {formatDate(item.date)}
           </Text>
-        </View>
-        <View
-          style={
-            (theme === 'light'
-              ? mainStyle.courseRegistrationTableCell
-              : mainStyle.dCourseRegistrationTableCell,
-            {width: 85})
-          }>
-          <Text
-            style={
-              theme === 'light'
-                ? mainStyle.courseRegistrationTableText
-                : mainStyle.dCourseRegistrationTableText
-            }>
-            {item.feeMaster.name}
-          </Text>
-        </View>
-        <View
-          style={
-            (theme === 'light'
-              ? mainStyle.courseRegistrationTableCell
-              : mainStyle.dCourseRegistrationTableCell,
-            {width: 80, justifyContent: 'center'})
-          }>
-          <Text
-            style={
-              theme === 'light'
-                ? mainStyle.courseRegistrationTableText
-                : mainStyle.dCourseRegistrationTableText
-            }>
-            {currencySymbol}
-            {item.amount}
-          </Text>
-        </View>
-
-        <View
-          style={
-            (theme === 'light'
-              ? mainStyle.courseRegistrationTableCell
-              : mainStyle.dCourseRegistrationTableCell,
-            {width: 90, justifyContent: 'center'})
-          }>
-          <TouchableOpacity
-            onPress={() => {
-              handleDetailsPress(
-                formatDate(item.dateOfFine),
-                item.amount,
-                item.feeMaster.name,
-                item.demandCode,
-                item.status,
-                item.revokeStatus,
-                item.refundAmount,
-              );
-            }}
-            style={
-              theme === 'light'
-                ? {
-                    backgroundColor: 'transparent',
-                    width: '100%',
-                    paddingVertical: 7,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                    borderColor: '4d4d4d',
-                    borderWidth: 1,
-                  }
-                : {
-                    backgroundColor: 'transparent',
-                    width: '100%',
-                    paddingVertical: 7,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                    borderColor: '#ccc',
-                    borderWidth: 1,
-                  }
-            }>
-            <Text
-              style={
-                theme === 'light'
-                  ? {
-                      color: '#4d4d4d',
-                      fontSize: 12,
-                      fontWeight: 'bold',
-                    }
-                  : {
-                      color: '#ccc',
-                      fontSize: 12,
-                      fontWeight: 'bold',
-                    }
-              }>
-              Details
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
     );
@@ -389,7 +212,23 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
   });
 
   const formatDate = dateString => {
-    const date = new Date(dateString); // Create a Date object from the string
+    if (dateString === null || dateString === '') return 'N/A';
+
+    // Try parsing the date string in two formats
+    let date;
+    try {
+      // Attempt to parse in YYYY-MM-DD format
+      date = new Date(dateString.split('T')[0]);
+    } catch (error) {
+      // If parsing fails, try full datetime format
+      date = new Date(dateString);
+    }
+
+    if (isNaN(date.getTime())) {
+      // If both parsing attempts fail, return 'N/A'
+      return 'N/A';
+    }
+
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Pad month for single digits (01-12)
     const day = date.getDate().toString().padStart(2, '0'); // Pad day for single digits (01-31)
@@ -461,23 +300,6 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                 <ActivityIndicator size="large" color="#0000ff" />
               ) : (
                 <>
-                  <View>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        color: theme === 'light' ? '#3d3d3d' : '#ccc',
-                      }}>
-                      Total amount to be paid:{' '}
-                      <Text
-                        style={{
-                          fontWeight: 'bold',
-                          color: theme === 'light' ? '#1d1d1d' : '#eee',
-                        }}>
-                        {currencySymbol}
-                        {amountToPaid}
-                      </Text>
-                    </Text>
-                  </View>
                   <ScrollView horizontal={true}>
                     <View
                       style={
@@ -491,28 +313,12 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                             ? mainStyle.courseRegistrationTableHeader
                             : mainStyle.dCourseRegistrationTableHeader
                         }>
-                        {/* <View
-                          style={
-                            (theme === 'light'
-                              ? mainStyle.courseRegistrationTableCell
-                              : mainStyle.dCourseRegistrationTableCell,
-                            {width: 50})
-                          }>
-                          <Text
-                            style={
-                              theme === 'light'
-                                ? mainStyle.courseRegistrationTableHeaderText
-                                : mainStyle.dCourseRegistrationTableHeaderText
-                            }>
-                            Sr no.
-                          </Text>
-                        </View> */}
                         <View
                           style={
                             (theme === 'light'
                               ? mainStyle.courseRegistrationTableCell
                               : mainStyle.dCourseRegistrationTableCell,
-                            {width: 90})
+                            {width: 155})
                           }>
                           <Text
                             style={
@@ -520,7 +326,7 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                                 ? mainStyle.courseRegistrationTableHeaderText
                                 : mainStyle.dCourseRegistrationTableHeaderText
                             }>
-                            Due date
+                            Fees
                           </Text>
                         </View>
                         <View
@@ -528,23 +334,11 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                             (theme === 'light'
                               ? mainStyle.courseRegistrationTableCell
                               : mainStyle.dCourseRegistrationTableCell,
-                            {width: 85})
-                          }>
-                          <Text
-                            style={
-                              theme === 'light'
-                                ? mainStyle.courseRegistrationTableHeaderText
-                                : mainStyle.dCourseRegistrationTableHeaderText
-                            }>
-                            Fee name
-                          </Text>
-                        </View>
-                        <View
-                          style={
-                            (theme === 'light'
-                              ? mainStyle.courseRegistrationTableCell
-                              : mainStyle.dCourseRegistrationTableCell,
-                            {width: 80})
+                            {
+                              width: 80,
+                              alignItems: 'flex-end',
+                              paddingRight: 20,
+                            })
                           }>
                           <Text
                             style={
@@ -568,7 +362,7 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                                 ? mainStyle.courseRegistrationTableHeaderText
                                 : mainStyle.dCourseRegistrationTableHeaderText
                             }>
-                            Details
+                            Due date
                           </Text>
                         </View>
                         {/* <View
@@ -640,13 +434,19 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                         <ActivityIndicator size="large" color="#1E63BB" />
                       ) : (
                         <>
-                          {feeData.map((item, index) => (
-                            <ResultItem
-                              item={item}
-                              index={index + 1}
-                              key={index}
-                            />
-                          ))}
+                          {feeData ? (
+                            <>
+                              {feeData.map((item, index) => (
+                                <ResultItem
+                                  item={item}
+                                  index={index + 1}
+                                  key={index}
+                                />
+                              ))}
+                            </>
+                          ) : (
+                            <Text>Not Available</Text>
+                          )}
                         </>
                       )}
                     </View>
@@ -818,6 +618,30 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
                       </View>
                     </Modal>
                   </ScrollView>
+                  <View
+                    style={{
+                      width: '100%',
+                      justifyContent: 'center',
+                      alignItems: 'flex-start',
+                      marginTop: 20,
+                      paddingHorizontal: 20,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        color: theme === 'light' ? '#3d3d3d' : '#ccc',
+                      }}>
+                      Total Dues:{' '}
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          color: theme === 'light' ? '#1d1d1d' : '#eee',
+                        }}>
+                        {currencySymbol}
+                        {amountToPaid}
+                      </Text>
+                    </Text>
+                  </View>
                 </>
               )}
             </View>

@@ -54,6 +54,7 @@ const SwitchAccount = ({route}: SwitchAccountProps) => {
   const [otp, setOtp] = useState('');
   const [profiles, setProfiles] = useState([]);
   const [optVerified, setOptVerified] = useState(false);
+  const [baseURL, setBaseURL] = useState();
 
 
   React.useEffect(() => {
@@ -66,12 +67,12 @@ const SwitchAccount = ({route}: SwitchAccountProps) => {
 
     try {
       const response1 = await axios.post(
-        'https://erp.campuslabs.in/TEST/api/nure-student/v1/signIn',
+        `${baseURL}/nure-student/v1/signIn`,
         {
           username: `${userName}`,
           password: '',
           phoneNumber: ``,
-          oneTimePassword: ``,
+          oneTimePassword: `${otp}`,
         },
       );
       // const jwtToken = await JSON.stringify(response1.data.jwtToken);
@@ -132,10 +133,15 @@ const SwitchAccount = ({route}: SwitchAccountProps) => {
 
   const retrievingData = async () => {
     const usersData = await JSON.parse(await AsyncStorage.getItem('users'));
+    const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
+    const otp = await JSON.parse(await AsyncStorage.getItem('otp'));
+    console.log(otp);
     console.log(usersData);
     
     if (usersData !== null) {
-      setProfiles(usersData);
+      await setProfiles(usersData);
+      await setOtp(otp);
+      await setBaseURL(baseURL);
     }
   };
 

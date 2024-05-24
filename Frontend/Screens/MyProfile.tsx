@@ -41,12 +41,13 @@ const MyProfile = ({route}: MyProfileProps) => {
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
     const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
     const refreshToken = JSON.parse(await AsyncStorage.getItem('refreshToken'));
+    const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
     console.log('Stored Token', token);
     console.log('Stored Token', userId);
 
     try {
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchStudentProfile/${admissionId}`,
+        `${baseURL}/nure-student/v1/fetchStudentProfile/${admissionId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -66,7 +67,7 @@ const MyProfile = ({route}: MyProfileProps) => {
         console.log('Token Expired');
         try {
           const response = await axios.post(
-            `https://erp.campuslabs.in/TEST/api/nure-student/v1/refreshToken`,
+            `${baseURL}/nure-student/v1/refreshToken`,
             {
               refreshToken: refreshToken,
             },
@@ -86,7 +87,7 @@ const MyProfile = ({route}: MyProfileProps) => {
         } catch (error) {
           console.log('Error in refreshing token');
           await logoutHandler();
-          navigation.replace('LoginPage');
+          navigation.replace('LandingPage');
         }
       }
     } finally {
@@ -95,7 +96,7 @@ const MyProfile = ({route}: MyProfileProps) => {
   };
   const logoutHandler = async () => {
     await AsyncStorage.clear();
-    navigation.replace('LoginPage');
+    navigation.replace('LandingPage');
   };
   useEffect(() => {
     retrieveData();

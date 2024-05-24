@@ -38,24 +38,28 @@ const Dashboard = ({route}: DashboardProps) => {
   const [currentLevelId, setCurrentLevelId] = useState('');
   const [refreshToken, setRefreshToken] = useState('');
   const [userName, setUserName] = useState('');
+  const [baseURL, setBaseURL] = useState('');
 
   const retrieveData = async () => {
     setLoading(true); // Indicate loading state
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const refreshToken = JSON.parse(await AsyncStorage.getItem('refreshToken'));
+    const baseURL = JSON.parse(await AsyncStorage.getItem('baseURL'));
     if (token == null) {
-      navigation.replace('LoginPage');
+      navigation.replace('LandingPage');
     }
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
-    const firstName = JSON.parse(await AsyncStorage.getItem('firstName'));
+    const userFullName =
+        (await AsyncStorage.getItem('userFullName')) || 'User';
     const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
     const userName = JSON.parse(await AsyncStorage.getItem('userName'));
     await setJwtToken(token);
     await setUserId(userId);
-    await setFirstName(firstName);
+    await setFirstName(userFullName);
     await setAdmissionId(admissionId);
     await setRefreshToken(refreshToken);
     await setUserName(userName);
+    await setBaseURL(baseURL);
     console.log(refreshToken);
 
     if ((await AsyncStorage.getItem('currentLevelId')) !== null) {
@@ -66,7 +70,7 @@ const Dashboard = ({route}: DashboardProps) => {
       // for checking the expiry of the token
       try {
         const response = await axios.get(
-          `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchTermsForCourseRegistration/${admissionId}`,
+          `${baseURL}/nure-student/v1/fetchMyAlertsAndNotices/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -82,19 +86,13 @@ const Dashboard = ({route}: DashboardProps) => {
     }
     try {
       const reponse = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchTermsForCourseRegistration/${admissionId}`,
+        `${baseURL}/nure-student/v1/fetchMyAlertsAndNotices/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         },
       );
-      // console.log(reponse.data.resData.termsForRegistration[0].id);
-      await AsyncStorage.setItem(
-        'currentLevelId',
-        JSON.stringify(reponse.data.resData.termsForRegistration[0].id),
-      );
-      await setCurrentLevelId(reponse.data.resData.termsForRegistration[0].id);
       // console.log(await AsyncStorage.getItem('currentLevelId'));
     } catch (error) {
       // Error retrieving data
@@ -109,7 +107,7 @@ const Dashboard = ({route}: DashboardProps) => {
   const loginHandler = async (userName) => {
     try {
       const response1 = await axios.post(
-        'https://erp.campuslabs.in/TEST/api/nure-student/v1/signIn',
+        `${baseURL}/nure-student/v1/signIn`,
         {
           username: `${userName}`,
           password: '',
@@ -123,9 +121,8 @@ const Dashboard = ({route}: DashboardProps) => {
       // setState({jwtToken: jwtToken, firstName: firstName});
       const token = await JSON.stringify(response1.data.jwtToken);
       const refreshToken = await JSON.stringify(response1.data.refreshToken);
-      const firstName = await JSON.stringify(
-        response1.data.resData.user.firstName,
-      );
+      const userFullName =
+        (await AsyncStorage.getItem('userFullName')) || 'User';
       const userId = await JSON.stringify(
         response1.data.resData.user.appUserId,
       );
@@ -135,7 +132,7 @@ const Dashboard = ({route}: DashboardProps) => {
 
       await setJwtToken(token);
       await setRefreshToken(refreshToken);
-      await setFirstName(firstName);
+      await setFirstName(userFullName);
       await setUserId(userId);
       await setAdmissionId(admissionId);
 
@@ -146,13 +143,13 @@ const Dashboard = ({route}: DashboardProps) => {
       await AsyncStorage.setItem('admissionId', admissionId);
     } catch (error) {
       console.log(error);
-      navigation.replace('LoginPage');
+      navigation.replace('LandingPage');
     }
   };
 
   const logoutHandler = async () => {
     await AsyncStorage.clear();
-    navigation.replace('LoginPage');
+    navigation.replace('LandingPage');
   };
 
   const [theme, setTheme] = useState(Appearance.getColorScheme());
@@ -176,7 +173,7 @@ const Dashboard = ({route}: DashboardProps) => {
       const token = await JSON.parse(await AsyncStorage.getItem('jwtToken'));
 
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchTermsForCourseRegistration/${admissionId}`,
+        `${baseURL}/nure-student/v1/fetchTermsForCourseRegistration/${admissionId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -248,7 +245,8 @@ const Dashboard = ({route}: DashboardProps) => {
                   ? mainStyle.greetingText
                   : mainStyle.dGreetingText
               }>
-              Hello, {!isLoading ? firstName : <ActivityIndicator />}!
+              Hello, {!isLoading ? 
+              firstName.replace(/['"]+/g, '') : null}!
             </Text>
           </View>
           <View style={mainStyle.ongoingEvents}>

@@ -36,6 +36,7 @@ const LoginPage = ({navigation}: LoginPageProps) => {
   const [valid, setValid] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const phoneInput = useRef<PhoneInput>(null);
+  const [baseURL, setBaseURL] = useState();
   const handleNumberChange = text => {
     // Regex to ensure only numbers are entered
     const cleanNumber = text.replace(/[^0-9]/g, '');
@@ -48,7 +49,20 @@ const LoginPage = ({navigation}: LoginPageProps) => {
 
     setNumber(cleanNumber);
   };
+
+  const retrievingData = async () => {
+    const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
+    console.log(baseURL);
+    
+    if (baseURL === null) {
+      navigation.replace('LandingPage');
+    } else {
+      await setBaseURL(baseURL);
+    }
+  };
+
   useEffect(() => {
+    retrievingData();
     // requestStoragePermission();
     const colorTheme = Appearance.getColorScheme();
     console.log(colorTheme);
@@ -67,9 +81,11 @@ const LoginPage = ({navigation}: LoginPageProps) => {
       return;
     }
     setLoading(true);
+    let url = baseURL + `/nure-student/v1/generateOTP/${number}`;
+    console.log(url);
     try {
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/generateOTP/${number}`,
+        `${url}`,
       );
       console.log(response.data);
       navigation.replace('OTPVerification', {
@@ -123,11 +139,33 @@ const LoginPage = ({navigation}: LoginPageProps) => {
               <Text
                 style={
                   theme === 'light'
-                    ? {color: '#4d4d4d', fontSize: 17, marginBottom: 150}
-                    : {color: '#bbb', fontSize: 17, marginBottom: 150}
+                    ? {color: '#4d4d4d', fontSize: 17, marginBottom: 10}
+                    : {color: '#bbb', fontSize: 17, marginBottom: 10}
                 }>
                 We will send you confirmation code...
               </Text>
+              <TouchableOpacity
+                style={{
+                  marginBottom: 120,
+                }}
+                onPress={() => {
+                  // sendEmail(state.email);
+                  navigation.replace('LandingPage');
+                }}>
+                <Text
+                  style={
+                    theme === 'light'
+                      ? {color: '#272D7A', fontSize: 20}
+                      : {color: '#98BAFC', fontSize: 20}
+                  }>
+                  Edit the Institute Base URL {'  '}
+                  <Icon
+                    name="edit"
+                    size={20}
+                    color={theme === 'light' ? '#272D7A' : '#98BAFC'}
+                  />
+                </Text>
+              </TouchableOpacity>
             </View>
             {!isLoading ? (
               <View style={mainStyle.loginInputButtonContainer}>

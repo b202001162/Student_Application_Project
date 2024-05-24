@@ -40,11 +40,13 @@ const Schedule = ({route}: ScheduleProps) => {
   const [timeTableData, setTimeTableData] = useState([]);
   const [todayDate, setTodayDate] = useState(new Date());
   const [tomorrowDate, setTomorrowDate] = useState();
+  const [baseURL, setBaseURL] = useState();
 
   const retrieveData = async () => {
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
     const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
+    const baseURL = JSON.parse(await AsyncStorage.getItem('baseURL'));
     console.log('Stored Token', token);
 
     setLoading(true); // Indicate loading state
@@ -53,7 +55,7 @@ const Schedule = ({route}: ScheduleProps) => {
       const tomorrow = new Date(today.setDate(today.getDate() + 1));
       await setTomorrowDate(tomorrow);
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourses/${admissionId}/${levelId}`,
+        `${baseURL}/nure-student/v1/fetchMyCourses/${admissionId}/${levelId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -76,7 +78,7 @@ const Schedule = ({route}: ScheduleProps) => {
         console.log(response.data.resData.courses[i].id);
         try {
           const res = await axios.get(
-            `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelId}/${admissionId}/0`,
+            `${baseURL}/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelId}/${admissionId}/0`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -104,7 +106,7 @@ const Schedule = ({route}: ScheduleProps) => {
         await setTimeTableData(todaySche);
         try {
           const res = await axios.get(
-            `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelId}/${admissionId}/1`,
+            `${baseURL}/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelId}/${admissionId}/1`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -133,7 +135,7 @@ const Schedule = ({route}: ScheduleProps) => {
 
         try {
           const res3 = await axios.get(
-            `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelId}/${admissionId}/7`,
+            `${baseURL}/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelId}/${admissionId}/7`,
             {
               headers: {
                 'Content-Type': 'application/json',

@@ -54,6 +54,7 @@ const ForgotPin = ({route}: ForgotPinProps) => {
   const [jwtToken, setJwtToken] = useState('');
   const [firstName, setFirstName] = useState('');
   const [otp, setOtp] = useState('');
+  const [baseURL, setBaseURL] = useState('');
 
   React.useEffect(() => {
     generateOTP();
@@ -82,7 +83,7 @@ const ForgotPin = ({route}: ForgotPinProps) => {
 
     try {
       const response = await axios.post(
-        'https://erp.campuslabs.in/TEST/api/nure-student/v1/validateOTP',
+        `${baseURL}/nure-student/v1/validateOTP`,
         {
           username: '',
           password: '',
@@ -113,6 +114,7 @@ const ForgotPin = ({route}: ForgotPinProps) => {
       const oldNumber = await JSON.parse(
         await AsyncStorage.getItem('MobileNumber'),
       );
+      const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
       if (oldNumber !== null) console.log(oldNumber);
       if (oldNumber !== null && oldNumber !== Number) {
         await AsyncStorage.setItem('Number', JSON.stringify(0));
@@ -138,6 +140,7 @@ const ForgotPin = ({route}: ForgotPinProps) => {
         }
       }
       await setOtpBannedTime(otpBannedTime);
+      await setBaseURL(baseURL);
       const numberOfTimeResendPressed = parseInt(
         await JSON.parse(await AsyncStorage.getItem('Number')),
       );
@@ -174,12 +177,12 @@ const ForgotPin = ({route}: ForgotPinProps) => {
 
     try {
       const response1 = await axios.post(
-        'https://erp.campuslabs.in/TEST/api/nure-student/v1/signIn',
+        `${baseURL}/nure-student/v1/signIn`,
         {
           username: `${userName}`,
           password: '',
           phoneNumber: ``,
-          oneTimePassword: ``,
+          oneTimePassword: `${otp}`,
         },
       );
       // const jwtToken = await JSON.stringify(response1.data.jwtToken);
@@ -277,7 +280,7 @@ const ForgotPin = ({route}: ForgotPinProps) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/generateOTP/${Number}`,
+        `${baseURL}/nure-student/v1/generateOTP/${Number}`,
       );
       console.log(response.data);
       //   navigation.replace('OTPVerification', {Number: number});
@@ -313,7 +316,7 @@ const ForgotPin = ({route}: ForgotPinProps) => {
     }
     try {
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/generateOTP/${Number}`,
+        `${baseURL}/nure-student/v1/generateOTP/${Number}`,
       );
       console.log(response.data);
       // navigation.replace('ForgotPin', {Number: number});

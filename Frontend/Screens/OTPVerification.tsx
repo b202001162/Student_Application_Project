@@ -66,6 +66,7 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
   const [jwtToken, setJwtToken] = useState('');
   const [firstName, setFirstName] = useState('');
   const [otp, setOtp] = useState('');
+  const [baseURL, setBaseURL] = useState();
 
   React.useEffect(() => {
     retrievingData();
@@ -96,8 +97,9 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
     setLoading(true); // Indicate loading state
 
     try {
+      const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
       const response = await axios.post(
-        'https://erp.campuslabs.in/TEST/api/nure-student/v1/validateOTP',
+        `${baseURL}/nure-student/v1/validateOTP`,
         {
           username: '',
           password: '',
@@ -147,6 +149,8 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
       const oldNumber = await JSON.parse(
         await AsyncStorage.getItem('MobileNumber'),
       );
+      const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
+      await setBaseURL(baseURL);
       // current mobile number
       await AsyncStorage.setItem('mobileNumber', JSON.stringify(Number));
       if (oldNumber !== null) console.log(oldNumber);
@@ -206,15 +210,19 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
   const loginHandler = async userName => {
     await AsyncStorage.setItem('userName', await JSON.stringify(userName));
     setLoading(true); // Indicate loading state
+    const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
 
     try {
+      let URL = `${baseURL}/nure-student/v1/signIn`;
+      console.log(URL);
+      
       const response1 = await axios.post(
-        'https://erp.campuslabs.in/TEST/api/nure-student/v1/signIn',
+        `${URL}`,
         {
           username: `${userName}`,
           password: '',
           phoneNumber: ``,
-          oneTimePassword: ``,
+          oneTimePassword: `${otp}`,
         },
       );
       // const jwtToken = await JSON.stringify(response1.data.jwtToken);
@@ -250,6 +258,7 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
       await AsyncStorage.setItem('lastName', lastName);
       await AsyncStorage.setItem('userId', userId);
       await AsyncStorage.setItem('admissionId', admissionId);
+      await AsyncStorage.setItem('otp', JSON.stringify(otp));
       // await AsyncStorage.setItem('userName', userName);
       await AsyncStorage.setItem('userFullName', fullName);
       await AsyncStorage.setItem('currencySymbol', currencySymbol);
@@ -334,8 +343,10 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
       return;
     }
     try {
+      const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
+      let URL = `${baseURL}/nure-student/v1/generateOTP/${Number}`;
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/generateOTP/${Number}`,
+        `${URL}`,
       );
       console.log(response.data);
       // navigation.replace('OTPVerification', {Number: number});

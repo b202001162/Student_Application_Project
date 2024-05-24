@@ -48,15 +48,18 @@ const CurrentCourses = ({route}: CurrentCoursesProps) => {
   const [admissionId, setAdmissionId] = useState('');
   const [userId, setUserId] = useState('');
   const [levelId, setLevelId] = useState('');
+  const [baseURL, setBaseURL] = useState('');
 
   const [terms, setTerms] = useState([]);
   const retrieveData = async () => {
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
     const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
-    setJwtToken(token);
-    setUserId(userId);
-    setAdmissionId(admissionId);
+    const baseURL = JSON.parse(await AsyncStorage.getItem('baseURL'));
+    await setJwtToken(token);
+    await setUserId(userId);
+    await setAdmissionId(admissionId);
+    await setBaseURL(baseURL);
     
 
     console.log('Stored Token', token);
@@ -64,7 +67,7 @@ const CurrentCourses = ({route}: CurrentCoursesProps) => {
     setLoading(true); // Indicate loading state
     try {
       const response1 = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyTerms/${admissionId}`,
+        `${baseURL}/nure-student/v1/fetchMyTerms/${admissionId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -90,7 +93,7 @@ const CurrentCourses = ({route}: CurrentCoursesProps) => {
       setLevelId(response1.data.resData.levels[response1.data.resData.levels.length - 1].id);
 
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourses/${admissionId}/${response1.data.resData.levels[response1.data.resData.levels.length - 1].id}`,
+        `${baseURL}/nure-student/v1/fetchMyCourses/${admissionId}/${response1.data.resData.levels[response1.data.resData.levels.length - 1].id}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -144,7 +147,7 @@ const CurrentCourses = ({route}: CurrentCoursesProps) => {
               levelId: levelId,
             })
           }>
-          <View style={{maxWidth: '85%'}}>
+          <View style={{width: '95%'}}>
             <Text
               style={
                 (theme === 'light'
@@ -168,18 +171,6 @@ const CurrentCourses = ({route}: CurrentCoursesProps) => {
                   : mainStyle.dPaymentHistoryStudentDetailsText,
                 {fontSize: 17})
               }>
-              <Text
-                style={
-                  theme === 'light' ? styles.valueText : styles.dValueText
-                }>{`${item.name}`}</Text>
-            </Text>
-            <Text
-              style={
-                (theme === 'light'
-                  ? mainStyle.paymentHistoryStudentDetailsText
-                  : mainStyle.dPaymentHistoryStudentDetailsText,
-                {fontSize: 17})
-              }>
               Credit:
               <Text
                 style={
@@ -188,6 +179,18 @@ const CurrentCourses = ({route}: CurrentCoursesProps) => {
                 {' '}
                 {`${item.value}`}
               </Text>
+            </Text>
+            <Text
+              style={
+                (theme === 'light'
+                  ? mainStyle.paymentHistoryStudentDetailsText
+                  : mainStyle.dPaymentHistoryStudentDetailsText,
+                {fontSize: 17})
+              }>
+              <Text
+                style={
+                  theme === 'light' ? styles.valueText : styles.dValueText
+                }>{`${item.name}`}</Text>
             </Text>
           </View>
           <Icon
@@ -209,7 +212,7 @@ const CurrentCourses = ({route}: CurrentCoursesProps) => {
     try {
       await setLoading(true);
       const response = await axios.get(
-        `https://erp.campuslabs.in/TEST/api/nure-student/v1/fetchMyCourses/${admissionId}/${id}`,
+        `${baseURL}/nure-student/v1/fetchMyCourses/${admissionId}/${id}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -336,7 +339,7 @@ const CurrentCourses = ({route}: CurrentCoursesProps) => {
                   width: '100%',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginTop: 100,
+                  marginTop: 110,
                 }}>
                 {courses.length > 0 ? (
                   <FlatList
