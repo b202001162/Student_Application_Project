@@ -529,7 +529,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                               ? styles.detailsTexts
                               : styles.dDetailsTexts
                           }>
-                          {date === null || date === '' ? 'N/A' : date}
+                          {date}
                         </Text>
                       </Text>
                       <Text
@@ -546,7 +546,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                               : styles.dDetailsTexts
                           }>
                           {currencySymbol}
-                          {amount === null || amount === '' ? 'N/A' : amount}
+                          {amount}
                         </Text>
                       </Text>
                       <Text
@@ -562,9 +562,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                               ? styles.detailsTexts
                               : styles.dDetailsTexts
                           }>
-                          {paymentMode === null || paymentMode === ''
-                            ? 'N/A'
-                            : paymentMode}
+                          {paymentMode}
                         </Text>
                       </Text>
                       <Text
@@ -580,9 +578,7 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                               ? styles.detailsTexts
                               : styles.dDetailsTexts
                           }>
-                          {bankRefNo === null || bankRefNo === ''
-                            ? 'N/A'
-                            : bankRefNo}
+                          {bankRefNo}
                         </Text>
                       </Text>
                       <Text
@@ -591,16 +587,14 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             ? styles.detailsMainTexts
                             : styles.dDetailsMainTexts
                         }>
-                        Receipt no.:{'\n'}
+                        Receipt No.:{'\n'}
                         <Text
                           style={
                             theme === 'light'
                               ? styles.detailsTexts
                               : styles.dDetailsTexts
                           }>
-                          {receiptNo === '' || receiptNo === null
-                            ? 'N/A'
-                            : receiptNo}
+                          {receiptNo}
                         </Text>
                       </Text>
                       <Text
@@ -609,16 +603,14 @@ const PaymentHistoryNew = ({route}: PaymentHistoryNewProps) => {
                             ? styles.detailsMainTexts
                             : styles.dDetailsMainTexts
                         }>
-                        Transaction no.:{'\n'}
+                        Transaction No.:{'\n'}
                         <Text
                           style={
                             theme === 'light'
                               ? styles.detailsTexts
                               : styles.dDetailsTexts
                           }>
-                          {transactionNo === '' || transactionNo === null
-                            ? 'N/A'
-                            : transactionNo}
+                          {transactionNo}
                         </Text>
                       </Text>
                     </View>

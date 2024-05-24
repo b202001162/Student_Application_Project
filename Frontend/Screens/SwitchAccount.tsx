@@ -250,3 +250,4 @@ const SwitchAccount = ({route}: SwitchAccountProps) => {
 };
 
 export default SwitchAccount;
+>>>>>>> 87a7810030cc271fe75c13b2cd77ccc574b4ea41

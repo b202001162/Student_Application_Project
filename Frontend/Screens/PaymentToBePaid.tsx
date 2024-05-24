@@ -89,7 +89,7 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
         },
       );
       console.log('Response', response.data);
-      if(response.data.sCode === 2 || response.data === null ){
+      if (response.data.sCode === 2 || response.data === null) {
         alert('Not available');
         navigation.goBack();
       }
