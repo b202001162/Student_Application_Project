@@ -49,8 +49,7 @@ const Dashboard = ({route}: DashboardProps) => {
       navigation.replace('LandingPage');
     }
     const userId = JSON.parse(await AsyncStorage.getItem('userId'));
-    const userFullName =
-        (await AsyncStorage.getItem('userFullName')) || 'User';
+    const userFullName = (await AsyncStorage.getItem('userFullName')) || 'User';
     const admissionId = JSON.parse(await AsyncStorage.getItem('admissionId'));
     const userName = JSON.parse(await AsyncStorage.getItem('userName'));
     await setJwtToken(token);
@@ -104,17 +103,14 @@ const Dashboard = ({route}: DashboardProps) => {
     }
   };
 
-  const loginHandler = async (userName) => {
+  const loginHandler = async userName => {
     try {
-      const response1 = await axios.post(
-        `${baseURL}/nure-student/v1/signIn`,
-        {
-          username: `${userName}`,
-          password: '',
-          phoneNumber: ``,
-          oneTimePassword: ``,
-        },
-      );
+      const response1 = await axios.post(`${baseURL}/nure-student/v1/signIn`, {
+        username: `${userName}`,
+        password: '',
+        phoneNumber: ``,
+        oneTimePassword: ``,
+      });
       // const jwtToken = await JSON.stringify(response1.data.jwtToken);
       // await setState({ jwtToken : await JSON.stringify(response1.data.jwtToken), firstName : await JSON.stringify(response1.data.resData.user.firstName)});
 
@@ -203,10 +199,53 @@ const Dashboard = ({route}: DashboardProps) => {
     }
   };
 
+  const handlePaymentToBePaidPress = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${baseURL}/nure-student/v1/fetchMyFeesToBePaid/${admissionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        },
+      );
+      if (response.data.sCode === 2 || response.data === null) {
+        alert('Not available');
+        return;
+      }
+      navigation.push('PaymentToBePaid');
+    } catch (error) {
+      console.log(error);
+      alert('Not available');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView>
       <View
         style={theme === 'light' ? mainStyle.container : mainStyle.dContainer}>
+        {
+          isLoading ? (
+            <View
+              style={{
+                position: 'absolute',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+                width: '100%',
+                zIndex: 1,
+                backgroundColor: theme === 'light' ? '#00000095' : '#00000095',
+              }}>
+              <ActivityIndicator
+                size="large"
+                color={theme === 'light' ? '#272D7A' : '#98BAFC'}
+              />
+            </View>
+          ) : null // Other code which you want to show when loading
+        }
         <View
           style={
             theme === 'light'
@@ -245,8 +284,7 @@ const Dashboard = ({route}: DashboardProps) => {
                   ? mainStyle.greetingText
                   : mainStyle.dGreetingText
               }>
-              Hello, {!isLoading ? 
-              firstName.replace(/['"]+/g, '') : null}!
+              Hello, {firstName ? firstName.replace(/['"]+/g, '') : null}!
             </Text>
           </View>
           <View style={mainStyle.ongoingEvents}>
@@ -294,7 +332,9 @@ const Dashboard = ({route}: DashboardProps) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.push('PaymentToBePaid')}
+                onPress={() => {
+                  handlePaymentToBePaidPress();
+                }}
                 style={
                   theme === 'light'
                     ? mainStyle.ongoingEventsButtons

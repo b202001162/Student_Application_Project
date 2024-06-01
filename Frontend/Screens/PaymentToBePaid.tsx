@@ -92,11 +92,14 @@ const PaymentToBePaid = ({route}: PaymentToBePaidProps) => {
       if (response.data.sCode === 2 || response.data === null) {
         alert('Not available');
         navigation.goBack();
+        return;
       }
       await setFeeData(response.data.resData.feesToBePaid);
       let totalFees = 0;
-      for (let i = 0; i < response.data.resData.feesToBePaid.length; i++) {
-        totalFees += response.data.resData.feesToBePaid[i].amount;
+      if (response.data.resData.feesToBePaid) {
+        for (let i = 0; i < response.data.resData.feesToBePaid.length; i++) {
+          totalFees += response.data.resData.feesToBePaid[i].amount;
+        }
       }
       await setAmountToPaid(totalFees);
     } catch (error) {

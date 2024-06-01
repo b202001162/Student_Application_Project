@@ -96,6 +96,7 @@ const MyProfile = ({route}: MyProfileProps) => {
   };
   const logoutHandler = async () => {
     await AsyncStorage.clear();
+    navigation.pop();
     navigation.replace('LandingPage');
   };
   useEffect(() => {
