@@ -1,71 +1,30 @@
-# Student Application Project
+## Screenshots
 
-## Table of Contents
-- [Introduction](#introduction)
-  - [Purpose](#purpose)
-  - [Target Audience](#target-audience)
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Functionalities and Activities Overview](#functionalities-and-activities-overview)
-- [UI Pages](#ui-pages)
-- [Color Palette](#color-palette)
-- [Profile Page Content](#profile-page-content)
-- [Welcome/Home Page Content](#welcomehome-page-content)
-- [Course Topics Page Content](#course-topics-page-content)
-- [Lesson Plans Page Content](#lesson-plans-page-content)
-- [Tangible Output for Evaluation](#tangible-output-for-evaluation)
-- [GitHub Project Management](#github-project-management)
+### Login and OTP verification Screen
+![image](https://github.com/b202001162/Student_Application_Project/assets/86399274/e505885e-25c5-4818-b4b8-b5c4ddff5f25)
+![image](https://github.com/b202001162/Student_Application_Project/assets/86399274/6dad6fe9-3125-4067-b720-b101c3b02a20)
 
-## Introduction
-### Purpose
-The Student Information Management App aims to provide a centralized platform for students to access and manage essential academic information.
+### Dashboard screen
+![image](https://github.com/b202001162/Student_Application_Project/assets/86399274/1748e0d8-4f81-41d0-bf13-2f3a0fc65d36)
 
-### Target Audience
-- Student Users
+### Current Courses screen
+![image](https://github.com/b202001162/Student_Application_Project/assets/86399274/4d4e4bc5-0cac-400d-8f32-e6c8b6028bc0)
 
-## Features
-- User Authentication
-- Academic Information Management
-- Fee Payments
-- Lesson Plans Access
-- Direct Messaging
-- Course Feedback
-- ...
+### Result Screen
+![image](https://github.com/b202001162/Student_Application_Project/assets/86399274/773a3f8b-f79c-4882-bef9-2b14dffa9572)
 
-## Technology Stack
-- Frontend: React Native, Redux, React Navigation
-- Backend: Spring Boot, RESTful APIs
-- Database: MongoDB
-- Communication: Firebase Cloud Messaging (FCM)
-- Development Tools: Visual Studio Code
-- Version Control: GitLab
-- Deployment: App Store/Google Play
-- Testing: Jest, Enzyme
-- Security: HTTPS, Encryption
-- Project Management: Taskidy
-- Monitoring and Analytics: Google Analytics/Firebase Analytics
+### Notification screen
+![image](https://github.com/b202001162/Student_Application_Project/assets/86399274/e81252a8-59ac-4213-a030-5db0e61ad579)
 
-## Functionalities and Activities Overview
-- [Detailed Overview](#link-to-detailed-document)
+### Schedule Screen
+![image](https://github.com/b202001162/Student_Application_Project/assets/86399274/169957ad-556e-49ac-bc03-7374427bc538)
 
-## UI Pages
-- [UI Pages Overview](#link-to-detailed-document)
+### Course registration screens
+![image](https://github.com/b202001162/Student_Application_Project/assets/86399274/4e939d7f-1acc-4df6-a6fc-65ff1e9aba52)
 
-## Color Palette
-- [Color Palette Overview](#link-to-detailed-document)
 
-## Profile Page Content
-- [Profile Page Details](#link-to-detailed-document)
 
-## Welcome/Home Page Content
-- [Welcome/Home Page Details](#link-to-detailed-document)
 
-## Course Topics Page Content
-- [Course Topics Page Details](#link-to-detailed-document)
 
-## Lesson Plans Page Content
-- [Lesson Plans Page Details](#link-to-detailed-document)
 
-## Tangible Output for Evaluation
-- [Evaluation Criteria](#link-to-detailed-document)
 
