@@ -265,9 +265,11 @@ const OTPVerification = ({route}: OTPVerificationProps) => {
       const Id = JSON.parse(await AsyncStorage.getItem('userId'));
       console.log(Id);
       const pinExists = await AsyncStorage.getItem(`pin${Id}`);
-      if (pinExists === null) navigation.replace('AppPinLock');
+      if (pinExists === null) {
+        navigation.pop(), navigation.pop(), navigation.replace('AppPinLock');
+      }
       else {
-        navigation.replace('VerifyPinLock');
+        navigation.pop(), navigation.pop(), navigation.replace('VerifyPinLock');
       }
     } catch (error) {
       console.error('Login handler error: ', error);
@@ -421,7 +423,7 @@ setText = () => {
                           paddingHorizontal: 5,
                         }
                   }>
-                  We have send 6 digit code to your mobile number...
+                  We have sent a 6 digit code to your mobile number...
                 </Text>
                 <TouchableOpacity
                   onPress={() => {

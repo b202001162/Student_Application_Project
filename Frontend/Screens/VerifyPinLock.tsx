@@ -13,8 +13,9 @@ import {
 
 import {OtpInput} from 'react-native-otp-entry';
 import OTPTextInput from 'react-native-otp-textinput';
-
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {NativeStackNavigationProps} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../App';
 import {mainStyle} from '../StyleSheet/StyleSheet';
 import axios from 'axios';
@@ -29,10 +30,28 @@ type VerifyPinLockProps = NativeStackScreenProps<
   'VerifyPinLock'
 >;
 
-const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
+const VerifyPinLock = ({route}: VerifyPinLockProps) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const [theme, setTheme] = useState(Appearance.getColorScheme());
   const [number, setNumber] = useState();
   const [userFullName, setUserFullName] = useState('');
+  const [isFirstTime, setIsFirstTime] = useState(false);
+  let isFirstTimeTemp = false;
+
+  const retrieveData = async () => {
+    let temp = await JSON.parse(
+      await AsyncStorage.getItem('isFirstTimePinSet'),
+    );
+    console.log('isFirstTimeTemp: ', temp);
+
+    if (temp && temp === true) {
+      console.log('isFirstTimeTemp: ', temp);
+      await setIsFirstTime(true);
+    }
+  };
+
   const handleNumberChange = text => {
     // Regex to ensure only numbers are entered
     const cleanNumber = text.replace(/[^0-9]/g, '');
@@ -55,12 +74,17 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
     } else {
       setTheme('dark');
     }
+    retrieveData();
   }, []);
   const [isLoading, setLoading] = useState(false);
 
   // generate api call
   const verifyPin = async () => {
-    if (number.length !== 4) {
+    if (!number) {
+      alert('Please enter a 4 digit pin');
+      return;
+    }
+    if (number && number.length !== 4) {
       alert('Please enter a 4 digit pin');
       return;
     }
@@ -70,7 +94,13 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
       const Id = await AsyncStorage.getItem('userId');
       const pin = await AsyncStorage.getItem(`pin${Id}`);
       if (pin === number) {
-        navigation.replace('Dashboard', {name: 'User', token: 'token'});
+        await AsyncStorage.setItem('isFirstTimePinSet', JSON.stringify(false));
+        if (!isFirstTime) {
+          navigation.replace('Dashboard');
+        } else {
+          navigation.pop(),
+            navigation.replace('Dashboard', {name: 'User', token: 'token'});
+        }
       } else {
         alert('Invalid Pin, try again!');
         let numberOfAttempts = await JSON.parse(
@@ -199,7 +229,7 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
       );
       console.log(mobileNumber);
 
-      navigation.replace('ForgotPin', {
+      navigation.push('ForgotPin', {
         Number: mobileNumber,
         user: userFullName,
       });
@@ -245,8 +275,9 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
                         textAlign: 'center',
                       }
                 }>
-                {!isLoading ? 
-                `Welcome, ${userFullName.replace(/['"]+/g, '')}` : null}
+                {!isLoading
+                  ? `Welcome, ${userFullName.replace(/['"]+/g, '')}`
+                  : null}
                 {'\n'}Verify Pin {'(4 digit)'}
               </Text>
             </View>
@@ -342,42 +373,76 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
                     }}
                     autoFocus
                   /> */}
-                  <OTPTextInput 
-                  tintColor={theme === 'light' ? '#272D7A' : '#98BAFC'}
-                  offTintColor={theme === 'light' ? '#6d6d6d' : '#aaa'}
-                  inputCount={4}
-                  handleTextChange={text =>{ handleNumberChange(text); console.log(text)}}
-                  handleCellTextChange={text => console.log(text)}
-                  containerStyle={{width: '100%', justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center'}}
-                  textInputStyle={theme === 'light' ? {borderWidth: 1, borderRadius: 10, borderColor: '#272D7A', height: 60, width: 50, textAlign: 'center', color: "#1d1d1d", fontSize: 20, fontWeight: 'bold'} : {borderWidth: 1, borderRadius: 10, borderColor: '#98BAFC', height: 60, width: 50, textAlign: 'center', color: "#eee", fontSize: 20, fontWeight: 'bold'}}
-                  autoFocus={true}
-                  />
-                </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    forgotPinHandler();
-                  }}>
-                  <Text
-                    style={
+                  <OTPTextInput
+                    tintColor={theme === 'light' ? '#272D7A' : '#98BAFC'}
+                    offTintColor={theme === 'light' ? '#6d6d6d' : '#aaa'}
+                    inputCount={4}
+                    handleTextChange={text => {
+                      handleNumberChange(text);
+                      console.log(text);
+                    }}
+                    handleCellTextChange={text => console.log(text)}
+                    containerStyle={{
+                      width: '100%',
+                      justifyContent: 'space-evenly',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                    textInputStyle={
                       theme === 'light'
                         ? {
-                            color: '#272D7A',
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            borderColor: '#272D7A',
+                            height: 60,
+                            width: 50,
+                            textAlign: 'center',
+                            color: '#1d1d1d',
                             fontSize: 20,
-                            fontWeight: 'semibold',
-                            // marginLeft: 10,
-                            marginBottom: 50,
+                            fontWeight: 'bold',
                           }
                         : {
-                            color: '#98BAFC',
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            borderColor: '#98BAFC',
+                            height: 60,
+                            width: 50,
+                            textAlign: 'center',
+                            color: '#eee',
                             fontSize: 20,
-                            fontWeight: 'semibold',
-                            // marginLeft: 10,
-                            marginBottom: 50,
+                            fontWeight: 'bold',
                           }
-                    }>
-                    Forgot Pin?
-                  </Text>
-                </TouchableOpacity>
+                    }
+                    autoFocus={true}
+                  />
+                </View>
+                {isFirstTime ? null : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      forgotPinHandler();
+                    }}>
+                    <Text
+                      style={
+                        theme === 'light'
+                          ? {
+                              color: '#272D7A',
+                              fontSize: 20,
+                              fontWeight: 'semibold',
+                              // marginLeft: 10,
+                              marginBottom: 50,
+                            }
+                          : {
+                              color: '#98BAFC',
+                              fontSize: 20,
+                              fontWeight: 'semibold',
+                              // marginLeft: 10,
+                              marginBottom: 50,
+                            }
+                      }>
+                      Forgot Pin?
+                    </Text>
+                  </TouchableOpacity>
+                )}
                 <View
                   style={{
                     flexDirection: 'row',
@@ -385,62 +450,64 @@ const VerifyPinLock = ({navigation}: VerifyPinLockProps) => {
                     width: '100%',
                     justifyContent: 'space-evenly',
                   }}>
-                  <TouchableOpacity
-                    onPress={() => logoutHandler()}
-                    style={
-                      theme === 'light'
-                        ? {
-                            backgroundColor: 'transparent',
-                            borderRadius: 50,
-                            height: 50,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            // width: '35%',
-                            paddingBottom: 10,
-                            paddingTop: 10,
-                            marginTop: 5,
-                            //   paddingLeft: 20,
-                            flexDirection: 'row',
-                            paddingHorizontal: 20,
-                            borderColor: '#272D7A',
-                            borderWidth: 1.5,
-                          }
-                        : {
-                            backgroundColor: 'transparent',
-                            borderRadius: 50,
-                            height: 50,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            // width: 's',
-                            paddingBottom: 10,
-                            paddingTop: 10,
-                            marginTop: 5,
-                            //   paddingLeft: 20,
-                            flexDirection: 'row',
-                            paddingHorizontal: 20,
-                            borderColor: '#98BAFC',
-                            borderWidth: 1.5,
-                          }
-                    }>
-                    <Text
+                  {isFirstTime ? null : (
+                    <TouchableOpacity
+                      onPress={() => logoutHandler()}
                       style={
                         theme === 'light'
-                          ? [
-                              mainStyle.myProfileLogoutText,
-                              {
-                                color: '#272D7A',
-                              },
-                            ]
-                          : [
-                              mainStyle.dMyProfileLogoutText,
-                              {
-                                color: '#98BAFC',
-                              },
-                            ]
+                          ? {
+                              backgroundColor: 'transparent',
+                              borderRadius: 50,
+                              height: 50,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              // width: '35%',
+                              paddingBottom: 10,
+                              paddingTop: 10,
+                              marginTop: 5,
+                              //   paddingLeft: 20,
+                              flexDirection: 'row',
+                              paddingHorizontal: 20,
+                              borderColor: '#272D7A',
+                              borderWidth: 1.5,
+                            }
+                          : {
+                              backgroundColor: 'transparent',
+                              borderRadius: 50,
+                              height: 50,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              // width: 's',
+                              paddingBottom: 10,
+                              paddingTop: 10,
+                              marginTop: 5,
+                              //   paddingLeft: 20,
+                              flexDirection: 'row',
+                              paddingHorizontal: 20,
+                              borderColor: '#98BAFC',
+                              borderWidth: 1.5,
+                            }
                       }>
-                      Switch Account?
-                    </Text>
-                  </TouchableOpacity>
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? [
+                                mainStyle.myProfileLogoutText,
+                                {
+                                  color: '#272D7A',
+                                },
+                              ]
+                            : [
+                                mainStyle.dMyProfileLogoutText,
+                                {
+                                  color: '#98BAFC',
+                                },
+                              ]
+                        }>
+                        Switch Account?
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                   <TouchableOpacity
                     style={
                       theme === 'light'

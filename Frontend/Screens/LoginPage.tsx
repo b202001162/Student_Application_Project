@@ -28,7 +28,7 @@ type LoginPageProps = NativeStackScreenProps<RootStackParamList, 'LoginPage'>;
 
 const LoginPage = ({navigation}: LoginPageProps) => {
   const [theme, setTheme] = useState(Appearance.getColorScheme());
-  const [number, setNumber] = useState();
+  const [number, setNumber] = useState('');
   const [show, setShow] = useState(false);
   const [countryCode, setCountryCode] = useState('+91');
   const [value, setValue] = useState('');
@@ -37,15 +37,20 @@ const LoginPage = ({navigation}: LoginPageProps) => {
   const [showMessage, setShowMessage] = useState(false);
   const phoneInput = useRef<PhoneInput>(null);
   const [baseURL, setBaseURL] = useState();
-  const handleNumberChange = text => {
+
+  const handleNumberChange = async text => {
     // Regex to ensure only numbers are entered
     const cleanNumber = text.replace(/[^0-9]/g, '');
 
     // Limit number length to 10
-    if (cleanNumber.length > 10) {
-      alert('Number cannot exceed 10 digits');
-      return; // Prevent further changes if max length is exceeded
-    }
+    // if (cleanNumber.length > 10) {
+    //   alert('Number cannot exceed 10 digits');
+    //   // remove the last entered character
+    //   await setNumber(cleanNumber.slice(0, -1));
+    //   console.log(number);
+
+    //   return; // Prevent further changes if max length is exceeded
+    // }
 
     setNumber(cleanNumber);
   };
@@ -53,11 +58,18 @@ const LoginPage = ({navigation}: LoginPageProps) => {
   const retrievingData = async () => {
     const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
     console.log(baseURL);
-    
+
     if (baseURL === null) {
       navigation.replace('LandingPage');
     } else {
       await setBaseURL(baseURL);
+    }
+
+    let tempNumber = await JSON.parse(await AsyncStorage.getItem('number'));
+    if (tempNumber !== null) {
+      console.log(tempNumber);
+
+      await setNumber(tempNumber);
     }
   };
 
@@ -71,34 +83,49 @@ const LoginPage = ({navigation}: LoginPageProps) => {
     } else {
       setTheme('dark');
     }
-  });
+  }, []);
   const [isLoading, setLoading] = useState(false);
 
   // generate api call
   const generateOTP = async () => {
-    if (number.length < 10) {
+    if (!number) {
       alert('Please enter a valid mobile number');
+      return;
+    }
+    if (number && number.length < 10) {
+      alert('Please enter a valid mobile number');
+      return;
+    }
+    if(!countryCode){
+      alert('Please select a country code');
+      return;
+    }
+    if(countryCode && countryCode !== '+91'){
+      alert('Currently we only support Indian numbers');
       return;
     }
     setLoading(true);
     let url = baseURL + `/nure-student/v1/generateOTP/${number}`;
     console.log(url);
     try {
-      const response = await axios.get(
-        `${url}`,
-      );
+      const response = await axios.get(`${url}`);
+      await AsyncStorage.setItem('number', await JSON.stringify(number));
+      await AsyncStorage.setItem('isFirstTimePinSet', await JSON.stringify(true));
       console.log(response.data);
-      navigation.replace('OTPVerification', {
+      navigation.push('OTPVerification', {
         Number: number,
         countryCode: countryCode,
       });
     } catch (error) {
       console.error(error);
+      navigation.goBack();
       alert('Something went wrong, please try again later.');
     } finally {
       setLoading(false);
     }
   };
+
+  /// <reference path="" />
 
   return (
     <SafeAreaView>
@@ -170,14 +197,18 @@ const LoginPage = ({navigation}: LoginPageProps) => {
             {!isLoading ? (
               <View style={mainStyle.loginInputButtonContainer}>
                 <View
-                  style={
+                  style={[
                     theme === 'light'
                       ? mainStyle.loginTextInput
-                      : mainStyle.dLoginTextInput
-                  }>
+                      : mainStyle.dLoginTextInput,
+                    {
+                      flexDirection: 'row',
+                    },
+                  ]}>
                   <PhoneInput
                     ref={phoneInput}
-                    defaultValue={value}
+                    defaultValue={number}
+                    value={number}
                     defaultCode="IN"
                     layout="first"
                     onChangeText={text => {
@@ -188,56 +219,71 @@ const LoginPage = ({navigation}: LoginPageProps) => {
                     //   setFormattedValue(text);
                     // }}
                     withDarkTheme
-                    withShadow
                     autoFocus
                     placeholder="Enter Mobile number"
                     containerStyle={{
-                      width: '100%',
+                      width: 150,
                       height: 50,
+                      padding: 0,
                       borderRadius: 10,
                       backgroundColor:
-                        theme === 'light' ? '#FAFAFA' : '#23303C',
+                        theme === 'light' ? '#EAEAEA' : '#23303C',
                       color: theme === 'light' ? '#003f5c' : '#ccc',
                     }}
                     textContainerStyle={{
                       height: 50,
-                      borderRadius: 10,
+                      padding: 0,
                       backgroundColor:
-                        theme === 'light' ? '#FAFAFA' : '#23303C',
+                        theme === 'light' ? '#EAEAEA' : '#23303C',
                       color: theme === 'light' ? '#003f5c' : '#ccc',
                     }}
                     textInputStyle={{
-                      height: 50,
-                      borderRadius: 10,
-                      backgroundColor:
-                        theme === 'light' ? '#FAFAFA' : '#23303C',
-                      color: theme === 'light' ? '#003f5c' : '#eee',
+                      display: 'none',
+                      // height: 50,
+                      // padding: 0,
+                      // backgroundColor:
+                      //   theme === 'light' ? '#FAFAFA' : '#23303C',
+                      // color: theme === 'light' ? '#003f5c' : '#eee',
                     }}
                     codeTextStyle={{
                       color: theme === 'light' ? '#003f5c' : '#ccc',
+                      padding: 0,
                     }}
                     textInputProps={{
                       placeholder: 'Enter Mobile number',
                       placeholderTextColor:
                         theme === 'light' ? '#003f5c' : '#ccc',
+                      display: 'none',
+                      padding: 0,
                     }}
                     onChangeCountry={country => {
                       setCountryCode('+' + country.callingCode);
                     }}
                   />
-                  {/* <TextInput
+                  <TextInput
                     style={
-                      theme == 'light'
+                      [theme == 'light'
                         ? mainStyle.loginInputText
-                        : mainStyle.dLoginInputText
+                        : mainStyle.dLoginInputText, {
+                        width: 210,
+                        height: 50,
+                        backgroundColor: theme === 'light' ? '#EAEAEA' : '#23303C',
+                        color: theme === 'light' ? '#003f5c' : '#ccc',
+                        borderRadius: 10,
+                        borderBottomLeftRadius: 0,
+                        borderTopLeftRadius: 0,
+                        }]
                     }
                     keyboardType="numeric"
                     placeholder="Enter Mobile number"
                     placeholderTextColor={
                       theme === 'light' ? '#003f5c' : '#ccc'
                     }
-                    onChangeText={handleNumberChange}
-                  /> */}
+                    defaultValue={number}
+                    value={number}
+                    onChangeText={e => handleNumberChange(e)}
+                    maxLength={10}
+                  />
                 </View>
                 <TouchableOpacity
                   style={
@@ -286,7 +332,7 @@ const LoginPage = ({navigation}: LoginPageProps) => {
                         ? {
                             height: 18,
                             width: 18,
-                            backgroundColor: '#FAFAFA',
+                            backgroundColor: '#EAEAEA',
                             borderRadius: 50,
                           }
                         : {

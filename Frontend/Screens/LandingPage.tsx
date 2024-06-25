@@ -40,12 +40,27 @@ const LandingPage = ({navigation}: LandingPageProps) => {
   const [showMessage, setShowMessage] = useState(false);
   const phoneInput = useRef<PhoneInput>(null);
   const handleTextChange = text => {
-
     //remove space from text
     const cleanText = text.replace(/\s/g, '');
 
     setBaseURL(cleanText);
   };
+
+  const retrieveData = async () => {
+    let tempInstituteURL = await JSON.parse(
+      await AsyncStorage.getItem('baseURL'),
+    );
+    console.log("BaseURL: ", tempInstituteURL);
+    if (tempInstituteURL !== null) {
+      await setBaseURL(tempInstituteURL);
+    }
+    // empty all the navigation stack
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [{name: 'LoginPage'}],
+    // });
+  };
+
   useEffect(() => {
     // requestStoragePermission();
     const colorTheme = Appearance.getColorScheme();
@@ -55,15 +70,36 @@ const LandingPage = ({navigation}: LandingPageProps) => {
     } else {
       setTheme('dark');
     }
-  });
+    retrieveData();
+  }, []);
   const [isLoading, setLoading] = useState(false);
 
   // generate api call
-  const generateOTP = async () => {
+  const action = async () => {
+    if (baseURL === undefined || baseURL === '') {
+      alert('Please enter the base URL.');
+      return;
+    }
+    // There must be some validation, such as starting with http or https, and ending with /api, etc.
+    let temp = baseURL;
+    // check whether the base URL ends with /api
+    if (temp.endsWith('/api')) {
+      temp = temp.slice(0, -4);
+    } else {
+      alert('Please enter a valid base URL. Must end with /api');
+      return;
+    }
+    // start with http or https
+    if (!temp.startsWith('http://') && !temp.startsWith('https://')) {
+      alert(
+        'Please enter a valid base URL. Must start with http:// or https://',
+      );
+      return;
+    }
     setLoading(true);
     try {
       await AsyncStorage.setItem('baseURL', await JSON.stringify(baseURL));
-      navigation.replace('LoginPage');
+      navigation.push('LoginPage');
     } catch (error) {
       console.error(error);
       alert('Something went wrong, please try again later.');
@@ -127,6 +163,7 @@ const LandingPage = ({navigation}: LandingPageProps) => {
                     placeholderTextColor={
                       theme === 'light' ? '#003f5c' : '#ccc'
                     }
+                    value={baseURL}
                     onChangeText={handleTextChange}
                   />
                 </View>
@@ -138,7 +175,7 @@ const LandingPage = ({navigation}: LandingPageProps) => {
                   }
                   onPress={() => {
                     console.log(baseURL);
-                    generateOTP();
+                    action();
                   }}>
                   <Text
                     style={

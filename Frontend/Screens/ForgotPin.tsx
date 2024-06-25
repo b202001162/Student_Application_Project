@@ -29,6 +29,8 @@ type ForgotPinProps = NativeStackScreenProps<RootStackParamList, 'ForgotPin'>;
 
 const ForgotPin = ({route}: ForgotPinProps) => {
   const {Number, user} = route.params;
+  console.log(Number);
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [theme, setTheme] = useState(Appearance.getColorScheme());
@@ -100,7 +102,7 @@ const ForgotPin = ({route}: ForgotPinProps) => {
         return;
       }
 
-      navigation.replace('AppPinLock');
+      navigation.pop(),  navigation.replace('AppPinLock');
     } catch (error) {
       console.error('OTP veri error:', error);
       alert('Something went wrong, please try again later.');
@@ -112,7 +114,7 @@ const ForgotPin = ({route}: ForgotPinProps) => {
   const retrievingData = async () => {
     try {
       const oldNumber = await JSON.parse(
-        await AsyncStorage.getItem('MobileNumber'),
+        await AsyncStorage.getItem('mobileNumber'),
       );
       const baseURL = await JSON.parse(await AsyncStorage.getItem('baseURL'));
       if (oldNumber !== null) console.log(oldNumber);
@@ -176,15 +178,12 @@ const ForgotPin = ({route}: ForgotPinProps) => {
     setLoading(true); // Indicate loading state
 
     try {
-      const response1 = await axios.post(
-        `${baseURL}/nure-student/v1/signIn`,
-        {
-          username: `${userName}`,
-          password: '',
-          phoneNumber: ``,
-          oneTimePassword: `${otp}`,
-        },
-      );
+      const response1 = await axios.post(`${baseURL}/nure-student/v1/signIn`, {
+        username: `${userName}`,
+        password: '',
+        phoneNumber: ``,
+        oneTimePassword: `${otp}`,
+      });
       // const jwtToken = await JSON.stringify(response1.data.jwtToken);
       // await setState({ jwtToken : await JSON.stringify(response1.data.jwtToken), firstName : await JSON.stringify(response1.data.resData.user.firstName)});
 
@@ -221,13 +220,16 @@ const ForgotPin = ({route}: ForgotPinProps) => {
       const Id = JSON.parse(await AsyncStorage.getItem('userId'));
       console.log(Id);
       const pinExists = await AsyncStorage.getItem(`pin${Id}`);
-      if (pinExists === null) navigation.replace('AppPinLock');
+      if (pinExists === null) {
+        navigation.pop(), navigation.replace('AppPinLock');
+      }
       else {
-        navigation.replace('VerifyPinLock');
+        navigation.goBack();
       }
     } catch (error) {
       console.error('Login handler error: ', error);
       alert('Something went wrong, please try again later.');
+      navigation.goBack();
     } finally {
       setLoading(false);
     }
@@ -277,13 +279,15 @@ const ForgotPin = ({route}: ForgotPinProps) => {
   };
 
   const generateOTP = async () => {
+    let baseURlTemp = await JSON.parse(await AsyncStorage.getItem('baseURL'));
     setLoading(true);
     try {
-      const response = await axios.get(
-        `${baseURL}/nure-student/v1/generateOTP/${Number}`,
-      );
+      let url = baseURlTemp + `/nure-student/v1/generateOTP/${Number}`;
+      console.log(url);
+
+      const response = await axios.get(url);
       console.log(response.data);
-      //   navigation.replace('OTPVerification', {Number: number});
+      // navigation.replace('OTPVerification', {Number: number});
     } catch (error) {
       console.error(error);
       alert('Something went wrong, please try again later.');

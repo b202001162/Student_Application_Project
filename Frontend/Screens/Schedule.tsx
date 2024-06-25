@@ -28,7 +28,7 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 type ScheduleProps = NativeStackScreenProps<RootStackParamList, 'Schedule'>;
 
 const Schedule = ({route}: ScheduleProps) => {
-  const {levelId} = route.params;
+  // const {levelId} = route.params;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [theme, setTheme] = useState(Appearance.getColorScheme());
@@ -41,6 +41,8 @@ const Schedule = ({route}: ScheduleProps) => {
   const [todayDate, setTodayDate] = useState(new Date());
   const [tomorrowDate, setTomorrowDate] = useState();
   const [baseURL, setBaseURL] = useState();
+  const [levelId, setLevelId] = useState();
+  const [isLoading, setLoading] = useState(false);
 
   const retrieveData = async () => {
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
@@ -49,13 +51,51 @@ const Schedule = ({route}: ScheduleProps) => {
     const baseURL = JSON.parse(await AsyncStorage.getItem('baseURL'));
     console.log('Stored Token', token);
 
-    setLoading(true); // Indicate loading state
+    await setLoading(true); // Indicate loading state
+    let levelID = await JSON.parse(await AsyncStorage.getItem('levelId'));
+    if (levelID == null) {
+      try {
+        const response1 = await axios.get(
+          `${baseURL}/nure-student/v1/fetchMyTerms/${admissionId}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        if (response1.data.sCode !== 1) {
+          alert('Error fetching data');
+          navigation.goBack();
+        }
+        console.log(
+          'levelID:',
+          response1.data.resData.levels[
+            response1.data.resData.levels.length - 1
+          ].id,
+        );
+        await setLevelId(
+          response1.data.resData.levels[
+            response1.data.resData.levels.length - 1
+          ].id,
+        );
+        levelID =
+          response1.data.resData.levels[
+            response1.data.resData.levels.length - 1
+          ].id;
+      } catch (error) {
+        console.log('Error retrieving data' + error);
+      }
+    }
     try {
       const today = new Date();
       const tomorrow = new Date(today.setDate(today.getDate() + 1));
       await setTomorrowDate(tomorrow);
+      console.log('levelID:', levelID, admissionId, baseURL);
+
       const response = await axios.get(
-        `${baseURL}/nure-student/v1/fetchMyCourses/${admissionId}/${levelId}`,
+        `${baseURL}/nure-student/v1/fetchMyCourses/${admissionId}/${levelID}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -78,7 +118,7 @@ const Schedule = ({route}: ScheduleProps) => {
         console.log(response.data.resData.courses[i].id);
         try {
           const res = await axios.get(
-            `${baseURL}/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelId}/${admissionId}/0`,
+            `${baseURL}/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelID}/${admissionId}/0`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -106,7 +146,7 @@ const Schedule = ({route}: ScheduleProps) => {
         await setTimeTableData(todaySche);
         try {
           const res = await axios.get(
-            `${baseURL}/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelId}/${admissionId}/1`,
+            `${baseURL}/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelID}/${admissionId}/1`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -135,7 +175,7 @@ const Schedule = ({route}: ScheduleProps) => {
 
         try {
           const res3 = await axios.get(
-            `${baseURL}/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelId}/${admissionId}/7`,
+            `${baseURL}/nure-student/v1/fetchMyClassTimeTable/${response.data.resData.courses[i].id}/${levelID}/${admissionId}/7`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -253,7 +293,7 @@ const Schedule = ({route}: ScheduleProps) => {
     }
   }, []);
 
-  const ResultItem = ({item, index}) => {
+  const ScheduleItem = ({item, index}) => {
     return (
       <View
         style={theme === 'light' ? styles.scheduleCard : styles.dScheduleCard}>
@@ -324,167 +364,200 @@ const Schedule = ({route}: ScheduleProps) => {
       </View>
     );
   };
-
-  const [isLoading, setLoading] = useState(false);
   return (
     <SafeAreaView>
       <View
         style={theme === 'light' ? mainStyle.container : mainStyle.dContainer}>
-        <View
-          style={
-            theme === 'light' ? mainStyle.subContainer : mainStyle.dSubContainer
-          }>
-          <View style={{width: '100%', justifyContent: 'center'}}>
-            <Animated.View
+        {isLoading ? (
+          <View
+            style={{
+              position: 'absolute',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+              width: '100%',
+              zIndex: 10,
+              backgroundColor: theme === 'light' ? '#00000095' : '#00000095',
+            }}>
+            <ActivityIndicator
+              size="large"
+              color={theme === 'light' ? '#272D7A' : '#98BAFC'}
+            />
+            <Text
               style={{
-                transform: [{translateY: translateY}],
-                elevation: 4,
-                zIndex: 100,
+                color: theme === 'light' ? '#272D7A' : '#98BAFC',
+                marginTop: 10,
               }}>
-              <View
-                style={
-                  theme === 'light' ? styles.headerMain : styles.dHeaderMain
-                }>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => navigation.goBack()}
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Icon
-                      style={mainStyle.headerIcon}
-                      name="arrow-left-long"
-                      size={20}
-                      color={theme === 'light' ? '#1d1d1d' : '#eee'}
-                    />
-                    <Text
-                      style={
-                        theme === 'light'
-                          ? mainStyle.headerText
-                          : mainStyle.dHeaderText
-                      }>
-                      Schedule
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.filterContainer}>
-                  <TouchableOpacity
-                    style={[
-                      theme === 'light'
-                        ? styles.filterButton
-                        : styles.dFilterButton,
-                      filterStatus === 'today' &&
-                        (theme === 'light'
-                          ? styles.activeFilterButton
-                          : styles.dActiveFilterButton), {marginLeft: 10}
-                    ]}
-                    onPress={() => handleFilterChange('today')}>
-                    <Text
-                      style={
-                        filterStatus === 'today'
-                          ? (theme === 'light'
-                            ? styles.activeFilterText
-                            : styles.dActiveFilteText)
-                          : (theme === 'light'
-                          ? styles.filterButtonText
-                          : styles.dFilterButtonText)
-                      }>
-                      Today's
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      theme === 'light'
-                        ? styles.filterButton
-                        : styles.dFilterButton,
-                      filterStatus === 'tomorrow' &&
-                        (theme === 'light'
-                          ? styles.activeFilterButton
-                          : styles.dActiveFilterButton),
-                    ]}
-                    onPress={() => handleFilterChange('tomorrow')}>
-                    <Text
-                      style={
-                        filterStatus === 'tomorrow'
-                          ? (theme === 'light'
-                            ? styles.activeFilterText
-                            : styles.dActiveFilteText)
-                          : (theme === 'light'
-                          ? styles.filterButtonText
-                          : styles.dFilterButtonText)
-                      }>
-                      Tomorrow's
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      theme === 'light'
-                        ? styles.filterButton
-                        : styles.dFilterButton,
-                      filterStatus === 'nextsevendays' &&
-                        (theme === 'light'
-                          ? styles.activeFilterButton
-                          : styles.dActiveFilterButton),
-                    ]}
-                    onPress={() => handleFilterChange('nextsevendays')}>
-                    <Text
-                      style={
-                        filterStatus === 'nextsevendays'
-                          ? (theme === 'light'
-                            ? styles.activeFilterText
-                            : styles.dActiveFilteText)
-                          : (theme === 'light'
-                          ? styles.filterButtonText
-                          : styles.dFilterButtonText)
-                      }>
-                      Next 7 Days'
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </Animated.View>
+              Loading...
+            </Text>
           </View>
-          {isLoading ? (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100%',
-              }}>
-              <ActivityIndicator size="large" color="#1E63BB" />
-            </View>
-          ) : (
-            <ScrollView
-              onScroll={e => {
-                scrollY.setValue(e.nativeEvent.contentOffset.y);
-              }}>
-              {isLoading ? (
+        ) : (
+          <View
+            style={
+              theme === 'light'
+                ? mainStyle.subContainer
+                : mainStyle.dSubContainer
+            }>
+            <View style={{width: '100%', justifyContent: 'center'}}>
+              <Animated.View
+                style={{
+                  transform: [{translateY: translateY}],
+                  elevation: 4,
+                  zIndex: 100,
+                }}>
                 <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100%',
-                    width: '100%',
-                    marginTop: 120,
-                  }}>
-                  <ActivityIndicator
-                    size="large"
-                    color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
-                  />
+                  style={
+                    theme === 'light' ? styles.headerMain : styles.dHeaderMain
+                  }>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => navigation.goBack()}
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Icon
+                        style={mainStyle.headerIcon}
+                        name="arrow-left-long"
+                        size={20}
+                        color={theme === 'light' ? '#1d1d1d' : '#eee'}
+                      />
+                      <Text
+                        style={
+                          theme === 'light'
+                            ? mainStyle.headerText
+                            : mainStyle.dHeaderText
+                        }>
+                        Schedule
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.filterContainer}>
+                    <TouchableOpacity
+                      style={[
+                        theme === 'light'
+                          ? styles.filterButton
+                          : styles.dFilterButton,
+                        filterStatus === 'today' &&
+                          (theme === 'light'
+                            ? styles.activeFilterButton
+                            : styles.dActiveFilterButton),
+                        {marginLeft: 10},
+                      ]}
+                      onPress={() => handleFilterChange('today')}>
+                      <Text
+                        style={
+                          filterStatus === 'today'
+                            ? theme === 'light'
+                              ? styles.activeFilterText
+                              : styles.dActiveFilteText
+                            : theme === 'light'
+                            ? styles.filterButtonText
+                            : styles.dFilterButtonText
+                        }>
+                        Today's
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[
+                        theme === 'light'
+                          ? styles.filterButton
+                          : styles.dFilterButton,
+                        filterStatus === 'tomorrow' &&
+                          (theme === 'light'
+                            ? styles.activeFilterButton
+                            : styles.dActiveFilterButton),
+                      ]}
+                      onPress={() => handleFilterChange('tomorrow')}>
+                      <Text
+                        style={
+                          filterStatus === 'tomorrow'
+                            ? theme === 'light'
+                              ? styles.activeFilterText
+                              : styles.dActiveFilteText
+                            : theme === 'light'
+                            ? styles.filterButtonText
+                            : styles.dFilterButtonText
+                        }>
+                        Tomorrow's
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[
+                        theme === 'light'
+                          ? styles.filterButton
+                          : styles.dFilterButton,
+                        filterStatus === 'nextsevendays' &&
+                          (theme === 'light'
+                            ? styles.activeFilterButton
+                            : styles.dActiveFilterButton),
+                      ]}
+                      onPress={() => handleFilterChange('nextsevendays')}>
+                      <Text
+                        style={
+                          filterStatus === 'nextsevendays'
+                            ? theme === 'light'
+                              ? styles.activeFilterText
+                              : styles.dActiveFilteText
+                            : theme === 'light'
+                            ? styles.filterButtonText
+                            : styles.dFilterButtonText
+                        }>
+                        Next 7 Days'
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              ) : (
-                <>
+              </Animated.View>
+            </View>
+            {isLoading ? (
+              <View
+                style={{
+                  position: 'absolute',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
+                  width: 500,
+                  zIndex: 10,
+                  marginTop: 120,
+                  backgroundColor:
+                    theme === 'light' ? '#00000095' : '#00000095',
+                }}>
+                <ActivityIndicator
+                  size="large"
+                  color={theme === 'light' ? '#272D7A' : '#98BAFC'}
+                />
+              </View>
+            ) : (
+              <ScrollView
+                onScroll={e => {
+                  scrollY.setValue(e.nativeEvent.contentOffset.y);
+                }}>
+                {isLoading ? (
                   <View
                     style={{
-                      width: '100%',
                       justifyContent: 'center',
                       alignItems: 'center',
+                      height: 500,
+                      width: '100%',
                       marginTop: 120,
                     }}>
-                    {/* {courses.length > 0 ? (
+                    <ActivityIndicator
+                      size="large"
+                      color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+                    />
+                  </View>
+                ) : (
+                  <>
+                    <View
+                      style={{
+                        width: '100%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: 120,
+                      }}>
+                      {/* {courses.length > 0 ? (
                   <FlatList
                     data={courses}
                     renderItem={({item}) => <CourseItem item={item} />}
@@ -500,32 +573,45 @@ const Schedule = ({route}: ScheduleProps) => {
                 ) : (
                   <Text>No courses found</Text>
                 )} */}
-                    {isLoading ? (
-                      <ActivityIndicator size="large" color="#1E63BB" />
-                    ) : (
-                      <>
-                        {timeTableData.length > 0 ? (
-                          <View style={styles.scheduleCardContainer}>
-                            {timeTableData.map((item, index) => (
-                              <ResultItem
-                                item={item}
-                                index={index}
-                                keyExtractor={item.id}
-                                key={item.id}
-                              />
-                            ))}
-                          </View>
-                        ) : (
-                          <Text>No Schedule found</Text>
-                        )}
-                      </>
-                    )}
-                  </View>
-                </>
-              )}
-            </ScrollView>
-          )}
-        </View>
+                      {isLoading ? (
+                        <View
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 500,
+                            width: '100%',
+                            marginTop: 120,
+                          }}>
+                          <ActivityIndicator
+                            size="large"
+                            color={theme === 'light' ? '#1E63BB' : '#98BAFC'}
+                          />
+                        </View>
+                      ) : (
+                        <>
+                          {timeTableData.length > 0 ? (
+                            <View style={styles.scheduleCardContainer}>
+                              {timeTableData.map((item, index) => (
+                                <ScheduleItem
+                                  item={item}
+                                  index={index}
+                                  keyExtractor={item.id}
+                                  key={item.id}
+                                />
+                              ))}
+                            </View>
+                          ) : (
+                            <Text>No Schedule found</Text>
+                          )}
+                        </>
+                      )}
+                    </View>
+                  </>
+                )}
+              </ScrollView>
+            )}
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
