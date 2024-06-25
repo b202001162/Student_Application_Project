@@ -70,8 +70,12 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
   };
 
   // generate api call
-  const generateOTP = async () => {
-    if (number.length !== 4) {
+  const setPin = async () => {
+    if(!number) {
+      alert('Please enter a 4 digit pin');
+      return;
+    }
+    if (number && number.length !== 4) {
       alert('Please enter a 4 digit pin');
       return;
     }
@@ -79,7 +83,8 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
     try {
       const Id = await JSON.parse(await AsyncStorage.getItem('userId'));
       await AsyncStorage.setItem(`pin${Id}`, number);
-      navigation.replace('VerifyPinLock');
+      await AsyncStorage.setItem('isFirstTimePinSet', await JSON.stringify(true));
+      navigation.push('VerifyPinLock');
     } catch (error) {
       console.error(error);
       //   alert('Something went wrong, please try again later.');
@@ -257,7 +262,7 @@ const AppPinLock = ({navigation}: AppPinLockProps) => {
                           }
                     }
                     onPress={() => {
-                      generateOTP();
+                      setPin();
                     }}>
                     <Text
                       style={

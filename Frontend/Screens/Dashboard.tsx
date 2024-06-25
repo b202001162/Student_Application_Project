@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   FlatList,
   Appearance,
+  Pressable,
 } from 'react-native';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -39,12 +40,14 @@ const Dashboard = ({route}: DashboardProps) => {
   const [refreshToken, setRefreshToken] = useState('');
   const [userName, setUserName] = useState('');
   const [baseURL, setBaseURL] = useState('');
+  const [numOfNotifications, setNumOfNotifications] = useState(0);
 
   const retrieveData = async () => {
     setLoading(true); // Indicate loading state
     const token = JSON.parse(await AsyncStorage.getItem('jwtToken'));
     const refreshToken = JSON.parse(await AsyncStorage.getItem('refreshToken'));
     const baseURL = JSON.parse(await AsyncStorage.getItem('baseURL'));
+    await AsyncStorage.setItem('isFirstTimePinSet', await JSON.stringify(false));
     if (token == null) {
       navigation.replace('LandingPage');
     }
@@ -59,32 +62,12 @@ const Dashboard = ({route}: DashboardProps) => {
     await setRefreshToken(refreshToken);
     await setUserName(userName);
     await setBaseURL(baseURL);
-    console.log(refreshToken);
 
-    if ((await AsyncStorage.getItem('currentLevelId')) !== null) {
-      // await AsyncStorage.removeItem('currentLevelId');
-      await setCurrentLevelId(await AsyncStorage.getItem('currentLevelId'));
-      setLoading(false);
+    console.log('UserId: ', userId, baseURL);
 
-      // for checking the expiry of the token
-      try {
-        const response = await axios.get(
-          `${baseURL}/nure-student/v1/fetchMyAlertsAndNotices/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-      } catch (error) {
-        console.log('Token Expired');
-        // console.log(refreshToken);
-        await loginHandler(userName);
-      }
-      return;
-    }
     try {
-      const reponse = await axios.get(
+      await setLoading(true);
+      const response = await axios.get(
         `${baseURL}/nure-student/v1/fetchMyAlertsAndNotices/${userId}`,
         {
           headers: {
@@ -92,19 +75,27 @@ const Dashboard = ({route}: DashboardProps) => {
           },
         },
       );
+      console.log('Token is still valid', response.data.resData.notifications);
+      await setNumOfNotifications(
+        response.data.resData.notifications.length || 0,
+      );
       // console.log(await AsyncStorage.getItem('currentLevelId'));
     } catch (error) {
       // Error retrieving data
       // navigation.replace('LoginPage');
-      await loginHandler(userName);
-      console.log('Error retrieving data');
+      console.log('Token Expired', baseURL, userName);
+
+      await loginHandler(userName, baseURL);
+      console.log('Error retrieving data in Dashboard', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const loginHandler = async userName => {
+  const loginHandler = async (userName, baseURL) => {
     try {
+      console.log(userName, baseURL);
+
       const response1 = await axios.post(`${baseURL}/nure-student/v1/signIn`, {
         username: `${userName}`,
         password: '',
@@ -126,11 +117,11 @@ const Dashboard = ({route}: DashboardProps) => {
         response1.data.resData.user.admissionId,
       );
 
-      await setJwtToken(token);
-      await setRefreshToken(refreshToken);
+      await setJwtToken(response1.data.jwtToken);
+      await setRefreshToken(response1.data.refreshToken);
       await setFirstName(userFullName);
-      await setUserId(userId);
-      await setAdmissionId(admissionId);
+      await setUserId(response1.data.resData.user.appUserId);
+      await setAdmissionId(response1.data.resData.user.admissionId);
 
       await AsyncStorage.setItem('jwtToken', token);
       await AsyncStorage.setItem('refreshToken', refreshToken);
@@ -139,6 +130,7 @@ const Dashboard = ({route}: DashboardProps) => {
       await AsyncStorage.setItem('admissionId', admissionId);
     } catch (error) {
       console.log(error);
+      await AsyncStorage.clear();
       navigation.replace('LandingPage');
     }
   };
@@ -259,14 +251,34 @@ const Dashboard = ({route}: DashboardProps) => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
               }}>
-              <View style={{marginRight: 15}}>
+              <Pressable
+                onPress={() => navigation.navigate('Notifications')}
+                style={{marginRight: 15}}>
+                {/* badge on the bell icon */}
+                <View
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    backgroundColor: 'red',
+                    borderRadius: 50,
+                    width: 15,
+                    height: 15,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1,
+                  }}>
+                  <Text style={{color: 'white', fontSize: 10}}>
+                    {numOfNotifications}
+                  </Text>
+                </View>
+
                 <Icon4
                   name="bell"
                   size={25}
                   color={theme === 'light' ? '#1d1d1d' : '#eee'}
-                  onPress={() => navigation.navigate('Notifications')}
                 />
-              </View>
+              </Pressable>
               <View style={{marginRight: 5}}>
                 <Icon
                   onPress={() => navigation.push('MyProfile')}
@@ -385,11 +397,7 @@ const Dashboard = ({route}: DashboardProps) => {
                 }}>
                 <View>
                   <TouchableOpacity
-                    onPress={() =>
-                      navigation.push('CurrentCourses', {
-                        levelId: currentLevelId,
-                      })
-                    }
+                    onPress={() => navigation.push('CurrentCourses')}
                     style={
                       theme === 'light'
                         ? mainStyle.academicsButtons
